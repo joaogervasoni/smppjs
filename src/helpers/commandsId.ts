@@ -1,6 +1,6 @@
 /**
  * The complete set of SMPP Command IDs
- * 
+ *
  * ref: Documentation SMPP_v3_4
  */
 const commandsId = {
@@ -23,14 +23,14 @@ const commandsId = {
     cancel_sm_resp: 0x80000008,
     bind_transceiver: 0x00000009,
     bind_transceiver_resp: 0x80000009,
-    outbind: 0x0000000B,
+    outbind: 0x0000000b,
     enquire_link: 0x00000015,
     enquire_link_resp: 0x80000015,
     submit_multi: 0x00000021,
     submit_multi_resp: 0x80000021,
     alert_notification: 0x00000102,
     data_sm: 0x00000103,
-    data_sm_resp: 0x80000103
-}
+    data_sm_resp: 0x80000103,
+};
 
-export {commandsId}
+export { commandsId };

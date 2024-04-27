@@ -7,7 +7,7 @@ export default class Client {
         this.session = new Session();
     }
 
-    connect({ url }: { url: string; }) {
+    connect({ url }: { url: string }) {
         const [host, portStr] = url.split(':');
 
         if (!host || !portStr) {

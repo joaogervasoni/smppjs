@@ -29,4 +29,8 @@ export default class Client {
     on(eventName: 'connect' | 'close' | 'error', callback: (...args: any[]) => void) {
         this.session.on(eventName, callback);
     }
+
+    bindTransceiver() {
+        this.session.bindTransceiver();
+    }
 }

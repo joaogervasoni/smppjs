@@ -33,4 +33,9 @@ export default class Session {
     on(eventName: 'connect' | 'close' | 'error' | 'timeout', callback: (...args: any[]) => void) {
         this.socket.on(eventName, callback);
     }
+
+    bindTransceiver() {
+        this.sequenceNumber += 1;
+        this.PDU.call('bind_transceiver', this.sequenceNumber, this.socket);
+    }
 }

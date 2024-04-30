@@ -2,9 +2,15 @@ import Session from './session';
 
 export default class Client {
     private readonly session!: Session;
+    private _debug: boolean;
 
-    constructor() {
-        this.session = new Session();
+    public get debug(): boolean {
+        return this._debug;
+    }
+
+    constructor({ debug = false }: { debug?: boolean }) {
+        this._debug = debug;
+        this.session = new Session(this.debug);
     }
 
     connect({ url }: { url: string }) {
@@ -26,7 +32,7 @@ export default class Client {
         return this.session.disconnect();
     }
 
-    on(eventName: 'connect' | 'close' | 'error', callback: (...args: any[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'debug', callback: (...args: any[]) => void) {
         this.session.on(eventName, callback);
     }
 

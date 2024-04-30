@@ -1,8 +1,10 @@
-import net from 'net';
+import { Socket } from 'net';
 import PDU from './PDU';
+import { Logger } from './utils/logger';
 
 export default class Session {
-    private socket!: net.Socket;
+    private socket!: Socket;
+    private logger!: Logger;
     private PDU!: PDU;
     private sequenceNumber: number = 0;
 
@@ -10,12 +12,13 @@ export default class Session {
         return this.socket.closed;
     }
 
-    constructor() {
+    constructor(private readonly debug = false) {
         this.initSession();
     }
 
     initSession() {
-        this.socket = new net.Socket();
+        this.socket = new Socket();
+        this.logger = new Logger(this.socket, { debug: this.debug });
         this.PDU = new PDU();
     }
 
@@ -30,7 +33,7 @@ export default class Session {
         return this.socket.closed;
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout', callback: (...args: any[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug', callback: (...args: any[]) => void) {
         this.socket.on(eventName, callback);
     }
 

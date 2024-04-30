@@ -1,10 +1,17 @@
 import { Socket } from 'net';
 
 class Logger {
-    constructor(private socket: Socket) {}
+    constructor(
+        private socket: Socket,
+        private readonly options: {
+            debug: boolean;
+        }
+    ) {}
 
     debug(message: string) {
-        this.socket.emit('debug', message);
+        if (this.options.debug) {
+            this.socket.emit('debug', message);
+        }
     }
 }
 

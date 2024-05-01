@@ -32,7 +32,7 @@ export default class Client {
         return this.session.disconnect();
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'debug', callback: (...args: any[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data', callback: (...args: any[]) => void) {
         this.session.on(eventName, callback);
     }
 

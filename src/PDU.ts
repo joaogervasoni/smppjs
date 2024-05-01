@@ -20,9 +20,18 @@ export default class PDU {
         socket.write(buffer);
     }
 
-    private initPduBuffer({ commandLength, commandId, sequenceNumber }: { commandLength: number; commandId: number; sequenceNumber: number }): Buffer {
+    private initPduBuffer({
+        commandLength,
+        commandId,
+        sequenceNumber,
+        commandStatus = 0,
+    }: {
+        commandLength: number;
+        commandId: number;
+        sequenceNumber: number;
+        commandStatus?: number;
+    }): Buffer {
         let pduBuffer = Buffer.alloc(commandLength);
-        const commandStatus = 0;
 
         // header
         pduBuffer.writeUInt32BE(commandLength, 0);

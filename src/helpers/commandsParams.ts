@@ -9,6 +9,10 @@ const commandsParams: Record<number, Record<string, { type: 'Cstring' | 'Int8'; 
         addr_npi: { type: 'Int8', value: 0 },
         address_range: { type: 'Cstring', value: '' },
     },
+    // Command params to test
+    0x80000009: {
+        system_id: { type: 'Cstring', value: '' },
+    },
 };
 
 export { commandsParams };

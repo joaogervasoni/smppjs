@@ -14,12 +14,19 @@ export default class Session {
 
     constructor(private readonly debug = false) {
         this.initSession();
+        this.initResponseRead();
     }
 
     initSession() {
         this.socket = new Socket();
         this.logger = new Logger(this.socket, { debug: this.debug });
         this.PDU = new PDU();
+    }
+
+    initResponseRead() {
+        this.socket.on('readable', () => {
+            this.PDU.readPduBuffer(this.socket.read());
+        });
     }
 
     connect({ host, port }: { host: string; port: number }) {
@@ -33,7 +40,7 @@ export default class Session {
         return this.socket.closed;
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug', callback: (...args: any[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data', callback: (...args: any[]) => void) {
         this.socket.on(eventName, callback);
     }
 

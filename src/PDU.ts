@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import { commandsId, commandsParams } from './helpers';
+import { commandsId, commandsName, commandsParams } from './helpers';
 import { octets } from './octets';
 
 const HEADER_COMMAND_LENGTH = 16;
@@ -75,5 +75,19 @@ export default class PDU {
         }
 
         return pduBuffer;
+    }
+
+    readPduBuffer(buffer: Buffer) {
+        let pdu: Record<string, any> = {};
+
+        pdu.command_length = buffer.readUInt32BE(0);
+        pdu.command_id = buffer.readUInt32BE(4);
+        pdu.command_status = buffer.readUInt32BE(8);
+        pdu.sequence_number = buffer.readUInt32BE(12);
+        pdu.command = commandsName[pdu.command_id];
+
+        // Add read to informations
+
+        return pdu;
     }
 }

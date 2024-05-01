@@ -2,12 +2,15 @@ import { Socket } from 'net';
 import { commandsId, commandsParams } from './helpers';
 import { octets } from './octets';
 
+const HEADER_COMMAND_LENGTH = 16;
+
 export default class PDU {
+
     call(command: 'bind_transceiver', sequenceNumber: number, socket: Socket) {
         const commandId = commandsId[command];
         const commandParams = commandsParams[commandId];
 
-        let commandLength = 16;
+        let commandLength = HEADER_COMMAND_LENGTH;
 
         const paramEntries = Object.entries(commandParams);
         for (let index = 0; index < paramEntries.length; index++) {
@@ -15,11 +18,17 @@ export default class PDU {
             commandLength += octets[element.type].size(element.value);
         }
 
-        let buffer = this.initPduBuffer({ commandLength, commandId, sequenceNumber });
+        let buffer = this.initPduBuffer({ commandLength: HEADER_COMMAND_LENGTH, commandId, sequenceNumber });
         buffer = this.writePduBuffer({ pduBuffer: buffer, pduParams: commandParams, offset: 16 });
         socket.write(buffer);
     }
 
+    /**
+     *  Init Buffer and add header
+     *
+     * @param commandStatus Is relevante only in the SMPP response message, default to request should be not passed
+     * @returns Buffer with header
+     */
     private initPduBuffer({
         commandLength,
         commandId,
@@ -33,7 +42,6 @@ export default class PDU {
     }): Buffer {
         let pduBuffer = Buffer.alloc(commandLength);
 
-        // header
         pduBuffer.writeUInt32BE(commandLength, 0);
         pduBuffer.writeUInt32BE(commandId, 4);
         pduBuffer.writeUInt32BE(commandStatus, 8);

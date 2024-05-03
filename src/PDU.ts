@@ -102,8 +102,8 @@ export default class PDU {
         return params;
     }
 
-    readPduBuffer(buffer: Buffer) {
-        let pdu: Record<string, any> = {};
+    readPduBuffer(buffer: Buffer): Record<string, string | number> {
+        let pdu: Record<string, string | number> = {};
 
         pdu.command_length = buffer.readUInt32BE(0);
         pdu.command_id = buffer.readUInt32BE(4);
@@ -111,8 +111,10 @@ export default class PDU {
         pdu.sequence_number = buffer.readUInt32BE(12);
         pdu.command = commandsName[pdu.command_id];
 
-        // Add read to informations
+        const commandParams = commandsParams[pdu.command_id];
 
-        return pdu;
+        const params = this.readParamsPduBuffer({ pduBuffer: buffer, pduParams: commandParams, offset: HEADER_COMMAND_LENGTH });
+
+        return Object.assign({}, pdu, params);
     }
 }

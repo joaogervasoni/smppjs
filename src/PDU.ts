@@ -5,11 +5,22 @@ import { octets } from './octets';
 const HEADER_COMMAND_LENGTH = 16;
 
 export default class PDU {
-    call(command: 'bind_transceiver', sequenceNumber: number, socket: Socket): boolean {
+    call(command: 'bind_transceiver', sequenceNumber: number, socket: Socket, paramsValue?: Record<string, number | string>): boolean {
         const commandId = commandsId[command];
         const commandParams = commandsParams[commandId];
 
         let commandLength = HEADER_COMMAND_LENGTH;
+
+        if (paramsValue) {
+            const paramsValues = Object.entries(paramsValue);
+            for (let index = 0; index < paramsValues.length; index++) {
+                const element = paramsValues[index];
+
+                if (commandParams[element[0]]) {
+                    commandParams[element[0]].value = element[1];
+                }
+            }
+        }
 
         const paramEntries = Object.entries(commandParams);
         for (let index = 0; index < paramEntries.length; index++) {

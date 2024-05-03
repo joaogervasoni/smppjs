@@ -77,6 +77,31 @@ export default class PDU {
         return pduBuffer;
     }
 
+    private readParamsPduBuffer({
+        pduParams,
+        pduBuffer,
+        offset,
+    }: {
+        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number }>;
+        pduBuffer: Buffer;
+        offset: number;
+    }) {
+        const params: Record<string, string | number> = {};
+
+        for (const key in pduParams) {
+            const param = pduParams[key];
+            const type = param.type;
+            const value = param.value;
+
+            if (type === 'Cstring') {
+                params[key] = octets.Cstring.read({ buffer: pduBuffer, offset });
+                offset += octets.Cstring.size(value as string);
+            }
+        }
+
+        return params;
+    }
+
     readPduBuffer(buffer: Buffer) {
         let pdu: Record<string, any> = {};
 

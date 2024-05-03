@@ -1,4 +1,3 @@
-// abstrair como base
 class Cstring {
     static write({ buffer, value, offset }: { buffer: Buffer; value: string; offset: number }): Buffer {
         let newBuffer = buffer;
@@ -16,6 +15,16 @@ class Cstring {
         }
 
         return value.length + 1;
+    }
+
+    static read({ buffer, offset }: { buffer: Buffer; offset: number }) {
+        let length = 0;
+
+        while (buffer[offset + length]) {
+            length++;
+        }
+
+        return buffer.toString('ascii', offset, offset + length);
     }
 }
 

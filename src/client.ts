@@ -1,3 +1,4 @@
+import { Commands } from './helpers';
 import Session from './session';
 
 export default class Client {
@@ -32,7 +33,7 @@ export default class Client {
         return this.session.disconnect();
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data', callback: (...args: any[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | Commands, callback: (...args: any[]) => void) {
         this.session.on(eventName, callback);
     }
 

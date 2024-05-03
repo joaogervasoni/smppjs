@@ -1,6 +1,8 @@
 import { Socket } from 'net';
 import PDU from './PDU';
 import { Logger } from './utils/logger';
+import { Commands } from './helpers';
+
 
 export default class Session {
     private socket!: Socket;
@@ -25,7 +27,8 @@ export default class Session {
 
     initResponseRead() {
         this.socket.on('readable', () => {
-            this.PDU.readPduBuffer(this.socket.read());
+            const pdu = this.PDU.readPduBuffer(this.socket.read());
+            this.socket.emit('pdu', pdu);
         });
     }
 
@@ -40,7 +43,8 @@ export default class Session {
         return this.socket.closed;
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data', callback: (...args: any[]) => void) {
+
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu'  | Commands, callback: (...args: any[]) => void) {
         this.socket.on(eventName, callback);
     }
 

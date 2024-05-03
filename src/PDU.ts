@@ -5,7 +5,7 @@ import { octets } from './octets';
 const HEADER_COMMAND_LENGTH = 16;
 
 export default class PDU {
-    call(command: 'bind_transceiver', sequenceNumber: number, socket: Socket) {
+    call(command: 'bind_transceiver', sequenceNumber: number, socket: Socket): boolean {
         const commandId = commandsId[command];
         const commandParams = commandsParams[commandId];
 
@@ -19,7 +19,7 @@ export default class PDU {
 
         let buffer = this.initPduBuffer({ commandLength, commandId, sequenceNumber });
         buffer = this.writePduBuffer({ pduBuffer: buffer, pduParams: commandParams, offset: HEADER_COMMAND_LENGTH });
-        socket.write(buffer);
+        return socket.write(buffer);
     }
 
     /**

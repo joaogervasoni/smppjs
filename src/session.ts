@@ -44,8 +44,8 @@ export default class Session {
         this.socket.on(eventName, callback);
     }
 
-    bindTransceiver() {
+    bindTransceiver(): boolean {
         this.sequenceNumber += 1;
-        this.PDU.call('bind_transceiver', this.sequenceNumber, this.socket);
+        return this.PDU.call('bind_transceiver', this.sequenceNumber, this.socket);
     }
 }

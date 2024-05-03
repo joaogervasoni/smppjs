@@ -44,8 +44,8 @@ export default class Session {
         this.socket.on(eventName, callback);
     }
 
-    bindTransceiver(): boolean {
+    bindTransceiver({ system_id, password }: { system_id: string; password: string }): boolean {
         this.sequenceNumber += 1;
-        return this.PDU.call('bind_transceiver', this.sequenceNumber, this.socket);
+        return this.PDU.call('bind_transceiver', this.sequenceNumber, this.socket, { system_id, password });
     }
 }

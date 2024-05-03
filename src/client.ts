@@ -36,7 +36,7 @@ export default class Client {
         this.session.on(eventName, callback);
     }
 
-    bindTransceiver() {
-        this.session.bindTransceiver();
+    bindTransceiver({ system_id, password }: { system_id: string; password: string }) {
+        this.session.bindTransceiver({ system_id, password });
     }
 }

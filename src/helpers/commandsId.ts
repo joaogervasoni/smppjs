@@ -1,3 +1,5 @@
+export type Commands = 'bind_transceiver' | 'bind_transceiver_resp';
+
 /**
  * The complete set of SMPP Command IDs
  *

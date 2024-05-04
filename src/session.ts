@@ -10,6 +10,15 @@ export default class Session {
     private logger!: Logger;
     private PDU!: PDU;
     private sequenceNumber: number = 0;
+    private _connected: boolean = false;
+
+    public get connected(): boolean {
+        return this._connected;
+    }
+
+    private set connected(value: boolean) {
+        this._connected = value;
+    }
 
     public get closed(): boolean {
         return this.socket.closed;
@@ -35,13 +44,14 @@ export default class Session {
 
     connect({ host, port }: { host: string; port: number }) {
         this.socket.connect(port, host, () => {
+            this.connected = true;
             console.log('Connected to SMPP server.');
-            // add isAlive or connected = true
         });
     }
 
     disconnect(): boolean {
         this.socket.destroy();
+        this.connected = false;
         return this.socket.closed;
     }
 

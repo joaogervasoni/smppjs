@@ -9,6 +9,10 @@ export default class Client {
         return this._debug;
     }
 
+    public get connected(): boolean {
+        return this.session.connected;
+    }
+
     constructor({ debug = false }: { debug?: boolean }) {
         this._debug = debug;
         this.session = new Session(this.debug);

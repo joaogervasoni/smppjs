@@ -1,3 +1,7 @@
+/**
+ * Octet size 'x' + 1
+ * Value x = string chars
+ */
 class Cstring {
     /**
      * Write a cstring in a buffer

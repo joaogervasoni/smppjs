@@ -1,1 +1,1 @@
-export * from './dto-base'
+export * from './dto'

@@ -1,6 +1,6 @@
-import { DTO } from "../types";
+import { DTO, DTOFunction } from '../types';
 
-interface BindTransceiver extends DTO {
+export interface BindTransceiver extends DTO {
     system_id: { type: 'Cstring'; value: string };
     password: { type: 'Cstring'; value: string };
     system_type: { type: 'Cstring'; value: string };
@@ -10,7 +10,11 @@ interface BindTransceiver extends DTO {
     address_range: { type: 'Cstring'; value: string };
 }
 
-export const bindTransceiverDTO = ({ systemIdValue, passwordValue }: { systemIdValue: string; passwordValue: string }): BindTransceiver => {
+export interface BindTransceiverFunction extends DTOFunction<{ systemIdValue: string; passwordValue: string }, BindTransceiver> {
+    ({ systemIdValue, passwordValue }: { systemIdValue: string; passwordValue: string }): BindTransceiver;
+}
+
+export const bindTransceiverDTO: BindTransceiverFunction = ({ systemIdValue, passwordValue }: { systemIdValue: string; passwordValue: string }): BindTransceiver => {
     return {
         system_id: { type: 'Cstring', value: systemIdValue },
         password: { type: 'Cstring', value: passwordValue },

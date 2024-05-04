@@ -1,26 +1,20 @@
 import { Socket } from 'net';
-import { commandsId, commandsName, commandsParams } from './helpers';
+import { commandsId, commandsName } from './helpers';
 import { octets } from './octets';
+import { getDTO } from './dtos';
+import { DTO, DTOFunction } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;
 
 export default class PDU {
-    call(command: 'bind_transceiver', sequenceNumber: number, socket: Socket, paramsValue?: Record<string, number | string>): boolean {
+    call(
+        command: 'bind_transceiver',
+        sequenceNumber: number,
+        socket: Socket,
+        commandParams: DTO
+    ): boolean {
         const commandId = commandsId[command];
-        const commandParams = commandsParams[commandId];
-
         let commandLength = HEADER_COMMAND_LENGTH;
-
-        if (paramsValue) {
-            const paramsValues = Object.entries(paramsValue);
-            for (let index = 0; index < paramsValues.length; index++) {
-                const element = paramsValues[index];
-
-                if (commandParams[element[0]]) {
-                    commandParams[element[0]].value = element[1];
-                }
-            }
-        }
 
         const paramEntries = Object.entries(commandParams);
         for (let index = 0; index < paramEntries.length; index++) {
@@ -117,12 +111,12 @@ export default class PDU {
         let pdu: Record<string, string | number> = {};
 
         pdu.command_length = buffer.readUInt32BE(0);
-        pdu.command_id = buffer.readUInt32BE(4);
+        pdu.command_id = buffer.readUInt32BE(4); // add type
         pdu.command_status = buffer.readUInt32BE(8);
         pdu.sequence_number = buffer.readUInt32BE(12);
         pdu.command = commandsName[pdu.command_id];
 
-        const commandParams = commandsParams[pdu.command_id];
+        const commandParams = getDTO<DTOFunction>(pdu.command)({});
 
         const params = this.readParamsPduBuffer({ pduBuffer: buffer, pduParams: commandParams, offset: HEADER_COMMAND_LENGTH });
 

@@ -37,7 +37,7 @@ export default class Session {
 
     initResponseRead() {
         this.socket.on('readable', () => {
-            const pdu = this.PDU.readPduBuffer(this.socket.read());
+            const pdu = this.PDU.readPdu(this.socket.read());
             this.socket.emit('pdu', pdu);
         });
     }

@@ -2,7 +2,7 @@ import { Socket } from 'net';
 import { commandsId, commandsName } from './helpers';
 import { octets } from './octets';
 import { getDTO } from './dtos';
-import { DTO, DTOFunction } from './types';
+import { DTO, DTOFunction, Pdu } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;
 
@@ -122,11 +122,9 @@ export default class PDU {
         return params;
     }
 
-    private readHeaderPdu(buffer: Buffer) {
-        let pdu: Record<string, number | string> = {};
-
+    private readHeaderPdu({ buffer, pdu }: { buffer: Buffer; pdu: Pdu }) {
         pdu.command_length = buffer.readUInt32BE(0);
-        pdu.command_id = buffer.readUInt32BE(4); // add type
+        pdu.command_id = buffer.readUInt32BE(4);
         pdu.command_status = buffer.readUInt32BE(8);
         pdu.sequence_number = buffer.readUInt32BE(12);
 
@@ -134,7 +132,15 @@ export default class PDU {
     }
 
     readPdu(buffer: Buffer): Record<string, string | number> {
-        const pdu = this.readHeaderPdu(buffer);
+        const pdu: Pdu = {
+            command: '',
+            command_id: 0,
+            command_length: 0,
+            command_status: 0,
+            sequence_number: 0,
+        };
+
+        this.readHeaderPdu({ buffer, pdu });
         pdu.command = commandsName[pdu.command_id];
 
         const commandParams = getDTO<DTOFunction>(pdu.command)({});

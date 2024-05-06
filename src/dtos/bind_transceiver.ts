@@ -18,15 +18,22 @@ export interface BindTransceiver extends DTO {
 }
 
 export interface BindTransceiverFunction
-    extends DTOFunction<{ systemIdValue: string; passwordValue: string; interfaceVersionValue: InterfaceVersion }, BindTransceiver> {
+    extends DTOFunction<
+        { systemIdValue: string; passwordValue: string; interfaceVersionValue: InterfaceVersion; systemTypeValue?: string; addressRangeValue?: string },
+        BindTransceiver
+    > {
     ({
         systemIdValue,
         passwordValue,
         interfaceVersionValue,
+        systemTypeValue,
+        addressRangeValue,
     }: {
         systemIdValue: string;
         passwordValue: string;
         interfaceVersionValue: InterfaceVersion;
+        systemTypeValue?: string;
+        addressRangeValue?: string;
     }): BindTransceiver;
 }
 
@@ -34,19 +41,23 @@ export const bindTransceiverDTO: BindTransceiverFunction = ({
     systemIdValue,
     passwordValue,
     interfaceVersionValue,
+    systemTypeValue,
+    addressRangeValue,
 }: {
     systemIdValue: string;
     passwordValue: string;
     interfaceVersionValue: InterfaceVersion;
+    systemTypeValue?: string;
+    addressRangeValue?: string;
 }): BindTransceiver => {
     const dto: BindTransceiver = {
         system_id: { type: 'Cstring', value: systemIdValue },
         password: { type: 'Cstring', value: passwordValue },
-        system_type: { type: 'Cstring', value: '' },
+        system_type: { type: 'Cstring', value: systemTypeValue || '' },
         interface_version: { type: 'Int8', value: interfaceVersionValue },
         addr_ton: { type: 'Int8', value: 0 },
         addr_npi: { type: 'Int8', value: 0 },
-        address_range: { type: 'Cstring', value: '' },
+        address_range: { type: 'Cstring', value: addressRangeValue || '' },
     };
 
     validateDto(dto);

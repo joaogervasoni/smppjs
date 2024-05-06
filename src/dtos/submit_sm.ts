@@ -1,7 +1,7 @@
 import { DTO, DTOFunction } from '../types';
 
 const MAX_LENGTH = {
-    system_type: 6,
+    service_type: 6,
     source_addr: 21,
     destination_addr: 21,
 };

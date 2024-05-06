@@ -24,6 +24,7 @@ export interface SubmitSm extends DTO {
     data_coding: { type: 'Int8'; value: number };
     sm_default_msg_id: { type: 'Int8'; value: number };
     // short_message
+    // need to create message validations to send submitsm
 }
 
 export type SubmitSmParams = {

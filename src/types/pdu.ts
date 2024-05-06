@@ -37,3 +37,12 @@ export type CommandName =
     | 'alert_notification'
     | 'data_sm'
     | 'data_sm_resp';
+
+export interface Pdu {
+    command_length: number;
+    command_id: number;
+    command_status: number;
+    sequence_number: number;
+    command: CommandName | '';
+    [key: string]: any;
+}

@@ -1,3 +1,4 @@
+import { SubmitSmParams } from './dtos/submit_sm';
 import { Commands } from './helpers';
 import Session from './session';
 import { InterfaceVersion } from './types';
@@ -44,5 +45,9 @@ export default class Client {
 
     bindTransceiver({ systemId, password }: { systemId: string; password: string }) {
         this.session.bindTransceiver({ systemId, password });
+    }
+
+    submitSm(params: SubmitSmParams) {
+        this.session.submitSm(params);
     }
 }

@@ -5,6 +5,7 @@ import { Commands } from './helpers';
 import { BindTransceiverFunction } from './dtos/bind_transceiver';
 import { getDTO } from './dtos';
 import { InterfaceVersion } from './types';
+import { SubmitSmFunction, SubmitSmParams } from './dtos/submit_sm';
 
 export default class Session {
     private socket!: Socket;
@@ -71,5 +72,11 @@ export default class Session {
         });
         this.sequenceNumber += 1;
         return this.PDU.call('bind_transceiver', this.sequenceNumber, this.socket, dto);
+    }
+
+    submitSm(params: SubmitSmParams): boolean {
+        const dto = getDTO<SubmitSmFunction>('submit_sm')(params);
+        this.sequenceNumber += 1;
+        return this.PDU.call('submit_sm', this.sequenceNumber, this.socket, dto);
     }
 }

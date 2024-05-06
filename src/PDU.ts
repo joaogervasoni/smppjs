@@ -7,7 +7,7 @@ import { DTO, DTOFunction } from './types';
 const HEADER_COMMAND_LENGTH = 16;
 
 export default class PDU {
-    call(command: 'bind_transceiver', sequenceNumber: number, socket: Socket, commandParams: DTO): boolean {
+    call(command: 'bind_transceiver' | 'submit_sm', sequenceNumber: number, socket: Socket, commandParams: DTO): boolean {
         const commandId = commandsId[command];
         let commandLength = HEADER_COMMAND_LENGTH;
 

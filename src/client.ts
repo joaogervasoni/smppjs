@@ -1,5 +1,6 @@
 import { Commands } from './helpers';
 import Session from './session';
+import { InterfaceVersion } from './types';
 
 export default class Client {
     private readonly session!: Session;
@@ -13,9 +14,9 @@ export default class Client {
         return this.session.connected;
     }
 
-    constructor({ debug = false }: { debug?: boolean }) {
+    constructor({ interfaceVersion = 80, debug = false }: { interfaceVersion: InterfaceVersion; debug?: boolean }) {
         this._debug = debug;
-        this.session = new Session(this.debug);
+        this.session = new Session(interfaceVersion, this.debug);
     }
 
     connect({ url }: { url: string }) {

@@ -4,6 +4,7 @@ import { Logger } from './utils/logger';
 import { Commands } from './helpers';
 import { BindTransceiverFunction } from './dtos/bind_transceiver';
 import { getDTO } from './dtos';
+import { InterfaceVersion } from './types';
 
 export default class Session {
     private socket!: Socket;
@@ -24,7 +25,10 @@ export default class Session {
         return this.socket.closed;
     }
 
-    constructor(private readonly debug = false) {
+    constructor(
+        private readonly interfaceVersion: InterfaceVersion,
+        private readonly debug = false
+    ) {
         this.initSession();
         this.initResponseRead();
     }
@@ -60,7 +64,11 @@ export default class Session {
     }
 
     bindTransceiver({ systemId, password }: { systemId: string; password: string }): boolean {
-        const dto = getDTO<BindTransceiverFunction>('bind_transceiver')({ systemIdValue: systemId, passwordValue: password });
+        const dto = getDTO<BindTransceiverFunction>('bind_transceiver')({
+            systemIdValue: systemId,
+            passwordValue: password,
+            interfaceVersionValue: this.interfaceVersion,
+        });
         this.sequenceNumber += 1;
         return this.PDU.call('bind_transceiver', this.sequenceNumber, this.socket, dto);
     }

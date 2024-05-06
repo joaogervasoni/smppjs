@@ -1,4 +1,4 @@
-import { DTO, DTOFunction } from '../types';
+import { DTO, DTOFunction, InterfaceVersion } from '../types';
 
 const MAX_LENGTH = {
     system_id: 16,
@@ -11,28 +11,39 @@ export interface BindTransceiver extends DTO {
     system_id: { type: 'Cstring'; value: string };
     password: { type: 'Cstring'; value: string };
     system_type: { type: 'Cstring'; value: string };
-    interface_version: { type: 'Int8'; value: number };
+    interface_version: { type: 'Int8'; value: InterfaceVersion };
     addr_ton: { type: 'Int8'; value: number };
     addr_npi: { type: 'Int8'; value: number };
     address_range: { type: 'Cstring'; value: string };
 }
 
-export interface BindTransceiverFunction extends DTOFunction<{ systemIdValue: string; passwordValue: string }, BindTransceiver> {
-    ({ systemIdValue, passwordValue }: { systemIdValue: string; passwordValue: string }): BindTransceiver;
+export interface BindTransceiverFunction
+    extends DTOFunction<{ systemIdValue: string; passwordValue: string; interfaceVersionValue: InterfaceVersion }, BindTransceiver> {
+    ({
+        systemIdValue,
+        passwordValue,
+        interfaceVersionValue,
+    }: {
+        systemIdValue: string;
+        passwordValue: string;
+        interfaceVersionValue: InterfaceVersion;
+    }): BindTransceiver;
 }
 
 export const bindTransceiverDTO: BindTransceiverFunction = ({
     systemIdValue,
     passwordValue,
+    interfaceVersionValue,
 }: {
     systemIdValue: string;
     passwordValue: string;
+    interfaceVersionValue: InterfaceVersion;
 }): BindTransceiver => {
     const dto: BindTransceiver = {
         system_id: { type: 'Cstring', value: systemIdValue },
         password: { type: 'Cstring', value: passwordValue },
         system_type: { type: 'Cstring', value: '' },
-        interface_version: { type: 'Int8', value: 80 },
+        interface_version: { type: 'Int8', value: interfaceVersionValue },
         addr_ton: { type: 'Int8', value: 0 },
         addr_npi: { type: 'Int8', value: 0 },
         address_range: { type: 'Cstring', value: '' },
@@ -44,7 +55,7 @@ export const bindTransceiverDTO: BindTransceiverFunction = ({
 
 /**
  * Add length plus one to add 00 validation
- * 
+ *
  * Ref: Page 49 - SMPP_v5
  * @param dto BindTransceiver
  */

@@ -1,4 +1,4 @@
-export type Commands = 'bind_transceiver' | 'bind_transceiver_resp';
+import { CommandName } from "../types";
 
 /**
  * The complete set of SMPP Command IDs
@@ -35,7 +35,7 @@ const commandsId = {
     data_sm_resp: 0x80000103,
 };
 
-const commandsName: Record<string, string> = {
+const commandsName: Record<string, CommandName> = {
     0x80000000: 'generic_nack',
     0x00000001: 'bind_receiver',
     0x80000001: 'bind_receiver_resp',

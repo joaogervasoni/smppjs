@@ -1,7 +1,6 @@
 import { SubmitSmParams } from './dtos/submit_sm';
-import { Commands } from './helpers';
 import Session from './session';
-import { InterfaceVersion } from './types';
+import { CommandName, InterfaceVersion } from './types';
 
 export default class Client {
     private readonly session!: Session;
@@ -39,7 +38,7 @@ export default class Client {
         return this.session.disconnect();
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | Commands, callback: (...args: any[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | CommandName, callback: (...args: any[]) => void) {
         this.session.on(eventName, callback);
     }
 

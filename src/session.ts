@@ -1,10 +1,9 @@
 import { Socket } from 'net';
 import PDU from './PDU';
 import { Logger } from './utils/logger';
-import { Commands } from './helpers';
 import { BindTransceiverFunction } from './dtos/bind_transceiver';
 import { getDTO } from './dtos';
-import { InterfaceVersion } from './types';
+import { CommandName, InterfaceVersion } from './types';
 import { SubmitSmFunction, SubmitSmParams } from './dtos/submit_sm';
 
 export default class Session {
@@ -60,7 +59,7 @@ export default class Session {
         return this.socket.closed;
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | Commands, callback: (...args: any[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | CommandName, callback: (...args: any[]) => void) {
         this.socket.on(eventName, callback);
     }
 

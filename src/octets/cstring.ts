@@ -6,12 +6,22 @@ class Cstring {
     /**
      * Write a cstring in a buffer
      */
-    static write({ buffer, value, offset }: { buffer: Buffer; value: string | Buffer; offset: number }): Buffer {
+    static write({
+        buffer,
+        value,
+        offset,
+        encoding = 'ascii',
+    }: {
+        buffer: Buffer;
+        value: string | Buffer;
+        offset: number;
+        encoding?: 'ascii' | 'latin1' | 'usc2';
+    }): Buffer {
         let newBuffer = buffer;
         let valueBuffer: Buffer;
 
         if (typeof value === 'string') {
-            valueBuffer = Buffer.from(value, 'ascii'); // add optional decodes
+            valueBuffer = Buffer.from(value, encoding as BufferEncoding);
         } else {
             valueBuffer = value;
         }

@@ -1,9 +1,8 @@
 import { Socket } from 'net';
 import PDU from './PDU';
 import { Logger } from './utils/logger';
-import { BindTransceiverFunction } from './dtos/bind_transceiver';
 import { getDTO } from './dtos';
-import { CommandName, InterfaceVersion } from './types';
+import { CommandName, InterfaceVersion, BindTransceiverFunction } from './types';
 import { SubmitSmFunction, SubmitSmParams } from './dtos/submit_sm';
 
 export default class Session {

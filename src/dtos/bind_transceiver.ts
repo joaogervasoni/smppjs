@@ -1,4 +1,4 @@
-import { DTO, DTOFunction, InterfaceVersion } from '../types';
+import { BindTransceiver, BindTransceiverFunction, BindTransceiverParams } from "../types/dto/bind_transceiver";
 
 const MAX_LENGTH = {
     system_id: 16,
@@ -7,49 +7,13 @@ const MAX_LENGTH = {
     address_range: 41,
 };
 
-export interface BindTransceiver extends DTO {
-    system_id: { type: 'Cstring'; value: string };
-    password: { type: 'Cstring'; value: string };
-    system_type: { type: 'Cstring'; value: string };
-    interface_version: { type: 'Int8'; value: InterfaceVersion };
-    addr_ton: { type: 'Int8'; value: number };
-    addr_npi: { type: 'Int8'; value: number };
-    address_range: { type: 'Cstring'; value: string };
-}
-
-export interface BindTransceiverFunction
-    extends DTOFunction<
-        { systemIdValue: string; passwordValue: string; interfaceVersionValue: InterfaceVersion; systemTypeValue?: string; addressRangeValue?: string },
-        BindTransceiver
-    > {
-    ({
-        systemIdValue,
-        passwordValue,
-        interfaceVersionValue,
-        systemTypeValue,
-        addressRangeValue,
-    }: {
-        systemIdValue: string;
-        passwordValue: string;
-        interfaceVersionValue: InterfaceVersion;
-        systemTypeValue?: string;
-        addressRangeValue?: string;
-    }): BindTransceiver;
-}
-
 export const bindTransceiverDTO: BindTransceiverFunction = ({
     systemIdValue,
     passwordValue,
     interfaceVersionValue,
     systemTypeValue,
     addressRangeValue,
-}: {
-    systemIdValue: string;
-    passwordValue: string;
-    interfaceVersionValue: InterfaceVersion;
-    systemTypeValue?: string;
-    addressRangeValue?: string;
-}): BindTransceiver => {
+}: BindTransceiverParams): BindTransceiver => {
     const dto: BindTransceiver = {
         system_id: { type: 'Cstring', value: systemIdValue },
         password: { type: 'Cstring', value: passwordValue },

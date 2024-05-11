@@ -1,3 +1,4 @@
+import { dateToAbsolute } from '../helpers';
 import { DTO, DTOFunction } from '../types';
 
 const MAX_LENGTH = {
@@ -18,7 +19,7 @@ export interface SubmitSm extends DTO {
     protocol_id: { type: 'Int8'; value: number };
     priority_flag: { type: 'Int8'; value: number };
     // schedule_delivery_time
-    // validity_period
+    validity_period: { type: 'Cstring'; value: string };
     registered_delivery: { type: 'Int8'; value: number };
     replace_if_present_flag: { type: 'Int8'; value: number };
     data_coding: { type: 'Int8'; value: number };
@@ -39,6 +40,7 @@ export type SubmitSmParams = {
     destAddrNpi?: number;
     protocolId?: number;
     priorityFlag?: number;
+    validityPeriod?: Date;
     registeredFelivery?: number;
     replaceIfPresentFlag?: number;
     smDefaultMsgId?: number;
@@ -57,6 +59,7 @@ export interface SubmitSmFunction extends DTOFunction<SubmitSmParams, SubmitSm> 
         destAddrNpi,
         protocolId,
         priorityFlag,
+        validityPeriod,
         registeredFelivery,
         replaceIfPresentFlag,
         smDefaultMsgId,
@@ -75,6 +78,7 @@ export const submitSmDTO: SubmitSmFunction = ({
     destAddrNpi,
     protocolId,
     priorityFlag,
+    validityPeriod,
     registeredFelivery,
     replaceIfPresentFlag,
     smDefaultMsgId,
@@ -87,10 +91,11 @@ export const submitSmDTO: SubmitSmFunction = ({
         dest_addr_ton: { type: 'Int8', value: destAddrTon || 0 },
         dest_addr_npi: { type: 'Int8', value: destAddrNpi || 0 },
         destination_addr: { type: 'Cstring', value: destinationAddr },
-        esm_class: { type: 'Int8', value: esmClass},
+        esm_class: { type: 'Int8', value: esmClass },
         protocol_id: { type: 'Int8', value: protocolId || 0 },
         priority_flag: { type: 'Int8', value: priorityFlag || 0 },
         registered_delivery: { type: 'Int8', value: registeredFelivery || 0 },
+        validity_period: { type: 'Cstring', value: validityPeriod ? dateToAbsolute(validityPeriod) : '' },
         replace_if_present_flag: { type: 'Int8', value: replaceIfPresentFlag || 0 },
         data_coding: { type: 'Int8', value: dataCoding },
         sm_default_msg_id: { type: 'Int8', value: smDefaultMsgId || 0 },

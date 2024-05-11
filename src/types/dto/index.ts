@@ -1,4 +1,4 @@
-export type DTO<T = Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>> = T;
+export type DTO<T = Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: 'ascii' | 'latin1' | 'usc2' }>> = T;
 export interface DTOFunction<T = any, Y = DTO> {
     (...args: T[]): Y;
 }

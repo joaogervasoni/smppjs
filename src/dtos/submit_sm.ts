@@ -24,7 +24,10 @@ export interface SubmitSm extends DTO {
     replace_if_present_flag: { type: 'Int8'; value: number };
     data_coding: { type: 'Int8'; value: number };
     sm_default_msg_id: { type: 'Int8'; value: number };
-    short_message: { type: 'Cstring'; value: string | Buffer };
+    /**
+     * Default ASCII
+     */
+    short_message: { type: 'Cstring'; value: string | Buffer; encode?: 'ascii' | 'latin1' | 'usc2' };
     // need to create message validations to send submitsm
 }
 
@@ -45,7 +48,10 @@ export type SubmitSmParams = {
     registeredFelivery?: number;
     replaceIfPresentFlag?: number;
     smDefaultMsgId?: number;
-    shortMessage?: string;
+    shortMessage?: {
+        message: string;
+        encoding: 'ascii' | 'latin1' | 'usc2';
+    };
 };
 
 export interface SubmitSmFunction extends DTOFunction<SubmitSmParams, SubmitSm> {
@@ -106,8 +112,11 @@ export const submitSmDTO: SubmitSmFunction = ({
         replace_if_present_flag: { type: 'Int8', value: replaceIfPresentFlag || 0 },
         data_coding: { type: 'Int8', value: dataCoding },
         sm_default_msg_id: { type: 'Int8', value: smDefaultMsgId || 0 },
-        short_message: { type: 'Cstring', value: shortMessage || Buffer.alloc(0, '', 'ascii') }, // accept another encoder
-        // add tobuffer with encode to short
+        short_message: {
+            type: 'Cstring',
+            value: shortMessage?.message || Buffer.alloc(0, '', (shortMessage?.encoding as BufferEncoding) || 'ascii'),
+            encode: shortMessage?.encoding,
+        },
     };
 
     validateDto(dto);

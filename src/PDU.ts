@@ -141,7 +141,7 @@ export default class PDU {
         };
 
         this.readHeaderPdu({ buffer, pdu });
-        pdu.command = commandsName[pdu.command_id];
+        pdu.command = commandsName[pdu.command_id]; // validation if is resp type
 
         const commandParams = getDTO<DTOFunction>(pdu.command)({});
         const params = this.readParamsPdu({ pduBuffer: buffer, pduParams: commandParams, offset: HEADER_COMMAND_LENGTH });

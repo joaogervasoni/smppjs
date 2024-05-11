@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import { commandsId, commandsName } from './helpers';
+import { commandsId, commandsName } from './constains';
 import { octets } from './octets';
 import { getDTO } from './dtos';
 import { DTO, DTOFunction, Pdu } from './types';

@@ -8,20 +8,20 @@ const MAX_LENGTH = {
 };
 
 export const bindTransceiverDTO: BindTransceiverFunction = ({
-    systemIdValue,
-    passwordValue,
-    interfaceVersionValue,
-    systemTypeValue,
-    addressRangeValue,
+    systemId,
+    password,
+    interfaceVersion,
+    systemType,
+    addressRange,
 }: BindTransceiverParams): BindTransceiver => {
     const dto: BindTransceiver = {
-        system_id: { type: 'Cstring', value: systemIdValue },
-        password: { type: 'Cstring', value: passwordValue },
-        system_type: { type: 'Cstring', value: systemTypeValue || '' },
-        interface_version: { type: 'Int8', value: interfaceVersionValue },
+        system_id: { type: 'Cstring', value: systemId },
+        password: { type: 'Cstring', value: password },
+        system_type: { type: 'Cstring', value: systemType || '' },
+        interface_version: { type: 'Int8', value: interfaceVersion },
         addr_ton: { type: 'Int8', value: 0 },
         addr_npi: { type: 'Int8', value: 0 },
-        address_range: { type: 'Cstring', value: addressRangeValue || '' },
+        address_range: { type: 'Cstring', value: addressRange || '' },
     };
 
     validateDto(dto);

@@ -12,23 +12,23 @@ export interface BindTransceiver extends DTO {
 
 
 export type BindTransceiverParams = {
-    systemIdValue: string;
-    passwordValue: string;
-    interfaceVersionValue: InterfaceVersion;
-    systemTypeValue?: string;
-    addressRangeValue?: string;
+    systemId: string;
+    password: string;
+    interfaceVersion: InterfaceVersion;
+    systemType?: string;
+    addressRange?: string;
 };
 
 export interface BindTransceiverFunction
     extends DTOFunction<
-        { systemIdValue: string; passwordValue: string; interfaceVersionValue: InterfaceVersion; systemTypeValue?: string; addressRangeValue?: string },
+        { systemId: string; password: string; interfaceVersion: InterfaceVersion; systemType?: string; addressRange?: string },
         BindTransceiver
     > {
     ({
-        systemIdValue,
-        passwordValue,
-        interfaceVersionValue,
-        systemTypeValue,
-        addressRangeValue,
+        systemId,
+        password,
+        interfaceVersion,
+        systemType,
+        addressRange,
     }: BindTransceiverParams): BindTransceiver;
 }

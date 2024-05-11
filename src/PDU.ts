@@ -141,9 +141,14 @@ export default class PDU {
         };
 
         this.readHeaderPdu({ buffer, pdu });
-        pdu.command = commandsName[pdu.command_id]; // validation if is resp type
+        pdu.command = commandsName[pdu.command_id];
 
-        const commandParams = getDTO<DTOFunction>(pdu.command)({});
+        const DTO = getDTO<DTOFunction>(pdu.command);
+        if (!DTO) {
+            throw new Error(`Command {${pdu.command}} not found.`);
+        }
+
+        const commandParams = DTO({});
         const params = this.readParamsPdu({ pduBuffer: buffer, pduParams: commandParams, offset: HEADER_COMMAND_LENGTH });
 
         return Object.assign({}, pdu, params);

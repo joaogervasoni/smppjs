@@ -37,7 +37,7 @@ export default class PDU {
         commandLength: number;
         commandId: number;
         sequenceNumber: number;
-        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number }>;
+        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
         commandStatus?: number;
     }): Buffer {
         let pduBuffer = Buffer.alloc(commandLength);
@@ -74,7 +74,7 @@ export default class PDU {
         pduBuffer,
         offset,
     }: {
-        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number }>;
+        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
         pduBuffer: Buffer;
         offset: number;
     }) {
@@ -84,8 +84,8 @@ export default class PDU {
             const value = param.value;
 
             if (type === 'Cstring') {
-                pduBuffer = octets.Cstring.write({ buffer: pduBuffer, offset, value: value as string });
-                offset += octets.Cstring.size(value as string);
+                pduBuffer = octets.Cstring.write({ buffer: pduBuffer, offset, value: value as string | Buffer });
+                offset += octets.Cstring.size(value as string | Buffer);
             }
 
             if (type === 'Int8') {
@@ -102,7 +102,7 @@ export default class PDU {
         pduBuffer,
         offset,
     }: {
-        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number }>;
+        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
         pduBuffer: Buffer;
         offset: number;
     }) {

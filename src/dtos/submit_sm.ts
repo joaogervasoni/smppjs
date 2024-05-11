@@ -18,7 +18,7 @@ export interface SubmitSm extends DTO {
     esm_class: { type: 'Int8'; value: number };
     protocol_id: { type: 'Int8'; value: number };
     priority_flag: { type: 'Int8'; value: number };
-    // schedule_delivery_time
+    schedule_delivery_time: { type: 'Cstring'; value: string };
     validity_period: { type: 'Cstring'; value: string };
     registered_delivery: { type: 'Int8'; value: number };
     replace_if_present_flag: { type: 'Int8'; value: number };
@@ -40,6 +40,7 @@ export type SubmitSmParams = {
     destAddrNpi?: number;
     protocolId?: number;
     priorityFlag?: number;
+    scheduleDeliveryTime?: Date;
     validityPeriod?: Date;
     registeredFelivery?: number;
     replaceIfPresentFlag?: number;
@@ -59,6 +60,7 @@ export interface SubmitSmFunction extends DTOFunction<SubmitSmParams, SubmitSm> 
         destAddrNpi,
         protocolId,
         priorityFlag,
+        scheduleDeliveryTime,
         validityPeriod,
         registeredFelivery,
         replaceIfPresentFlag,
@@ -78,6 +80,7 @@ export const submitSmDTO: SubmitSmFunction = ({
     destAddrNpi,
     protocolId,
     priorityFlag,
+    scheduleDeliveryTime,
     validityPeriod,
     registeredFelivery,
     replaceIfPresentFlag,
@@ -95,6 +98,7 @@ export const submitSmDTO: SubmitSmFunction = ({
         protocol_id: { type: 'Int8', value: protocolId || 0 },
         priority_flag: { type: 'Int8', value: priorityFlag || 0 },
         registered_delivery: { type: 'Int8', value: registeredFelivery || 0 },
+        schedule_delivery_time: { type: 'Cstring', value: scheduleDeliveryTime ? dateToAbsolute(scheduleDeliveryTime) : '' },
         validity_period: { type: 'Cstring', value: validityPeriod ? dateToAbsolute(validityPeriod) : '' },
         replace_if_present_flag: { type: 'Int8', value: replaceIfPresentFlag || 0 },
         data_coding: { type: 'Int8', value: dataCoding },

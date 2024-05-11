@@ -1,5 +1,5 @@
-import { DTO, DTOFunction } from '../types';
-import { bindTransceiverDTO, BindTransceiverFunction } from './bind_transceiver';
+import { BindTransceiverFunction, DTO, DTOFunction } from '../types';
+import { bindTransceiverDTO } from './bind_transceiver';
 import { BindTransceiverRespFunction, bindTransceiverRespDTO } from './bind_transceiver_resp';
 import { SubmitSmFunction, submitSmDTO } from './submit_sm';
 

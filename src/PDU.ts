@@ -2,12 +2,12 @@ import { Socket } from 'net';
 import { commandsId, commandsName } from './constains';
 import { octets } from './octets';
 import { getDTO } from './dtos';
-import { DTO, DTOFunction, Pdu } from './types';
+import { DTO, DTOFunction, Pdu, SendCommandName } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;
 
 export default class PDU {
-    call(command: 'bind_transceiver' | 'submit_sm', sequenceNumber: number, socket: Socket, commandParams: DTO): boolean {
+    call(command: SendCommandName, sequenceNumber: number, socket: Socket, commandParams: DTO): boolean {
         const commandId = commandsId[command];
         let commandLength = HEADER_COMMAND_LENGTH;
 

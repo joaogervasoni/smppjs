@@ -2,7 +2,7 @@ import { Socket } from 'net';
 import PDU from './PDU';
 import { Logger } from './utils/logger';
 import { getDTO } from './dtos';
-import { CommandName, InterfaceVersion, BindTransceiverFunction } from './types';
+import { CommandName, InterfaceVersion, BindTransceiverFunction, BindTransceiverParams } from './types';
 import { SubmitSmFunction, SubmitSmParams } from './dtos/submit_sm';
 
 export default class Session {
@@ -66,12 +66,12 @@ export default class Session {
         this.socket.on(eventName, callback);
     }
 
-    bindTransceiver({ systemId, password }: { systemId: string; password: string }): boolean {
-        const dto = getDTO<BindTransceiverFunction>('bind_transceiver')({
-            systemIdValue: systemId,
-            passwordValue: password,
-            interfaceVersionValue: this.interfaceVersion,
-        });
+    bindTransceiver(params: BindTransceiverParams): boolean {
+        if (!params.interfaceVersion) {
+            params.interfaceVersion = this.interfaceVersion;
+        }
+
+        const dto = getDTO<BindTransceiverFunction>('bind_transceiver')(params);
         this.sequenceNumber += 1;
         return this.PDU.call('bind_transceiver', this.sequenceNumber, this.socket, dto);
     }

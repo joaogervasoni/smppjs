@@ -1,12 +1,12 @@
-import { BindTransceiverFunction, DTO, DTOFunction } from '../types';
+import { DTO, DTOFunction, BindTransceiverFunction, BindTransceiverRespFunction, SubmitSmFunction } from '../types';
 import { bindTransceiverDTO } from './bind_transceiver';
-import { BindTransceiverRespFunction, bindTransceiverRespDTO } from './bind_transceiver_resp';
-import { SubmitSmFunction, submitSmDTO } from './submit_sm';
+import { bindTransceiverRespDTO } from './bind_transceiver_resp';
+import { submitSmDTO } from './submit_sm';
 
 const DTOs: Record<string, DTOFunction<any, DTO>> = {
     bind_transceiver: bindTransceiverDTO,
     bind_transceiver_resp: bindTransceiverRespDTO,
-    submit_sm: submitSmDTO
+    submit_sm: submitSmDTO,
 };
 
 const getDTO = <T extends DTOFunction | BindTransceiverFunction | BindTransceiverRespFunction | SubmitSmFunction>(name: string): T => {

@@ -1,6 +1,5 @@
-import { SubmitSmParams } from './dtos/submit_sm';
 import Session from './session';
-import { BindTransceiverParams, CommandName, InterfaceVersion } from './types';
+import { BindTransceiverParams, CommandName, InterfaceVersion, SubmitSmParams } from './types';
 
 export default class Client {
     private readonly session!: Session;

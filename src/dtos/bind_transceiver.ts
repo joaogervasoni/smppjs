@@ -1,4 +1,4 @@
-import { BindTransceiver, BindTransceiverFunction, BindTransceiverParams } from "../types/dto/bind_transceiver";
+import { BindTransceiver, BindTransceiverFunction, BindTransceiverParams } from "../types";
 
 const MAX_LENGTH = {
     system_id: 16,

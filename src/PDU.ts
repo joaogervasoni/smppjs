@@ -74,7 +74,7 @@ export default class PDU {
         pduBuffer,
         offset,
     }: {
-        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
+        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: 'ascii' | 'latin1' | 'usc2'; setLength?: boolean }>;
         pduBuffer: Buffer;
         offset: number;
     }) {
@@ -84,7 +84,10 @@ export default class PDU {
             const value = param.value;
 
             if (type === 'Cstring') {
-                pduBuffer = octets.Cstring.write({ buffer: pduBuffer, offset, value: value as string | Buffer });
+                const encode = param.encode || 'ascii';
+                const setLength = param.setLength || false;
+
+                pduBuffer = octets.Cstring.write({ buffer: pduBuffer, offset, value: value as string | Buffer, encoding: encode, setLength });
                 offset += octets.Cstring.size(value as string | Buffer);
             }
 

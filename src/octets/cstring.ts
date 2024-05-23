@@ -11,16 +11,18 @@ class Cstring {
         value,
         offset,
         encoding = 'ascii',
+        setLength = false,
     }: {
         buffer: Buffer;
         value: string | Buffer;
         offset: number;
+        setLength?: boolean;
         encoding?: 'ascii' | 'latin1' | 'usc2';
     }): Buffer {
         let newBuffer = buffer;
         let valueBuffer: Buffer;
 
-        if (encoding) {
+        if (setLength) {
 			buffer.writeUInt8(value.length, offset++);
         }
 

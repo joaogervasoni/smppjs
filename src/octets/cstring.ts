@@ -20,6 +20,10 @@ class Cstring {
         let newBuffer = buffer;
         let valueBuffer: Buffer;
 
+        if (encoding) {
+			buffer.writeUInt8(value.length, offset++);
+        }
+
         if (typeof value === 'string') {
             valueBuffer = Buffer.from(value, encoding as BufferEncoding);
         } else {

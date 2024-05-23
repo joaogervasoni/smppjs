@@ -20,7 +20,7 @@ export interface SubmitSm extends DTO {
     /**
      * Default ASCII
      */
-    short_message: { type: 'Cstring'; value: string | Buffer; encode?: 'ascii' | 'latin1' | 'usc2' };
+    short_message: { type: 'Cstring'; value: string | Buffer; encode?: 'ascii' | 'latin1' | 'usc2'; setLength?: boolean };
     // need to create message validations to send submitsm
 }
 

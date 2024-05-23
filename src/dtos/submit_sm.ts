@@ -45,8 +45,9 @@ export const submitSmDTO: SubmitSmFunction = ({
         sm_default_msg_id: { type: 'Int8', value: smDefaultMsgId || 0 },
         short_message: {
             type: 'Cstring',
-            value: shortMessage?.message || Buffer.alloc(0, '', (shortMessage?.encoding as BufferEncoding) || 'ascii'),
+            value: shortMessage?.message || Buffer.alloc(0, '', (shortMessage?.encoding as BufferEncoding)),
             encode: shortMessage?.encoding,
+            setLength: true,
         },
     };
 

@@ -43,7 +43,7 @@ export type SubmitSmParams = {
     smDefaultMsgId?: number;
     shortMessage?: {
         message: string;
-        encoding: 'ascii' | 'latin1' | 'usc2';
+        encoding?: 'ascii' | 'latin1' | 'usc2';
     };
 };
 

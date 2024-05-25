@@ -12,7 +12,7 @@ export interface IPDU {
      * @param socket Socker server - Socket
      * @param commandParams Params of command called
      */
-    call(command: SendCommandName, sequenceNumber: number, socket: Socket, commandParams: DTO): boolean;
+    call({ command, sequenceNumber, socket, commandParams }: { command: SendCommandName; sequenceNumber: number; socket: Socket; commandParams: DTO }): boolean;
     /**
      * Receive a smpp protocol buffer, read and return formated to object Pdu.
      * @param buffer Buffer

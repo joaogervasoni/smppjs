@@ -34,7 +34,7 @@ export default class Session {
     initSession() {
         this.socket = new Socket();
         this.logger = new Logger(this.socket, { debug: this.debug });
-        this.PDU = new PDU();
+        this.PDU = new PDU(this.socket);
     }
 
     initResponseRead() {
@@ -75,7 +75,7 @@ export default class Session {
 
         const dto = getDTO<BindTransceiverFunction>('bind_transceiver')(params);
         this.sequenceNumber += 1;
-        return this.PDU.call('bind_transceiver', this.sequenceNumber, this.socket, dto);
+        return this.PDU.call({ command: 'bind_transceiver', sequenceNumber: this.sequenceNumber, commandParams: dto });
     }
 
     submitSm(params: SubmitSmParams): boolean {
@@ -83,6 +83,6 @@ export default class Session {
 
         const dto = getDTO<SubmitSmFunction>('submit_sm')(params);
         this.sequenceNumber += 1;
-        return this.PDU.call('submit_sm', this.sequenceNumber, this.socket, dto);
+        return this.PDU.call({ command: 'submit_sm', sequenceNumber: this.sequenceNumber, commandParams: dto });
     }
 }

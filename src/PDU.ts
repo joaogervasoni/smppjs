@@ -7,15 +7,15 @@ import { DTO, DTOFunction, IPDU, Pdu, SendCommandName } from './types';
 const HEADER_COMMAND_LENGTH = 16;
 
 export default class PDU implements IPDU {
+    constructor(private socket: Socket) {}
+
     call({
         command,
         sequenceNumber,
-        socket,
         commandParams,
     }: {
         command: SendCommandName;
         sequenceNumber: number;
-        socket: Socket;
         commandParams: DTO;
     }): boolean {
         const commandId = commandsId[command];
@@ -28,7 +28,7 @@ export default class PDU implements IPDU {
         }
 
         const buffer = this.createPdu({ pduParams: commandParams, commandLength, commandId, sequenceNumber });
-        return socket.write(buffer);
+        return this.socket.write(buffer);
     }
 
     /**

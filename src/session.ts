@@ -31,13 +31,13 @@ export default class Session {
         this.initResponseRead();
     }
 
-    initSession() {
+    initSession(): void {
         this.socket = new Socket();
         this.logger = new Logger(this.socket, { debug: this.debug });
         this.PDU = new PDU(this.socket);
     }
 
-    initResponseRead() {
+    initResponseRead(): void {
         this.socket.on('readable', () => {
             try {
                 const pdu = this.PDU.readPdu(this.socket.read());
@@ -48,7 +48,7 @@ export default class Session {
         });
     }
 
-    connect({ host, port }: { host: string; port: number }) {
+    connect({ host, port }: { host: string; port: number }): void {
         this.socket.connect(port, host, () => {
             this.connected = true;
             this.logger.debug(`connect - called - connected to smmp server`, { host, port });

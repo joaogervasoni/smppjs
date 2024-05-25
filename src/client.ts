@@ -18,7 +18,7 @@ export default class Client {
         this.session = new Session(interfaceVersion, this.debug);
     }
 
-    connect({ url }: { url: string }) {
+    connect({ url }: { url: string }): void {
         const [host, portStr] = url.split(':');
 
         if (!host || !portStr) {
@@ -33,7 +33,7 @@ export default class Client {
         this.session.connect({ host, port });
     }
 
-    disconnect() {
+    disconnect(): boolean {
         return this.session.disconnect();
     }
 
@@ -41,11 +41,11 @@ export default class Client {
         this.session.on(eventName, callback);
     }
 
-    bindTransceiver(params: BindTransceiverParams) {
-        this.session.bindTransceiver(params);
+    bindTransceiver(params: BindTransceiverParams): boolean {
+        return this.session.bindTransceiver(params);
     }
 
-    submitSm(params: SubmitSmParams) {
-        this.session.submitSm(params);
+    submitSm(params: SubmitSmParams): boolean {
+        return this.session.submitSm(params);
     }
 }

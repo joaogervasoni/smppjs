@@ -4,6 +4,7 @@ import { BindTransceiverParams, CommandName, InterfaceVersion, SubmitSmParams } 
 export default class Client {
     private readonly session!: Session;
     private _debug: boolean;
+    private _enquireLink: { auto: boolean; interval?: number };
 
     public get debug(): boolean {
         return this._debug;
@@ -15,6 +16,7 @@ export default class Client {
 
     constructor({
         interfaceVersion = 80,
+        enquireLink,
         debug = false,
     }: {
         interfaceVersion: InterfaceVersion;
@@ -22,6 +24,7 @@ export default class Client {
         debug?: boolean;
     }) {
         this._debug = debug;
+        this._enquireLink = enquireLink;
         this.session = new Session(interfaceVersion, this.debug);
     }
 
@@ -38,6 +41,11 @@ export default class Client {
         }
 
         this.session.connect({ host, port });
+
+        if (this._enquireLink.auto && this._enquireLink.interval) {
+            this.enquireLink();
+            this.autoEnquireLink(this._enquireLink.interval);
+        }
     }
 
     disconnect(): boolean {
@@ -58,5 +66,11 @@ export default class Client {
 
     enquireLink(): boolean {
         return this.session.enquireLink();
+    }
+
+    private autoEnquireLink(interval: number) {
+        setInterval(() => {
+            this.enquireLink();
+        }, interval);
     }
 }

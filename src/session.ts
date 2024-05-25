@@ -2,7 +2,7 @@ import { Socket } from 'net';
 import PDU from './PDU';
 import { getDTO } from './dtos';
 import { Logger } from './utils/logger';
-import { CommandName, InterfaceVersion, BindTransceiverFunction, BindTransceiverParams, SubmitSmFunction, SubmitSmParams } from './types';
+import { CommandName, InterfaceVersion, BindTransceiverFunction, BindTransceiverParams, SubmitSmFunction, SubmitSmParams, EnquireLinkFunction } from './types';
 
 export default class Session {
     private socket!: Socket;
@@ -84,5 +84,13 @@ export default class Session {
         const dto = getDTO<SubmitSmFunction>('submit_sm')(params);
         this.sequenceNumber += 1;
         return this.PDU.call({ command: 'submit_sm', sequenceNumber: this.sequenceNumber, commandParams: dto });
+    }
+
+    enquireLink(): boolean {
+        this.logger.debug(`enquireLink - called`);
+
+        const dto = getDTO<EnquireLinkFunction>('enquire_link')({});
+        this.sequenceNumber += 1;
+        return this.PDU.call({ command: 'enquire_link', sequenceNumber: this.sequenceNumber, commandParams: dto });
     }
 }

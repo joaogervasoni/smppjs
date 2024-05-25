@@ -13,7 +13,14 @@ export default class Client {
         return this.session.connected;
     }
 
-    constructor({ interfaceVersion = 80, debug = false }: { interfaceVersion: InterfaceVersion; debug?: boolean }) {
+    constructor({
+        interfaceVersion = 80,
+        debug = false,
+    }: {
+        interfaceVersion: InterfaceVersion;
+        enquireLink: { auto: boolean; interval?: number };
+        debug?: boolean;
+    }) {
         this._debug = debug;
         this.session = new Session(interfaceVersion, this.debug);
     }
@@ -47,5 +54,9 @@ export default class Client {
 
     submitSm(params: SubmitSmParams): boolean {
         return this.session.submitSm(params);
+    }
+
+    enquireLink(): boolean {
+        return this.session.enquireLink();
     }
 }

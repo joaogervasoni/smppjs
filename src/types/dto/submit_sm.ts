@@ -1,4 +1,4 @@
-import { DTO, DTOFunction } from '../index';
+import { DTO, DTOFunction, PriorityFlag } from '../index';
 
 export interface SubmitSm extends DTO {
     service_type: { type: 'Cstring'; value: string };
@@ -35,7 +35,7 @@ export type SubmitSmParams = {
     destAddrTon?: number;
     destAddrNpi?: number;
     protocolId?: number;
-    priorityFlag?: number;
+    priorityFlag?: PriorityFlag;
     scheduleDeliveryTime?: Date;
     validityPeriod?: Date;
     registeredFelivery?: number;

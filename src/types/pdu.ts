@@ -70,6 +70,9 @@ export type ResponseCommandName =
     | 'submit_multi_resp'
     | 'data_sm_resp';
 
+/**
+ * Pdu base object
+ */
 export interface Pdu {
     command_length: number;
     command_id: number;
@@ -78,3 +81,10 @@ export interface Pdu {
     command: CommandName | '';
     [key: string]: any;
 }
+
+/**
+ * Indicate priority
+ * 
+ * Prioritys have difference to type, read: 4.7.19 on Smpp v5 doc.
+ */
+export type PriorityFlag = 0 | 1 | 2 | 3 | 4;

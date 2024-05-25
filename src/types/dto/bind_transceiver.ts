@@ -14,7 +14,7 @@ export interface BindTransceiver extends DTO {
 export type BindTransceiverParams = {
     systemId: string;
     password: string;
-    interfaceVersion: InterfaceVersion;
+    interfaceVersion?: InterfaceVersion;
     systemType?: string;
     addressRange?: string;
 };

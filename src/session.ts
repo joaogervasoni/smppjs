@@ -2,8 +2,7 @@ import { Socket } from 'net';
 import PDU from './PDU';
 import { Logger } from './utils/logger';
 import { getDTO } from './dtos';
-import { CommandName, InterfaceVersion, BindTransceiverFunction, BindTransceiverParams } from './types';
-import { SubmitSmFunction, SubmitSmParams } from './dtos/submit_sm';
+import { CommandName, InterfaceVersion, BindTransceiverFunction, BindTransceiverParams, SubmitSmFunction, SubmitSmParams } from './types';
 
 export default class Session {
     private socket!: Socket;
@@ -52,13 +51,14 @@ export default class Session {
     connect({ host, port }: { host: string; port: number }) {
         this.socket.connect(port, host, () => {
             this.connected = true;
-            console.log('Connected to SMPP server.');
+            this.logger.debug(`connect - called - connected to smmp server`, { host, port });
         });
     }
 
     disconnect(): boolean {
         this.socket.destroy();
         this.connected = false;
+        this.logger.debug(`disconnect - called - disconnected to smmp server`);
         return this.socket.closed;
     }
 
@@ -67,6 +67,8 @@ export default class Session {
     }
 
     bindTransceiver(params: BindTransceiverParams): boolean {
+        this.logger.debug(`bindTransceiver - called`, params);
+
         if (!params.interfaceVersion) {
             params.interfaceVersion = this.interfaceVersion;
         }
@@ -77,6 +79,8 @@ export default class Session {
     }
 
     submitSm(params: SubmitSmParams): boolean {
+        this.logger.debug(`submitSm - called`, params);
+
         const dto = getDTO<SubmitSmFunction>('submit_sm')(params);
         this.sequenceNumber += 1;
         return this.PDU.call('submit_sm', this.sequenceNumber, this.socket, dto);

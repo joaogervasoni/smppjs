@@ -1,7 +1,7 @@
 import { Socket } from 'net';
-import { commandsId, commandsName } from './constains';
-import { octets } from './octets';
 import { getDTO } from './dtos';
+import { octets } from './octets';
+import { commandsId, commandsName } from './constains';
 import { DTO, DTOFunction, Pdu, SendCommandName } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;

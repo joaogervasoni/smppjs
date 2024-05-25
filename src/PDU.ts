@@ -2,11 +2,11 @@ import { Socket } from 'net';
 import { getDTO } from './dtos';
 import { octets } from './octets';
 import { commandsId, commandsName } from './constains';
-import { DTO, DTOFunction, Pdu, SendCommandName } from './types';
+import { DTO, DTOFunction, IPDU, Pdu, SendCommandName } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;
 
-export default class PDU {
+export default class PDU implements IPDU {
     call(command: SendCommandName, sequenceNumber: number, socket: Socket, commandParams: DTO): boolean {
         const commandId = commandsId[command];
         let commandLength = HEADER_COMMAND_LENGTH;

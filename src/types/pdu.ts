@@ -1,3 +1,25 @@
+import { Socket } from 'net';
+import { DTO } from '.';
+
+/**
+ * Base class to manage PDU.
+ */
+export interface IPDU {
+    /**
+     * Call a smpp protocol.
+     * @param command Command name - SendCommandName
+     * @param sequenceNumber - Sequence number of call
+     * @param socket Socker server - Socket
+     * @param commandParams Params of command called
+     */
+    call(command: SendCommandName, sequenceNumber: number, socket: Socket, commandParams: DTO): boolean;
+    /**
+     * Receive a smpp protocol buffer, read and return formated to object Pdu.
+     * @param buffer Buffer
+     */
+    readPdu(buffer: Buffer): Record<string, string | number>;
+}
+
 /**
  * Indicate version of SMPP protocol
  * 80 - 5

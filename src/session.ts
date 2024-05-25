@@ -1,7 +1,7 @@
 import { Socket } from 'net';
 import PDU from './PDU';
-import { Logger } from './utils/logger';
 import { getDTO } from './dtos';
+import { Logger } from './utils/logger';
 import { CommandName, InterfaceVersion, BindTransceiverFunction, BindTransceiverParams, SubmitSmFunction, SubmitSmParams } from './types';
 
 export default class Session {

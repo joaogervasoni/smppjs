@@ -2,22 +2,14 @@ import { Socket } from 'net';
 import { getDTO } from './dtos';
 import { octets } from './octets';
 import { commandsId, commandsName } from './constains';
-import { DTO, DTOFunction, IPDU, Pdu, SendCommandName } from './types';
+import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;
 
 export default class PDU implements IPDU {
     constructor(private socket: Socket) {}
 
-    call({
-        command,
-        sequenceNumber,
-        commandParams,
-    }: {
-        command: SendCommandName;
-        sequenceNumber: number;
-        commandParams: DTO;
-    }): boolean {
+    call({ command, sequenceNumber, commandParams }: { command: SendCommandName; sequenceNumber: number; commandParams: DTO }): boolean {
         const commandId = commandsId[command];
         let commandLength = HEADER_COMMAND_LENGTH;
 
@@ -84,7 +76,7 @@ export default class PDU implements IPDU {
         pduBuffer,
         offset,
     }: {
-        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: 'ascii' | 'latin1' | 'usc2'; setLength?: boolean }>;
+        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
         pduBuffer: Buffer;
         offset: number;
     }) {

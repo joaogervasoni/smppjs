@@ -1,4 +1,4 @@
-import { DTO, DTOFunction, PriorityFlag } from '../index';
+import { DTO, DTOFunction, Encode, PriorityFlag } from '../index';
 
 export interface SubmitSm extends DTO {
     service_type: { type: 'Cstring'; value: string };
@@ -20,7 +20,7 @@ export interface SubmitSm extends DTO {
     /**
      * Default ASCII
      */
-    short_message: { type: 'Cstring'; value: string | Buffer; encode?: 'ascii' | 'latin1' | 'usc2'; setLength?: boolean };
+    short_message: { type: 'Cstring'; value: string | Buffer; encode?: Encode; setLength?: boolean };
     // need to create message validations to send submitsm
 }
 
@@ -43,7 +43,7 @@ export type SubmitSmParams = {
     smDefaultMsgId?: number;
     shortMessage?: {
         message: string;
-        encoding?: 'ascii' | 'latin1' | 'usc2';
+        encoding?: Encode;
     };
 };
 

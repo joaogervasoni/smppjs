@@ -1,3 +1,5 @@
+import { Encode } from "../types";
+
 /**
  * Octet size 'x' + 1
  * Value x = string chars
@@ -17,7 +19,7 @@ class Cstring {
         value: string | Buffer;
         offset: number;
         setLength?: boolean;
-        encoding?: 'ascii' | 'latin1' | 'usc2';
+        encoding?: Encode;
     }): Buffer {
         let newBuffer = buffer;
         let valueBuffer: Buffer;

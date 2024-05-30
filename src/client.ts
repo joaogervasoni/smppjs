@@ -1,3 +1,4 @@
+import { SecureContextOptions } from 'tls';
 import Session from './session';
 import { BindTransceiverParams, CommandName, InterfaceVersion, SubmitSmParams } from './types';
 
@@ -21,6 +22,7 @@ export default class Client {
     constructor({
         interfaceVersion = 80,
         enquireLink,
+        secure,
         debug = false,
     }: {
         interfaceVersion: InterfaceVersion;
@@ -28,11 +30,12 @@ export default class Client {
          * Default interval 20000
          */
         enquireLink: { auto: boolean; interval?: number };
+        secure: { tls: boolean; secureOptions?: SecureContextOptions };
         debug?: boolean;
     }) {
         this._debug = debug;
         this._enquireLink = enquireLink;
-        this.session = new Session(interfaceVersion, this.debug);
+        this.session = new Session(interfaceVersion, this.debug, secure);
     }
 
     connect({ url }: { url: string }): void {

@@ -34,7 +34,7 @@ export default class Session {
     }
 
     initSession(): void {
-        if (this.secure && this.secure.tls === true) {
+        if (this.secure.tls === true) {
             this.socket = new TLSSocket(new Socket(), { isServer: false });
         } else {
             this.socket = new Socket();

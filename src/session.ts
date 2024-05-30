@@ -1,11 +1,12 @@
 import { Socket } from 'net';
+import { TLSSocket, SecureContextOptions } from 'tls';
 import PDU from './PDU';
 import { getDTO } from './dtos';
 import { Logger } from './utils/logger';
 import { CommandName, InterfaceVersion, BindTransceiverFunction, BindTransceiverParams, SubmitSmFunction, SubmitSmParams, EnquireLinkFunction } from './types';
 
 export default class Session {
-    private socket!: Socket;
+    private socket!: Socket | TLSSocket;
     private logger!: Logger;
     private PDU!: PDU;
     private sequenceNumber: number = 0;
@@ -25,14 +26,20 @@ export default class Session {
 
     constructor(
         private readonly interfaceVersion: InterfaceVersion,
-        private readonly debug = false
+        private readonly debug = false,
+        private readonly secure: { tls: boolean; secureOptions?: SecureContextOptions }
     ) {
         this.initSession();
         this.initResponseRead();
     }
 
     initSession(): void {
-        this.socket = new Socket();
+        if (this.secure && this.secure.tls === true) {
+            this.socket = new TLSSocket(new Socket(), { isServer: false });
+        } else {
+            this.socket = new Socket();
+        }
+
         this.logger = new Logger(this.socket, { debug: this.debug });
         this.PDU = new PDU(this.socket);
     }
@@ -51,7 +58,7 @@ export default class Session {
     connect({ host, port }: { host: string; port: number }): void {
         this.socket.connect(port, host, () => {
             this.connected = true;
-            this.logger.debug(`connect - called - connected to smmp server`, { host, port });
+            this.logger.debug(`connect - called - connected to smmp server using secure set to: ${this.secure.tls}`, { host, port });
         });
     }
 

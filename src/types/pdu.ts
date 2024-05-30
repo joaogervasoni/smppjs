@@ -1,4 +1,3 @@
-import { Socket } from 'net';
 import { DTO } from '.';
 
 /**
@@ -9,7 +8,6 @@ export interface IPDU {
      * Call a smpp protocol.
      * @param command Command name - SendCommandName
      * @param sequenceNumber - Sequence number of call
-     * @param socket Socker server - Socket
      * @param commandParams Params of command called
      */
     call({ command, sequenceNumber, commandParams }: { command: SendCommandName; sequenceNumber: number; commandParams: DTO }): boolean;

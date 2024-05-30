@@ -14,12 +14,19 @@ export default class Client {
         return this.session.connected;
     }
 
+    /**
+     *
+     * @param enquireLink Interval is in milliseconds.
+     */
     constructor({
         interfaceVersion = 80,
         enquireLink,
         debug = false,
     }: {
         interfaceVersion: InterfaceVersion;
+        /**
+         * Default interval 20000
+         */
         enquireLink: { auto: boolean; interval?: number };
         debug?: boolean;
     }) {
@@ -68,7 +75,7 @@ export default class Client {
         return this.session.enquireLink();
     }
 
-    private autoEnquireLink(interval: number) {
+    private autoEnquireLink(interval: number = 20000) {
         setInterval(() => {
             this.enquireLink();
         }, interval);

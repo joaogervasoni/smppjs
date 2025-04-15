@@ -5,6 +5,7 @@ const MAX_LENGTH = {
     service_type: 6,
     source_addr: 21,
     destination_addr: 21,
+    short_message: 256
 };
 
 export const submitSmDTO: SubmitSmFunction = ({

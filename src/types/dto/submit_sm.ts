@@ -1,5 +1,8 @@
 import { DTO, DTOFunction, Encode, PriorityFlag } from '../index';
 
+/**
+ * sm_length - Passed in short message DTO (setLength).
+ */
 export interface SubmitSm extends DTO {
     service_type: { type: 'Cstring'; value: string };
     source_addr_ton: { type: 'Int8'; value: number };
@@ -21,7 +24,6 @@ export interface SubmitSm extends DTO {
      * Default ASCII
      */
     short_message: { type: 'Cstring'; value: string | Buffer; encode?: Encode; setLength?: boolean };
-    // need to create message validations to send submitsm
 }
 
 export type SubmitSmParams = {

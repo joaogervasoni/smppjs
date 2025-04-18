@@ -30,6 +30,7 @@ export default class Session {
         private readonly secure: { tls: boolean; secureOptions?: SecureContextOptions }
     ) {
         this.initSession();
+        this.initResponseEnd();
         this.initResponseRead();
     }
 
@@ -44,11 +45,24 @@ export default class Session {
         this.PDU = new PDU(this.socket);
     }
 
+    initResponseEnd(): void {
+        this.socket.on('end', () => {
+            this.connected = false;
+            this.logger.debug(`disconnect - forced - disconnected from smpp server.`);
+            this.socket.destroy();
+
+            throw new Error('Server closed the conn.');
+        });
+    }
+
     initResponseRead(): void {
         this.socket.on('readable', () => {
             try {
-                const pdu = this.PDU.readPdu(this.socket.read());
-                this.socket.emit('pdu', pdu);
+                const data = this.socket.read();
+                if (data) {
+                    const pdu = this.PDU.readPdu(data);
+                    this.socket.emit('pdu', pdu);
+                }
             } catch (error) {
                 this.socket.emit('error', error);
             }
@@ -65,11 +79,11 @@ export default class Session {
     disconnect(): boolean {
         this.socket.destroy();
         this.connected = false;
-        this.logger.debug(`disconnect - called - disconnected to smmp server`);
+        this.logger.debug(`disconnect - called - disconnected to smpp server.`);
         return this.socket.closed;
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | CommandName, callback: (...args: any[]) => void) {
+    on(eventName: 'connect' | 'close' | 'end' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | CommandName, callback: (...args: any[]) => void) {
         this.socket.on(eventName, callback);
     }
 

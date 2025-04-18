@@ -13,4 +13,4 @@ export interface DTOFunction<T = any, Y = DTO> {
 /**
  * Accepted encodes
  */
-export type Encode = 'ascii' | 'latin1' | 'usc2';
+export type Encode = 'ascii' | 'latin1' | 'ucs2';

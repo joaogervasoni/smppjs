@@ -8,7 +8,7 @@ export * from './enquire_link_resp';
 export type DTO<
     T = {
         command: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
-        tlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; }>;
+        tlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode }>;
     },
 > = T;
 export interface DTOFunction<T = any, Y = DTO> {

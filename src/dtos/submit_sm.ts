@@ -54,7 +54,7 @@ export const submitSmDTO: SubmitSmFunction = ({
             },
         },
         tlvs: {
-            message_payload: { type: 'Cstring', value: tlvs?.messagePayload || '' },
+            message_payload: { type: 'Cstring', value: tlvs?.messagePayload || '', encode: 'ascii' }, // Add to pass encode client
         },
     };
 

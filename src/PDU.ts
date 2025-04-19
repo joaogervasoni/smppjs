@@ -17,8 +17,14 @@ export default class PDU implements IPDU {
         let commandLength = HEADER_COMMAND_LENGTH;
 
         const paramEntries = Object.entries(commandParams);
+
         for (let index = 0; index < paramEntries.length; index++) {
             const element = paramEntries[index][1];
+
+            if (element.encode && element.type === 'Cstring' && typeof element.value === 'string') {
+                element.value = octets[element.type].convertToUtf16be(element.value)
+            }
+
             commandLength += octets[element.type].size(element.value);
         }
 

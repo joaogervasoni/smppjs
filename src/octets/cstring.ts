@@ -24,14 +24,16 @@ class Cstring {
         let newBuffer = buffer;
         let valueBuffer: Buffer;
 
-        if (setLength) {
-			buffer.writeUInt8(value.length, offset++);
-        }
+
 
         if (typeof value === 'string') {
             valueBuffer = Buffer.from(value, encoding as BufferEncoding);
         } else {
             valueBuffer = value;
+        }
+
+        if (setLength) {
+            buffer.writeUInt8(valueBuffer.length, offset++);
         }
 
         valueBuffer.copy(buffer, offset);
@@ -62,6 +64,24 @@ class Cstring {
         }
 
         return buffer.toString('ascii', offset, offset + length);
+    }
+
+    /**
+     * Converto to utf16be (Big Endian)
+     */
+    static convertToUtf16be(value: Buffer | string): Buffer {
+        if (typeof value === 'string') {
+            value = Buffer.from(value, 'ucs2');
+        }
+
+        const utf16beBuffer = Buffer.alloc(value.length);
+
+        for (let i = 0; i < value.length; i += 2) {
+            utf16beBuffer[i] = value[i + 1];
+            utf16beBuffer[i + 1] = value[i];
+        }
+
+        return utf16beBuffer;
     }
 }
 

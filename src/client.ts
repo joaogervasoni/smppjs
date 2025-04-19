@@ -22,7 +22,10 @@ export default class Client {
     constructor({
         interfaceVersion = 80,
         enquireLink,
-        secure,
+        secure = {
+            tls: false,
+            unsafeBuffer: false,
+        },
         debug = false,
     }: {
         interfaceVersion: InterfaceVersion;
@@ -30,7 +33,7 @@ export default class Client {
          * Default interval 20000
          */
         enquireLink: { auto: boolean; interval?: number };
-        secure: { tls: boolean; secureOptions?: SecureContextOptions };
+        secure: { tls?: boolean; unsafeBuffer?: boolean; secureOptions?: SecureContextOptions };
         debug?: boolean;
     }) {
         this._debug = debug;

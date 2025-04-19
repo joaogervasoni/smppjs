@@ -7,7 +7,10 @@ import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName } from './types';
 const HEADER_COMMAND_LENGTH = 16;
 
 export default class PDU implements IPDU {
-    constructor(private socket: Socket) {}
+    constructor(
+        private socket: Socket,
+        private secure: { unsafeBuffer: boolean }
+    ) {}
 
     call({ command, sequenceNumber, dto }: { command: SendCommandName; sequenceNumber: number; dto: DTO }): boolean {
         const commandParams = dto.command;
@@ -22,13 +25,13 @@ export default class PDU implements IPDU {
             const element = paramEntries[index][1];
 
             if (element.encode && element.type === 'Cstring' && typeof element.value === 'string') {
-                element.value = octets[element.type].convertToUtf16be(element.value)
+                element.value = octets[element.type].convertToUtf16be(element.value);
             }
 
             commandLength += octets[element.type].size(element.value);
         }
 
-        const buffer = this.createPdu({ pduParams: commandParams, commandLength, commandId, sequenceNumber, tlvs });
+        const buffer = this.createPdu({ pduParams: commandParams, commandLength, commandId, sequenceNumber, tlvs, unsafeBuffer: this.secure.unsafeBuffer });
         return this.socket.write(buffer);
     }
 
@@ -44,6 +47,7 @@ export default class PDU implements IPDU {
         sequenceNumber,
         pduParams,
         tlvs,
+        unsafeBuffer,
         commandStatus = 0,
     }: {
         commandLength: number;
@@ -51,9 +55,10 @@ export default class PDU implements IPDU {
         sequenceNumber: number;
         pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
         tlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
+        unsafeBuffer?: boolean;
         commandStatus?: number;
     }): Buffer {
-        let pduBuffer = Buffer.alloc(commandLength);
+        let pduBuffer = unsafeBuffer ? Buffer.allocUnsafe(commandLength) : Buffer.alloc(commandLength);
 
         pduBuffer = this.writeHeaderPdu({ buffer: pduBuffer, commandLength, commandId, sequenceNumber, commandStatus });
         pduBuffer = this.writeParamsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, pduParams, tlvs });

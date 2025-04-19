@@ -96,7 +96,7 @@ export default class Session {
 
         const dto = getDTO<BindTransceiverFunction>('bind_transceiver')(params);
         this.sequenceNumber += 1;
-        return this.PDU.call({ command: 'bind_transceiver', sequenceNumber: this.sequenceNumber, commandParams: dto });
+        return this.PDU.call({ command: 'bind_transceiver', sequenceNumber: this.sequenceNumber, dto });
     }
 
     submitSm(params: SubmitSmParams): boolean {
@@ -104,7 +104,7 @@ export default class Session {
 
         const dto = getDTO<SubmitSmFunction>('submit_sm')(params);
         this.sequenceNumber += 1;
-        return this.PDU.call({ command: 'submit_sm', sequenceNumber: this.sequenceNumber, commandParams: dto });
+        return this.PDU.call({ command: 'submit_sm', sequenceNumber: this.sequenceNumber, dto });
     }
 
     enquireLink(): boolean {
@@ -112,6 +112,6 @@ export default class Session {
 
         const dto = getDTO<EnquireLinkFunction>('enquire_link')({});
         this.sequenceNumber += 1;
-        return this.PDU.call({ command: 'enquire_link', sequenceNumber: this.sequenceNumber, commandParams: dto });
+        return this.PDU.call({ command: 'enquire_link', sequenceNumber: this.sequenceNumber, dto });
     }
 }

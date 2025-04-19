@@ -10,7 +10,7 @@ export interface IPDU {
      * @param sequenceNumber - Sequence number of call
      * @param commandParams Params of command called
      */
-    call({ command, sequenceNumber, commandParams }: { command: SendCommandName; sequenceNumber: number; commandParams: DTO }): boolean;
+    call({ command, sequenceNumber, dto }: { command: SendCommandName; sequenceNumber: number; dto: DTO }): boolean;
     /**
      * Receive a smpp protocol buffer, read and return formated to object Pdu.
      * @param buffer Buffer

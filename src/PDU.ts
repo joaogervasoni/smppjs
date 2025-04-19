@@ -1,7 +1,7 @@
 import { Socket } from 'net';
 import { getDTO } from './dtos';
 import { octets } from './octets';
-import { commandsId, commandsName } from './constains';
+import { commandsId, commandsName, optionalParams } from './constains';
 import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;
@@ -9,7 +9,10 @@ const HEADER_COMMAND_LENGTH = 16;
 export default class PDU implements IPDU {
     constructor(private socket: Socket) {}
 
-    call({ command, sequenceNumber, commandParams }: { command: SendCommandName; sequenceNumber: number; commandParams: DTO }): boolean {
+    call({ command, sequenceNumber, dto }: { command: SendCommandName; sequenceNumber: number; dto: DTO }): boolean {
+        const commandParams = dto.command;
+        const tlvs = dto.tlvs;
+
         const commandId = commandsId[command];
         let commandLength = HEADER_COMMAND_LENGTH;
 
@@ -19,7 +22,7 @@ export default class PDU implements IPDU {
             commandLength += octets[element.type].size(element.value);
         }
 
-        const buffer = this.createPdu({ pduParams: commandParams, commandLength, commandId, sequenceNumber });
+        const buffer = this.createPdu({ pduParams: commandParams, commandLength, commandId, sequenceNumber, tlvs });
         return this.socket.write(buffer);
     }
 
@@ -34,18 +37,20 @@ export default class PDU implements IPDU {
         commandId,
         sequenceNumber,
         pduParams,
+        tlvs,
         commandStatus = 0,
     }: {
         commandLength: number;
         commandId: number;
         sequenceNumber: number;
         pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
+        tlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
         commandStatus?: number;
     }): Buffer {
         let pduBuffer = Buffer.alloc(commandLength);
 
         pduBuffer = this.writeHeaderPdu({ buffer: pduBuffer, commandLength, commandId, sequenceNumber, commandStatus });
-        pduBuffer = this.writeParamsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, pduParams });
+        pduBuffer = this.writeParamsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, pduParams, tlvs });
 
         return pduBuffer;
     }
@@ -73,10 +78,12 @@ export default class PDU implements IPDU {
 
     private writeParamsPdu({
         pduParams,
+        tlvs,
         pduBuffer,
         offset,
     }: {
         pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
+        tlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
         pduBuffer: Buffer;
         offset: number;
     }) {
@@ -154,7 +161,7 @@ export default class PDU implements IPDU {
         }
 
         const commandParams = DTO({});
-        const params = this.readParamsPdu({ pduBuffer: buffer, pduParams: commandParams, offset: HEADER_COMMAND_LENGTH });
+        const params = this.readParamsPdu({ pduBuffer: buffer, pduParams: commandParams.command, offset: HEADER_COMMAND_LENGTH });
 
         return Object.assign({}, pdu, params);
     }

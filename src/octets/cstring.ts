@@ -1,4 +1,4 @@
-import { Encode } from "../types";
+import { Encode } from '../types';
 
 /**
  * Octet size 'x' + 1

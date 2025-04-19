@@ -2,6 +2,9 @@ import { BindTransceiverRespFunction, BindTransceiverResp, BindTransceiverRespPa
 
 export const bindTransceiverRespDTO: BindTransceiverRespFunction = ({ systemIdValue }: BindTransceiverRespParams): BindTransceiverResp => {
     return {
-        system_id: { type: 'Cstring', value: systemIdValue || '' },
+        command: {
+            system_id: { type: 'Cstring', value: systemIdValue || '' },
+        },
+        tlvs: {},
     };
 };

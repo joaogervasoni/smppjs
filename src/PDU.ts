@@ -31,6 +31,19 @@ export default class PDU implements IPDU {
             commandLength += octets[element.type].size(element.value);
         }
 
+        const tlvsEntries = Object.entries(tlvs);
+
+        // TODO: Refactor
+        for (let index = 0; index < tlvsEntries.length; index++) {
+            const element = tlvsEntries[index][1];
+
+            if (element.encode && element.type === 'Cstring' && typeof element.value === 'string') {
+                element.value = octets[element.type].convertToUtf16be(element.value);
+            }
+
+            commandLength += octets[element.type].size(element.value) + 4;
+        }
+
         const buffer = this.createPdu({ pduParams: commandParams, commandLength, commandId, sequenceNumber, tlvs, unsafeBuffer: this.secure.unsafeBuffer });
         return this.socket.write(buffer);
     }
@@ -114,6 +127,31 @@ export default class PDU implements IPDU {
             if (type === 'Int8') {
                 pduBuffer = octets.Int8.write({ buffer: pduBuffer, offset, value: value as number });
                 offset += octets.Int8.size();
+            }
+        }
+
+        // TODO: Refactor
+        if (tlvs && Object.entries(tlvs)) {
+            for (const key in tlvs) {
+                const param = tlvs[key];
+                const type = param.type;
+                const value = param.value;
+                if (value) {
+                    const sizeFix = octets.Cstring.size(value as string | Buffer) + 4;
+
+                    octets.Int16.write({ buffer: pduBuffer, offset, value: optionalParams[key] });
+                    offset += octets.Int16.size();
+                    octets.Int16.write({ buffer: pduBuffer, offset, value: sizeFix });
+                    offset += octets.Int16.size();
+
+                    if (type === 'Cstring') {
+                        const encode = param.encode || 'ascii';
+                        const setLength = param.setLength || false;
+
+                        pduBuffer = octets.Cstring.write({ buffer: pduBuffer, offset, value: value as string | Buffer, encoding: encode, setLength });
+                        offset += sizeFix;
+                    }
+                }
             }
         }
 

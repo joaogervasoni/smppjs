@@ -1,7 +1,10 @@
 import { DTO, DTOFunction } from '../index';
 
 export interface SubmitSmResp extends DTO {
-    message_id: { type: 'Cstring'; value: string };
+    command: {
+        message_id: { type: 'Cstring'; value: string };
+    };
+    tlvs: {};
 }
 
 export type SubmitSmRespParams = {

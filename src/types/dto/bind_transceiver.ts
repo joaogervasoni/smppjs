@@ -1,15 +1,17 @@
 import { DTO, DTOFunction, InterfaceVersion } from '../index';
 
 export interface BindTransceiver extends DTO {
-    system_id: { type: 'Cstring'; value: string };
-    password: { type: 'Cstring'; value: string };
-    system_type: { type: 'Cstring'; value: string };
-    interface_version: { type: 'Int8'; value: InterfaceVersion };
-    addr_ton: { type: 'Int8'; value: number };
-    addr_npi: { type: 'Int8'; value: number };
-    address_range: { type: 'Cstring'; value: string };
+    command: {
+        system_id: { type: 'Cstring'; value: string };
+        password: { type: 'Cstring'; value: string };
+        system_type: { type: 'Cstring'; value: string };
+        interface_version: { type: 'Int8'; value: InterfaceVersion };
+        addr_ton: { type: 'Int8'; value: number };
+        addr_npi: { type: 'Int8'; value: number };
+        address_range: { type: 'Cstring'; value: string };
+    };
+    tlvs: {};
 }
-
 
 export type BindTransceiverParams = {
     systemId: string;
@@ -17,6 +19,7 @@ export type BindTransceiverParams = {
     interfaceVersion?: InterfaceVersion;
     systemType?: string;
     addressRange?: string;
+    tlvs?: {};
 };
 
 export interface BindTransceiverFunction
@@ -24,11 +27,5 @@ export interface BindTransceiverFunction
         { systemId: string; password: string; interfaceVersion: InterfaceVersion; systemType?: string; addressRange?: string },
         BindTransceiver
     > {
-    ({
-        systemId,
-        password,
-        interfaceVersion,
-        systemType,
-        addressRange,
-    }: BindTransceiverParams): BindTransceiver;
+    ({ systemId, password, interfaceVersion, systemType, addressRange }: BindTransceiverParams): BindTransceiver;
 }

@@ -1,7 +1,10 @@
 import { DTO, DTOFunction } from '../index';
 
 export interface BindTransceiverResp extends DTO {
-    system_id: { type: 'Cstring'; value: string };
+    command: {
+        system_id: { type: 'Cstring'; value: string };
+    };
+    tlvs: {};
 }
 
 export type BindTransceiverRespParams = {

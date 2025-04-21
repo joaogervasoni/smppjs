@@ -33,7 +33,6 @@ export default class PDU implements IPDU {
 
         const tlvsEntries = Object.entries(tlvs);
 
-        // TODO: Refactor
         for (let index = 0; index < tlvsEntries.length; index++) {
             const element = tlvsEntries[index][1];
 
@@ -41,6 +40,7 @@ export default class PDU implements IPDU {
                 element.value = octets[element.type].convertToUtf16be(element.value);
             }
 
+            // Add 4 for tlvs element + length.  * ref: Documentation SMPP_v5 - 4.8.4.1
             commandLength += octets[element.type].size(element.value) + 4;
         }
 
@@ -77,7 +77,6 @@ export default class PDU implements IPDU {
         pduBuffer = this.writeParamsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, pduParams });
         pduBuffer = this.writeTlvsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, tlvs });
 
-
         return pduBuffer;
     }
 
@@ -93,7 +92,7 @@ export default class PDU implements IPDU {
         commandId: number;
         sequenceNumber: number;
         commandStatus: number;
-    }) {
+    }): Buffer {
         buffer.writeUInt32BE(commandLength, 0);
         buffer.writeUInt32BE(commandId, 4);
         buffer.writeUInt32BE(commandStatus, 8);
@@ -110,7 +109,7 @@ export default class PDU implements IPDU {
         pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
         pduBuffer: Buffer;
         offset: number;
-    }) {
+    }): Buffer {
         for (const key in pduParams) {
             const param = pduParams[key];
             const type = param.type;
@@ -141,7 +140,7 @@ export default class PDU implements IPDU {
         tlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
         pduBuffer: Buffer;
         offset: number;
-    }) {
+    }): Buffer {
         if (tlvs && Object.entries(tlvs)) {
             for (const key in tlvs) {
                 const param = tlvs[key];
@@ -149,7 +148,7 @@ export default class PDU implements IPDU {
                 const value = param.value;
 
                 if (value) {
-                    // Add 4 for int16 values.
+                    // Add 4 for tlvs element + length.  * ref: Documentation SMPP_v5 - 4.8.4.1
                     const valueSize = octets.Cstring.size(value as string | Buffer) + 4;
 
                     octets.Int16.write({ buffer: pduBuffer, offset, value: optionalParams[key] });
@@ -179,7 +178,7 @@ export default class PDU implements IPDU {
         pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
         pduBuffer: Buffer;
         offset: number;
-    }) {
+    }): Record<string, string | number> {
         const params: Record<string, string | number> = {};
 
         for (const key in pduParams) {
@@ -196,7 +195,7 @@ export default class PDU implements IPDU {
         return params;
     }
 
-    private readHeaderPdu({ buffer, pdu }: { buffer: Buffer; pdu: Pdu }) {
+    private readHeaderPdu({ buffer, pdu }: { buffer: Buffer; pdu: Pdu }): Pdu {
         pdu.command_length = buffer.readUInt32BE(0);
         pdu.command_id = buffer.readUInt32BE(4);
         pdu.command_status = buffer.readUInt32BE(8);

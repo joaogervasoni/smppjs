@@ -74,7 +74,9 @@ export default class PDU implements IPDU {
         let pduBuffer = unsafeBuffer ? Buffer.allocUnsafe(commandLength) : Buffer.alloc(commandLength);
 
         pduBuffer = this.writeHeaderPdu({ buffer: pduBuffer, commandLength, commandId, sequenceNumber, commandStatus });
-        pduBuffer = this.writeParamsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, pduParams, tlvs });
+        pduBuffer = this.writeParamsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, pduParams });
+        pduBuffer = this.writeTlvsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, tlvs });
+
 
         return pduBuffer;
     }
@@ -102,12 +104,10 @@ export default class PDU implements IPDU {
 
     private writeParamsPdu({
         pduParams,
-        tlvs,
         pduBuffer,
         offset,
     }: {
         pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
-        tlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
         pduBuffer: Buffer;
         offset: number;
     }) {
@@ -130,18 +130,31 @@ export default class PDU implements IPDU {
             }
         }
 
-        // TODO: Refactor
+        return pduBuffer;
+    }
+
+    private writeTlvsPdu({
+        tlvs,
+        pduBuffer,
+        offset,
+    }: {
+        tlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
+        pduBuffer: Buffer;
+        offset: number;
+    }) {
         if (tlvs && Object.entries(tlvs)) {
             for (const key in tlvs) {
                 const param = tlvs[key];
                 const type = param.type;
                 const value = param.value;
+
                 if (value) {
-                    const sizeFix = octets.Cstring.size(value as string | Buffer) + 4;
+                    // Add 4 for int16 values.
+                    const valueSize = octets.Cstring.size(value as string | Buffer) + 4;
 
                     octets.Int16.write({ buffer: pduBuffer, offset, value: optionalParams[key] });
                     offset += octets.Int16.size();
-                    octets.Int16.write({ buffer: pduBuffer, offset, value: sizeFix });
+                    octets.Int16.write({ buffer: pduBuffer, offset, value: valueSize });
                     offset += octets.Int16.size();
 
                     if (type === 'Cstring') {
@@ -149,7 +162,7 @@ export default class PDU implements IPDU {
                         const setLength = param.setLength || false;
 
                         pduBuffer = octets.Cstring.write({ buffer: pduBuffer, offset, value: value as string | Buffer, encoding: encode, setLength });
-                        offset += sizeFix;
+                        offset += valueSize;
                     }
                 }
             }

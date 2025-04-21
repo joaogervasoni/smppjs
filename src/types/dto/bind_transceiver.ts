@@ -10,7 +10,6 @@ export interface BindTransceiver extends DTO {
         addr_npi: { type: 'Int8'; value: number };
         address_range: { type: 'Cstring'; value: string };
     };
-    tlvs: {};
 }
 
 export type BindTransceiverParams = {

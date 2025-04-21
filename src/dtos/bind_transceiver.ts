@@ -24,7 +24,6 @@ export const bindTransceiverDTO: BindTransceiverFunction = ({
             addr_npi: { type: 'Int8', value: 0 },
             address_range: { type: 'Cstring', value: addressRange || '' },
         },
-        tlvs: {},
     };
 
     validateDto(dto);

@@ -31,17 +31,19 @@ export default class PDU implements IPDU {
             commandLength += octets[element.type].size(element.value);
         }
 
-        const tlvsEntries = Object.entries(tlvs);
+        if (tlvs) {
+            const tlvsEntries = Object.entries(tlvs);
 
-        for (let index = 0; index < tlvsEntries.length; index++) {
-            const element = tlvsEntries[index][1];
+            for (let index = 0; index < tlvsEntries.length; index++) {
+                const element = tlvsEntries[index][1];
 
-            if (element.encode && element.type === 'Cstring' && typeof element.value === 'string') {
-                element.value = octets[element.type].convertToUtf16be(element.value);
+                if (element.encode && element.type === 'Cstring' && typeof element.value === 'string') {
+                    element.value = octets[element.type].convertToUtf16be(element.value);
+                }
+
+                // Add 4 for tlvs element + length.  * ref: Documentation SMPP_v5 - 4.8.4.1
+                commandLength += octets[element.type].size(element.value) + 4;
             }
-
-            // Add 4 for tlvs element + length.  * ref: Documentation SMPP_v5 - 4.8.4.1
-            commandLength += octets[element.type].size(element.value) + 4;
         }
 
         const buffer = this.createPdu({ pduParams: commandParams, commandLength, commandId, sequenceNumber, tlvs, unsafeBuffer: this.secure.unsafeBuffer });
@@ -67,7 +69,7 @@ export default class PDU implements IPDU {
         commandId: number;
         sequenceNumber: number;
         pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
-        tlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
+        tlvs?: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }> | undefined;
         unsafeBuffer?: boolean;
         commandStatus?: number;
     }): Buffer {
@@ -137,9 +139,9 @@ export default class PDU implements IPDU {
         pduBuffer,
         offset,
     }: {
-        tlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
         pduBuffer: Buffer;
         offset: number;
+        tlvs?: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
     }): Buffer {
         if (tlvs && Object.entries(tlvs)) {
             for (const key in tlvs) {

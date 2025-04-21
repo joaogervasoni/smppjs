@@ -35,6 +35,11 @@ const commandsId = {
     data_sm_resp: 0x80000103,
 };
 
+/**
+ * The complete set of SMPP Command names
+ *
+ * ref: Documentation SMPP_v3_4
+ */
 const commandsName: Record<string, CommandName> = {
     0x80000000: 'generic_nack',
     0x00000001: 'bind_receiver',

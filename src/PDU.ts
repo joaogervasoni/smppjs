@@ -1,7 +1,7 @@
 import { Socket } from 'net';
 import { getDTO } from './dtos';
 import { octets } from './octets';
-import { commandsId, commandsName, optionalParams } from './constains';
+import { commandsId, commandsName, OptionalParamKey, optionalParams } from './constains';
 import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;
@@ -32,15 +32,16 @@ export default class PDU implements IPDU {
         }
 
         if (tlvs) {
-            const tlvsEntries = Object.entries(tlvs);
 
+            const tlvsEntries = Object.entries(tlvs);
+            
             for (let index = 0; index < tlvsEntries.length; index++) {
                 const element = tlvsEntries[index][1];
-
+                
                 if (element.encode && element.type === 'Cstring' && typeof element.value === 'string') {
                     element.value = octets[element.type].convertToUtf16be(element.value);
                 }
-
+                
                 // Add 4 for tlvs element + length.  * ref: Documentation SMPP_v5 - 4.8.4.1
                 commandLength += octets[element.type].size(element.value) + 4;
             }
@@ -145,7 +146,7 @@ export default class PDU implements IPDU {
     }): Buffer {
         if (tlvs && Object.entries(tlvs)) {
             for (const key in tlvs) {
-                const param = tlvs[key];
+                const param = tlvs[key as OptionalParamKey];
                 const type = param.type;
                 const value = param.value;
 
@@ -153,7 +154,7 @@ export default class PDU implements IPDU {
                     // Add 4 for tlvs element + length.  * ref: Documentation SMPP_v5 - 4.8.4.1
                     const valueSize = octets.Cstring.size(value as string | Buffer) + 4;
 
-                    octets.Int16.write({ buffer: pduBuffer, offset, value: optionalParams[key] });
+                    octets.Int16.write({ buffer: pduBuffer, offset, value: optionalParams[key as OptionalParamKey] });
                     offset += octets.Int16.size();
                     octets.Int16.write({ buffer: pduBuffer, offset, value: valueSize });
                     offset += octets.Int16.size();

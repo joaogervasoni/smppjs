@@ -43,8 +43,8 @@ export type SubmitSmParams = {
     destAddrNpi?: number;
     protocolId?: number;
     priorityFlag?: PriorityFlag;
-    scheduleDeliveryTime?: Date;
-    validityPeriod?: Date;
+    scheduleDeliveryTime?: Date | string;
+    validityPeriod?: Date | string;
     registeredFelivery?: number;
     replaceIfPresentFlag?: number;
     smDefaultMsgId?: number;

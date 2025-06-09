@@ -6,6 +6,9 @@ const MAX_LENGTH: Record<string, number> = {
     source_addr: 21,
     destination_addr: 21,
     short_message: 256,
+    /* Dates */
+    schedule_delivery_time: 17,
+    validity_period: 17,
 };
 
 export const submitSmDTO: SubmitSmFunction = ({

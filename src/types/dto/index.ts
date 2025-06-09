@@ -19,3 +19,12 @@ export interface DTOFunction<T = any, Y = DTO> {
  * Accepted encodes
  */
 export type Encode = 'ascii' | 'latin1' | 'ucs2';
+
+/**
+ * Enum to reference date types
+ */
+export enum DateType {
+    ABSOLUTE = 0,
+    RELATIVE = 1,
+    ABSOLUTE_AND_RELATIVE = 2,
+}

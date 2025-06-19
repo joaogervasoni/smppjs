@@ -1,8 +1,8 @@
 import { Socket } from 'net';
 import { getDTO } from './dtos/index';
 import { octets } from './octets';
-import { commandsId, commandsName, OptionalParamKey, optionalParams } from './constains';
-import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName } from './types';
+import { commandsId, commandsName, optionalParams } from './constains';
+import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName, OptionalParamKey } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;
 

@@ -1,6 +1,6 @@
 import { SecureContextOptions } from 'tls';
 import Session from './session';
-import { BindTransceiverParams, CommandName, InterfaceVersion, SubmitSmParams } from './types';
+import { BindReceiverParams, BindTransceiverParams, CommandName, InterfaceVersion, SubmitSmParams } from './types';
 
 export default class Client {
     private readonly session!: Session;
@@ -72,6 +72,10 @@ export default class Client {
 
     bindTransceiver(params: BindTransceiverParams): boolean {
         return this.session.bindTransceiver(params);
+    }
+
+    bindReceiver(params: BindReceiverParams): boolean {
+        return this.session.bindReceiver(params);
     }
 
     submitSm(params: SubmitSmParams): boolean {

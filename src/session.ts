@@ -3,7 +3,17 @@ import { TLSSocket, SecureContextOptions } from 'tls';
 import PDU from './PDU';
 import { getDTO } from './dtos';
 import { Logger } from './utils/logger';
-import { CommandName, InterfaceVersion, BindTransceiverFunction, BindTransceiverParams, SubmitSmFunction, SubmitSmParams, EnquireLinkFunction } from './types';
+import {
+    CommandName,
+    InterfaceVersion,
+    BindTransceiverFunction,
+    BindTransceiverParams,
+    SubmitSmFunction,
+    SubmitSmParams,
+    EnquireLinkFunction,
+    BindReceiverParams,
+    BindReceiverFunction,
+} from './types';
 
 export default class Session {
     private socket!: Socket | TLSSocket;
@@ -97,6 +107,18 @@ export default class Session {
         const dto = getDTO<BindTransceiverFunction>('bind_transceiver')(params);
         this.sequenceNumber += 1;
         return this.PDU.call({ command: 'bind_transceiver', sequenceNumber: this.sequenceNumber, dto });
+    }
+
+    bindReceiver(params: BindReceiverParams): boolean {
+        this.logger.debug(`bindReceiver - called`, params);
+
+        if (!params.interfaceVersion) {
+            params.interfaceVersion = this.interfaceVersion;
+        }
+
+        const dto = getDTO<BindReceiverFunction>('bind_receiver')(params);
+        this.sequenceNumber += 1;
+        return this.PDU.call({ command: 'bind_receiver', sequenceNumber: this.sequenceNumber, dto });
     }
 
     submitSm(params: SubmitSmParams): boolean {

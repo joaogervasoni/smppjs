@@ -4,6 +4,8 @@ export * from './submit_sm';
 export * from './submit_sm_resp';
 export * from './enquire_link';
 export * from './enquire_link_resp';
+export * from './bind_receiver';
+export * from './bind_receiver_resp';
 
 export type DTO<
     T = {

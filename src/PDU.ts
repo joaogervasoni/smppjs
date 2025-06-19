@@ -53,7 +53,7 @@ export default class PDU implements IPDU {
     /**
      *  Create Buffer, add header and params
      *
-     * @param commandStatus Is relevante only in the SMPP response message, default to request should be not passed
+     * @param commandStatus Is relevant only in the SMPP response message, default to request should be not passed
      * @returns Buffer with header and params
      */
     private createPdu({

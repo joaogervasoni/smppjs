@@ -1,11 +1,11 @@
-import { DTO, DTOFunction, Encode, PriorityFlag } from '../index';
+import { DTO, DTOFunction, Encode, PriorityFlag, SystemType } from '../index';
 
 /**
  * sm_length - Passed in short message DTO (setLength).
  */
 export interface SubmitSm extends DTO {
     command: {
-        service_type: { type: 'Cstring'; value: string };
+        service_type: { type: 'Cstring'; value: SystemType | (string & {}) };
         source_addr_ton: { type: 'Int8'; value: number };
         source_addr_npi: { type: 'Int8'; value: number };
         source_addr: { type: 'Cstring'; value: string };
@@ -35,7 +35,7 @@ export type SubmitSmParams = {
     destinationAddr: string;
     dataCoding: number;
     esmClass: number;
-    systemTypeValue?: string;
+    systemTypeValue?: SystemType | (string & {});
     sourceAddrTon?: number;
     sourceAddrNpi?: number;
     sourceAddr?: string;

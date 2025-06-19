@@ -86,3 +86,10 @@ export interface Pdu {
  * Prioritys have difference to type, read: 4.7.19 on Smpp v5 doc.
  */
 export type PriorityFlag = 0 | 1 | 2 | 3 | 4;
+
+/**
+ * Some default values to system type
+ *
+ * This is only some options.
+ */
+export type SystemType = 'SMPP' | 'VMS' | 'VASP' | 'OTA' | 'WAP' | 'USSD' | 'SCM' | 'EMAIL' | 'VOICE' | 'IP' | 'CMT' | 'WWW';

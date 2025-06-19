@@ -9,6 +9,8 @@ import { bindReceiverDTO } from './bind_receiver';
 import { bindReceiverRespDTO } from './bind_receiver_resp';
 import { unbindDTO } from './unbind';
 import { unbindRespDTO } from './unbind_resp';
+import { bindTransmitterDTO } from './bind_transmitter';
+import { bindTransmitterRespDTO } from './bind_transmitter_resp';
 
 const DTOs: Record<string, DTOFunction<never, DTO>> = {
     bind_transceiver: bindTransceiverDTO,
@@ -21,6 +23,8 @@ const DTOs: Record<string, DTOFunction<never, DTO>> = {
     bind_receiver_resp: bindReceiverRespDTO,
     unbind: unbindDTO,
     unbind_resp: unbindRespDTO,
+    bind_transmitter: bindTransmitterDTO,
+    bind_transmitter_resp: bindTransmitterRespDTO,
 };
 
 const getDTO = <T extends DTOFunction | BindTransceiverFunction | BindTransceiverRespFunction | SubmitSmFunction | EnquireLinkFunction>(name: string): T => {

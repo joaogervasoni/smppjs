@@ -8,6 +8,8 @@ export * from './bind_receiver';
 export * from './bind_receiver_resp';
 export * from './unbind';
 export * from './unbind_resp';
+export * from './bind_transmitter';
+export * from './bind_transmitter_resp';
 
 export type DTO<
     T = {

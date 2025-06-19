@@ -2,7 +2,7 @@
     <img src="https://github.com/joaogervasoni/smppjs/blob/master/images/smppjs-logo.png?raw=true" alt="smppjs">
 </p>
 <p align="center">
-    <a href="https://github.com/airbnb/javascript"><img src="https://img.shields.io/badge/Code--style-Airbnb-red?logo=Airbnb&style=flat-square"></a>
+    <a href="https://eslint.org/"><img src="https://img.shields.io/badge/Code--style-Eslint-blue?logo=Eslint&style=flat-square"></a>
 </p>
 
 ## About

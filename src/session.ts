@@ -14,6 +14,8 @@ import {
     BindReceiverParams,
     BindReceiverFunction,
     UnbindFunction,
+    BindTransmitterFunction,
+    BindTransmitterParams,
 } from './types';
 
 export default class Session {
@@ -120,6 +122,18 @@ export default class Session {
         const dto = getDTO<BindReceiverFunction>('bind_receiver')(params);
         this.sequenceNumber += 1;
         return this.PDU.call({ command: 'bind_receiver', sequenceNumber: this.sequenceNumber, dto });
+    }
+
+    bindTransmitter(params: BindTransmitterParams): boolean {
+        this.logger.debug(`bindTransmitter - called`, params);
+
+        if (!params.interfaceVersion) {
+            params.interfaceVersion = this.interfaceVersion;
+        }
+
+        const dto = getDTO<BindTransmitterFunction>('bind_transmitter')(params);
+        this.sequenceNumber += 1;
+        return this.PDU.call({ command: 'bind_transmitter', sequenceNumber: this.sequenceNumber, dto });
     }
 
     submitSm(params: SubmitSmParams): boolean {

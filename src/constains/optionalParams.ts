@@ -1,6 +1,3 @@
-// TODO: Move to types
-type OptionalParamKey = keyof typeof optionalParams;
-
 /**
  * The SMPP supported Optional Parameters and their associated Tag
  *
@@ -74,4 +71,4 @@ const optionalParams = {
     its_session_info: 0x1383,
 };
 
-export { optionalParams, OptionalParamKey };
+export { optionalParams };

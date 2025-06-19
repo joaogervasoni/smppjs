@@ -1,4 +1,5 @@
 import { DTO } from '.';
+import { optionalParams } from '../constains';
 
 /**
  * Base class to manage PDU.
@@ -93,3 +94,8 @@ export type PriorityFlag = 0 | 1 | 2 | 3 | 4;
  * This is only some options.
  */
 export type SystemType = 'SMPP' | 'VMS' | 'VASP' | 'OTA' | 'WAP' | 'USSD' | 'SCM' | 'EMAIL' | 'VOICE' | 'IP' | 'CMT' | 'WWW';
+
+/**
+ * Names of optinal params
+ */
+export type OptionalParamKey = keyof typeof optionalParams;

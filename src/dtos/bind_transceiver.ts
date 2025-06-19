@@ -13,15 +13,17 @@ export const bindTransceiverDTO: BindTransceiverFunction = ({
     interfaceVersion,
     systemType,
     addressRange,
+    addrNpi,
+    addrTon,
 }: BindTransceiverParams): BindTransceiver => {
     const dto: BindTransceiver = {
         command: {
             system_id: { type: 'Cstring', value: systemId },
             password: { type: 'Cstring', value: password },
-            system_type: { type: 'Cstring', value: systemType || '' },
+            system_type: { type: 'Cstring', value: systemType },
             interface_version: { type: 'Int8', value: interfaceVersion || 80 },
-            addr_ton: { type: 'Int8', value: 0 },
-            addr_npi: { type: 'Int8', value: 0 },
+            addr_ton: { type: 'Int8', value: addrNpi || 0 },
+            addr_npi: { type: 'Int8', value: addrTon || 0 },
             address_range: { type: 'Cstring', value: addressRange || '' },
         },
     };

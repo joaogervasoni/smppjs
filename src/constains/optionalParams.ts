@@ -72,7 +72,6 @@ const optionalParams = {
     alert_on_message_delivery: 0x130c,
     its_reply_type: 0x1380,
     its_session_info: 0x1383,
-  };
-  
+};
 
 export { optionalParams, OptionalParamKey };

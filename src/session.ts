@@ -27,7 +27,7 @@ export default class Session {
     constructor(
         private readonly interfaceVersion: InterfaceVersion,
         private readonly debug = false,
-        private readonly secure: { tls?: boolean; unsafeBuffer?: boolean; secureOptions?: SecureContextOptions }
+        private readonly secure: { tls?: boolean; unsafeBuffer?: boolean; secureOptions?: SecureContextOptions },
     ) {
         this.initSession();
         this.initResponseEnd();
@@ -50,7 +50,6 @@ export default class Session {
             this.connected = false;
             this.logger.debug(`disconnect - forced - disconnected from smpp server.`);
             this.socket.destroy();
-
             throw new Error('Server closed the conn.');
         });
     }
@@ -59,6 +58,7 @@ export default class Session {
         this.socket.on('readable', () => {
             try {
                 const data = this.socket.read();
+
                 if (data) {
                     const pdu = this.PDU.readPdu(data);
                     this.socket.emit('pdu', pdu);
@@ -83,7 +83,7 @@ export default class Session {
         return this.socket.closed;
     }
 
-    on(eventName: 'connect' | 'close' | 'end' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | CommandName, callback: (...args: any[]) => void) {
+    on(eventName: 'connect' | 'close' | 'end' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | CommandName, callback: (...args: unknown[]) => void) {
         this.socket.on(eventName, callback);
     }
 

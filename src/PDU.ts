@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import { getDTO } from './dtos';
+import { getDTO } from './dtos/index';
 import { octets } from './octets';
 import { commandsId, commandsName, OptionalParamKey, optionalParams } from './constains';
 import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName } from './types';
@@ -9,7 +9,7 @@ const HEADER_COMMAND_LENGTH = 16;
 export default class PDU implements IPDU {
     constructor(
         private socket: Socket,
-        private secure: { unsafeBuffer: boolean }
+        private secure: { unsafeBuffer: boolean },
     ) {}
 
     call({ command, sequenceNumber, dto }: { command: SendCommandName; sequenceNumber: number; dto: DTO }): boolean {
@@ -32,16 +32,15 @@ export default class PDU implements IPDU {
         }
 
         if (tlvs) {
-
             const tlvsEntries = Object.entries(tlvs);
-            
+
             for (let index = 0; index < tlvsEntries.length; index++) {
                 const element = tlvsEntries[index][1];
-                
+
                 if (element.encode && element.type === 'Cstring' && typeof element.value === 'string') {
                     element.value = octets[element.type].convertToUtf16be(element.value);
                 }
-                
+
                 // Add 4 for tlvs element + length.  * ref: Documentation SMPP_v5 - 4.8.4.1
                 commandLength += octets[element.type].size(element.value) + 4;
             }
@@ -220,6 +219,7 @@ export default class PDU implements IPDU {
         pdu.command = commandsName[pdu.command_id];
 
         const DTO = getDTO<DTOFunction>(pdu.command);
+
         if (!DTO) {
             throw new Error(`Command {${pdu.command}} not found.`);
         }

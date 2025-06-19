@@ -6,7 +6,7 @@ class Int16 {
      * Write a int16 in a buffer
      */
     static write({ buffer, value, offset }: { buffer: Buffer; value: number; offset: number }): Buffer {
-        let newBuffer = buffer;
+        const newBuffer = buffer;
         newBuffer.writeUInt16BE(value || 0, offset);
 
         return newBuffer;

@@ -4,7 +4,6 @@ export interface BindTransceiverResp extends DTO {
     command: {
         system_id: { type: 'Cstring'; value: string };
     };
-    tlvs: {};
 }
 
 export type BindTransceiverRespParams = {

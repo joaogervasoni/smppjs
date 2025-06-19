@@ -37,7 +37,7 @@ export const bindTransceiverDTO: BindTransceiverFunction = ({
  * @param dto BindTransceiver
  */
 const validateDto = (dto: BindTransceiver): void => {
-    const dtoRecord: Record<string, any> = dto.command;
+    const dtoRecord: Record<string, { type: string; value: string | number }> = dto.command;
     const validator = Object.entries(MAX_LENGTH);
 
     for (let index = 0; index < validator.length; index += 1) {

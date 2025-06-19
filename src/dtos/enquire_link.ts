@@ -1,6 +1,6 @@
-import { EnquireLink, EnquireLinkFunction, EnquireLinkParams } from '../types';
+import { EnquireLink, EnquireLinkFunction } from '../types';
 
-export const enquireLinkDTO: EnquireLinkFunction = ({}: EnquireLinkParams): EnquireLink => {
+export const enquireLinkDTO: EnquireLinkFunction = (): EnquireLink => {
     return {
         command: {},
     };

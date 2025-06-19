@@ -4,7 +4,6 @@ export interface SubmitSmResp extends DTO {
     command: {
         message_id: { type: 'Cstring'; value: string };
     };
-    tlvs: {};
 }
 
 export type SubmitSmRespParams = {

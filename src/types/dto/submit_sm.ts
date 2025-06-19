@@ -27,7 +27,7 @@ export interface SubmitSm extends DTO {
         short_message: { type: 'Cstring'; value: string | Buffer; encode?: Encode; setLength?: boolean };
     };
     tlvs: {
-        message_payload: { type: 'Cstring'; value: string | Buffer; encode?: Encode; };
+        message_payload: { type: 'Cstring'; value: string | Buffer; encode?: Encode };
     };
 }
 

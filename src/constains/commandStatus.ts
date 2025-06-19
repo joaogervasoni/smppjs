@@ -84,10 +84,10 @@ const CommandStatus5 = {
 /**
  * The complete set of SMPP command status
  *
- * The command_status field of a SMPP message response indicates the success or failure of 
+ * The command_status field of a SMPP message response indicates the success or failure of
  * a SMPP request. It is relevant only in the SMPP response message and should be set to
  * NULL in SMPP request messages.
- * 
+ *
  * ref: Documentation SMPP_v3_4 and SMPP_v5
  */
 const CommandStatus = Object.assign({}, CommandStatus34, CommandStatus5);

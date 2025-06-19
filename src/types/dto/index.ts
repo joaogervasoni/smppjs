@@ -11,7 +11,7 @@ export type DTO<
         tlvs?: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode }>;
     },
 > = T;
-export interface DTOFunction<T = any, Y = DTO> {
+export interface DTOFunction<T = unknown, Y = DTO> {
     (...args: T[]): Y;
 }
 

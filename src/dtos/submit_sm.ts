@@ -78,13 +78,15 @@ export const submitSmDTO: SubmitSmFunction = ({
  * Ref: Page 49 - SMPP_v5
  * @param dto SubmitSm
  */
+// TODO: Create abstract class.
 const validateDto = (dto: SubmitSm): void => {
-    const dtoRecord: Record<string, any> = dto.command;
+    const dtoRecord: Record<string, { type: string; value: string | number | Buffer }> = dto.command;
     const validator = Object.entries(MAX_LENGTH);
     const dateValidator = Object.entries(DATE_TYPE);
 
     for (let index = 0; index < validator.length; index += 1) {
         const fieldName = validator[index][0];
+
         if (dtoRecord[fieldName].value.toString().length + 1 > validator[index][1]) {
             throw new Error(`${validator[index][0]} need to be minor than ${validator[index][1]}`);
         }

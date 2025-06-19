@@ -18,13 +18,8 @@ export type BindTransceiverParams = {
     interfaceVersion?: InterfaceVersion;
     systemType?: string;
     addressRange?: string;
-    tlvs?: {};
 };
 
-export interface BindTransceiverFunction
-    extends DTOFunction<
-        { systemId: string; password: string; interfaceVersion: InterfaceVersion; systemType?: string; addressRange?: string },
-        BindTransceiver
-    > {
+export interface BindTransceiverFunction extends DTOFunction<BindTransceiverParams, BindTransceiver> {
     ({ systemId, password, interfaceVersion, systemType, addressRange }: BindTransceiverParams): BindTransceiver;
 }

@@ -1,4 +1,4 @@
-import { CommandName } from "../types";
+import { CommandName } from '../types';
 
 /**
  * The complete set of SMPP Command IDs

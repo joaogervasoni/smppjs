@@ -77,12 +77,12 @@ export interface Pdu {
     command_status: number;
     sequence_number: number;
     command: CommandName | '';
-    [key: string]: any;
+    [key: string]: string | number;
 }
 
 /**
  * Indicate priority
- * 
+ *
  * Prioritys have difference to type, read: 4.7.19 on Smpp v5 doc.
  */
 export type PriorityFlag = 0 | 1 | 2 | 3 | 4;

@@ -21,10 +21,8 @@ class Cstring {
         setLength?: boolean;
         encoding?: Encode;
     }): Buffer {
-        let newBuffer = buffer;
+        const newBuffer = buffer;
         let valueBuffer: Buffer;
-
-
 
         if (typeof value === 'string') {
             valueBuffer = Buffer.from(value, encoding as BufferEncoding);

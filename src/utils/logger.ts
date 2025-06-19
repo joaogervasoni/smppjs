@@ -5,10 +5,10 @@ class Logger {
         private socket: Socket,
         private readonly options: {
             debug: boolean;
-        }
+        },
     ) {}
 
-    debug(message: string, object?: Object) {
+    debug(message: string, object?: object) {
         const messageEmit = `${message} - ${JSON.stringify(object ? object : {})}`;
 
         if (this.options.debug) {

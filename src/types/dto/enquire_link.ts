@@ -1,7 +1,7 @@
 import { DTO, DTOFunction } from '../index';
 
 export interface EnquireLink extends DTO {
-    command: {},
+    command: {};
 }
 
 export type EnquireLinkParams = {};

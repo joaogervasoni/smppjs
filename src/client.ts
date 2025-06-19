@@ -49,6 +49,7 @@ export default class Client {
         }
 
         const port = parseInt(portStr, 10);
+
         if (isNaN(port)) {
             throw new Error('Invalid port.');
         }
@@ -65,7 +66,7 @@ export default class Client {
         return this.session.disconnect();
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | CommandName, callback: (...args: any[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | CommandName, callback: (...args: unknown[]) => void) {
         this.session.on(eventName, callback);
     }
 

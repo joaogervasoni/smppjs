@@ -1,9 +1,9 @@
 import { DTO, DTOFunction } from '../index';
 
-export interface EnquireLinkResp extends DTO {}
+export type EnquireLinkResp = DTO;
 
-export type EnquireLinkRespParams = {};
+export type EnquireLinkRespParams = unknown;
 
 export interface EnquireLinkRespFunction extends DTOFunction<EnquireLinkRespParams, EnquireLinkResp> {
-    ({}: EnquireLinkRespParams): EnquireLinkResp;
+    (): EnquireLinkResp;
 }

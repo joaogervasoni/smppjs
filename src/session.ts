@@ -13,6 +13,7 @@ import {
     EnquireLinkFunction,
     BindReceiverParams,
     BindReceiverFunction,
+    UnbindFunction,
 } from './types';
 
 export default class Session {
@@ -135,5 +136,13 @@ export default class Session {
         const dto = getDTO<EnquireLinkFunction>('enquire_link')({});
         this.sequenceNumber += 1;
         return this.PDU.call({ command: 'enquire_link', sequenceNumber: this.sequenceNumber, dto });
+    }
+
+    unbind(): boolean {
+        this.logger.debug(`unbind - called`);
+
+        const dto = getDTO<UnbindFunction>('enquire_link')({});
+        this.sequenceNumber += 1;
+        return this.PDU.call({ command: 'unbind', sequenceNumber: this.sequenceNumber, dto });
     }
 }

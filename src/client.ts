@@ -62,6 +62,11 @@ export default class Client {
         }
     }
 
+    /**
+     * It's recommended to call unbind event to close connection with server safety.
+     *
+     * @returns boolean confirmation do disconnect.
+     */
     disconnect(): boolean {
         return this.session.disconnect();
     }
@@ -84,6 +89,10 @@ export default class Client {
 
     enquireLink(): boolean {
         return this.session.enquireLink();
+    }
+
+    unbind(): boolean {
+        return this.session.unbind();
     }
 
     private autoEnquireLink(interval: number = 20000) {

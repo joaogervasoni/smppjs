@@ -1,0 +1,9 @@
+.vscode
+.git
+eslint.config.json
+src/
+node_modules/
+package-lock.json
+images/
+.prettierrc.json
+.prettierrc

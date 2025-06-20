@@ -1,15 +1,30 @@
 {
   "name": "smppjs",
   "version": "1.0.0",
-  "description": "",
-  "main": "build/index.js",
+  "description": "Modern approach to smpp protocol.",
+  "main": "lib/index.js",
+  "types": "lib",
   "scripts": {
     "dev": "tsnd --transpile-only --ignore-watch node_modules --no-notify --respawn src/index.ts",
-    "start": "./node_modules/.bin/tsc && node .",
-    "build": "./node_modules/.bin/tsc"
+    "dev:start": "./node_modules/.bin/tsc && node .",
+    "dev:build": "./node_modules/.bin/tsc",
+    "prod:pack": "npm pack",
+    "prod:build": "tsc -p ."
   },
-  "author": "",
+  "author": {
+    "name": "João Gervasoni",
+    "url": "https://github.com/joaogervasoni"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/joaogervasoni/smppjs"
+  },
   "license": "MIT",
+  "keywords": [
+    "smpp",
+    "protocol",
+    "smppjs"
+  ],
   "devDependencies": {
     "@types/node": "^20.12.7",
     "eslint": "9.29.0",

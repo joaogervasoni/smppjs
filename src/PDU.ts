@@ -37,12 +37,14 @@ export default class PDU implements IPDU {
             for (let index = 0; index < tlvsEntries.length; index++) {
                 const element = tlvsEntries[index][1];
 
-                if (element.encode && element.type === 'Cstring' && typeof element.value === 'string') {
-                    element.value = octets[element.type].convertToUtf16be(element.value);
-                }
+                if (element.value) {
+                    if (element.encode && element.type === 'Cstring' && typeof element.value === 'string') {
+                        element.value = octets[element.type].convertToUtf16be(element.value);
+                    }
 
-                // Add 4 for tlvs element + length.  * ref: Documentation SMPP_v5 - 4.8.4.1
-                commandLength += octets[element.type].size(element.value) + 4;
+                    // Add 4 for tlvs element + length.  * ref: Documentation SMPP_v5 - 4.8.4.1
+                    commandLength += octets[element.type].size(element.value) + 4;
+                }
             }
         }
 

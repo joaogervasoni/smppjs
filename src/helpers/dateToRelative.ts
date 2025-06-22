@@ -9,7 +9,9 @@
  * @param date Date - Date to formate
  * @returns String formated to date relative
  */
-const dateToRelative = (futureDate: Date): string => {
+const dateToRelative = (futureDate: Date | string): string => {
+    if (typeof futureDate === 'string') return futureDate;
+
     const now = new Date();
 
     if (futureDate <= now) return '000000000000R';

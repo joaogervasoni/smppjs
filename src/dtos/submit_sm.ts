@@ -48,9 +48,9 @@ export const submitSmDTO: SubmitSmFunction = ({
             esm_class: { type: 'Int8', value: esmClass },
             protocol_id: { type: 'Int8', value: protocolId || 0 },
             priority_flag: { type: 'Int8', value: priorityFlag || 0 },
-            registered_delivery: { type: 'Int8', value: registeredFelivery || 0 },
             schedule_delivery_time: { type: 'Cstring', value: scheduleDeliveryTime ? dateToAbsolute(scheduleDeliveryTime) : '' },
             validity_period: { type: 'Cstring', value: validityPeriod ? dateToAbsolute(validityPeriod) : '' },
+            registered_delivery: { type: 'Int8', value: registeredFelivery || 0 },
             replace_if_present_flag: { type: 'Int8', value: replaceIfPresentFlag || 0 },
             data_coding: { type: 'Int8', value: dataCoding },
             sm_default_msg_id: { type: 'Int8', value: smDefaultMsgId || 0 },
@@ -87,7 +87,7 @@ const validateDto = (dto: SubmitSm): void => {
     for (let index = 0; index < validator.length; index += 1) {
         const fieldName = validator[index][0];
 
-        if (dtoRecord[fieldName].value.toString().length + 1 > validator[index][1]) {
+        if (dtoRecord[fieldName].value && dtoRecord[fieldName].value.toString().length + 1 > validator[index][1]) {
             throw new Error(`${validator[index][0]} need to be minor than ${validator[index][1]}`);
         }
     }
@@ -95,11 +95,14 @@ const validateDto = (dto: SubmitSm): void => {
     for (let index = 0; index < dateValidator.length; index += 1) {
         const fieldName = dateValidator[index][0];
         const fieldType = dateValidator[index][1];
-        const value = dtoRecord[fieldName].value.toString() as string;
 
-        if (value) {
-            if (value.endsWith('R', value.length - 1) && fieldType === DateType.ABSOLUTE) {
-                throw new Error(`${validator[index][0]} need to be relative ${validator[index][1]}`);
+        if (dtoRecord[fieldName].value) {
+            const value = dtoRecord[fieldName].value.toString() as string;
+
+            if (value) {
+                if (value.endsWith('R', value.length - 1) && fieldType === DateType.ABSOLUTE) {
+                    throw new Error(`${validator[index][0]} need to be relative ${validator[index][1]}`);
+                }
             }
         }
     }

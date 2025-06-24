@@ -78,8 +78,10 @@ export default class PDU implements IPDU {
         let pduBuffer = unsafeBuffer ? Buffer.allocUnsafe(commandLength) : Buffer.alloc(commandLength);
 
         pduBuffer = this.writeHeaderPdu({ buffer: pduBuffer, commandLength, commandId, sequenceNumber, commandStatus });
-        pduBuffer = this.writeParamsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, pduParams });
-        pduBuffer = this.writeTlvsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, tlvs });
+        const pduWithParams = this.writeParamsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, pduParams });
+        pduBuffer = pduWithParams.pduBuffer;
+
+        pduBuffer = this.writeTlvsPdu({ offset: pduWithParams.offset, pduBuffer, tlvs });
 
         return pduBuffer;
     }
@@ -113,7 +115,7 @@ export default class PDU implements IPDU {
         pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
         pduBuffer: Buffer;
         offset: number;
-    }): Buffer {
+    }): { offset: number; pduBuffer: Buffer } {
         for (const key in pduParams) {
             const param = pduParams[key];
             const type = param.type;
@@ -133,7 +135,7 @@ export default class PDU implements IPDU {
             }
         }
 
-        return pduBuffer;
+        return { pduBuffer, offset };
     }
 
     private writeTlvsPdu({

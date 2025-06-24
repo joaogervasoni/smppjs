@@ -1,6 +1,6 @@
 {
   "name": "smppjs",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Modern approach to smpp protocol.",
   "main": "lib/index.js",
   "types": "lib",
@@ -10,6 +10,9 @@
     "dev:build": "./node_modules/.bin/tsc",
     "prod:pack": "npm pack",
     "prod:build": "tsc -p ."
+  },
+  "engines": {
+    "node": ">=8"
   },
   "author": {
     "name": "João Gervasoni",

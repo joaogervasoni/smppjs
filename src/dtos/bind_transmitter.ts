@@ -1,3 +1,4 @@
+import { dtoValidation } from '../helpers';
 import { BindTransmitter, BindTransmitterFunction, BindTransmitterParams } from '../types';
 
 const MAX_LENGTH: Record<string, number> = {
@@ -28,23 +29,6 @@ export const bindTransmitterDTO: BindTransmitterFunction = ({
         },
     };
 
-    validateDto(dto);
+    dtoValidation({ dto, MAX_LENGTH });
     return dto;
-};
-
-/**
- * Add length plus one to add 00 validation
- *
- * Ref: Page 49 - SMPP_v5
- * @param dto BindTransmitter
- */
-const validateDto = (dto: BindTransmitter): void => {
-    const dtoRecord: Record<string, { type: string; value: string | number }> = dto.command;
-    const validator = Object.entries(MAX_LENGTH);
-
-    for (let index = 0; index < validator.length; index += 1) {
-        if (dtoRecord[validator[index][0]].value.toString().length + 1 > validator[index][1]) {
-            throw new Error(`${validator[index][0]} need to be minor than ${validator[index][1]}`);
-        }
-    }
 };

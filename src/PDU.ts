@@ -1,7 +1,7 @@
 import { Socket } from 'net';
 import { getDTO } from './dtos/index';
 import { octets } from './octets';
-import { CommandStatus, commandsId, commandsName, optionalParams } from './constains';
+import { CommandStatus, CommandStatusInfo, commandsId, commandsName, optionalParams } from './constains';
 import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName, OptionalParamKey } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;
@@ -232,8 +232,8 @@ export default class PDU implements IPDU {
         const params = this.readParamsPdu({ pduBuffer: buffer, pduParams: commandParams.command, offset: HEADER_COMMAND_LENGTH });
 
         if (pdu.command_status !== CommandStatus.ESME_ROK) {
-            // TODO: Add explanation about errors.
-            throw new Error(`Command {${pdu.command}} return error.`);
+            const errorInfo = CommandStatusInfo[pdu.command_status];
+            throw new Error(`Command {${pdu.command}} return error {${errorInfo.name}} with info {${errorInfo.description}}.`);
         }
 
         return Object.assign({}, pdu, params);

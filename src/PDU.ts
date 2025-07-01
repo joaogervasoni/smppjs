@@ -194,7 +194,7 @@ export default class PDU implements IPDU {
 
             if (type === 'Cstring') {
                 params[key] = octets.Cstring.read({ buffer: pduBuffer, offset });
-                offset += octets.Cstring.size(value as string);
+                offset += octets.Cstring.size(params[key] || (value as string));
             }
         }
 

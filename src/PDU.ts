@@ -201,6 +201,36 @@ export default class PDU implements IPDU {
         return params;
     }
 
+    private readTlvsPdu({
+        pduTlvs,
+        pduBuffer,
+        offset,
+    }: {
+        pduTlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
+        pduBuffer: Buffer;
+        offset: number;
+    }): Record<string, string | number> {
+        const params: Record<string, string | number> = {};
+
+        for (const key in pduTlvs) {
+            const param = pduTlvs[key];
+            const type = param.type;
+            const value = param.value;
+
+            if (type === 'Cstring') {
+                params[key] = octets.Cstring.read({ buffer: pduBuffer, offset });
+                offset += octets.Cstring.size(value as string);
+            }
+
+            if (type === 'Int8') {
+                params[key] = octets.Int8.read({ buffer: pduBuffer, offset });
+                offset += octets.Cstring.size(value as string);
+            }
+        }
+
+        return params;
+    }
+
     private readHeaderPdu({ buffer, pdu }: { buffer: Buffer; pdu: Pdu }): Pdu {
         pdu.command_length = buffer.readUInt32BE(0);
         pdu.command_id = buffer.readUInt32BE(4);

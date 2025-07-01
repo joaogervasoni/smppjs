@@ -43,7 +43,7 @@ class Cstring {
     /**
      * Return size of cstring
      */
-    static size(value: string | number | Buffer) {
+    static size(value: string | number | Buffer): number {
         if (typeof value === 'number') {
             return value.toString().length + 1;
         }
@@ -54,7 +54,7 @@ class Cstring {
     /**
      * Read a cstring buffer and returns it in string
      */
-    static read({ buffer, offset }: { buffer: Buffer; offset: number }) {
+    static read({ buffer, offset }: { buffer: Buffer; offset: number }): string {
         let length = 0;
 
         while (buffer[offset + length]) {
@@ -65,7 +65,7 @@ class Cstring {
     }
 
     /**
-     * Converto to utf16be (Big Endian)
+     * Convert to utf16be (Big Endian)
      */
     static convertToUtf16be(value: Buffer | string): Buffer {
         if (typeof value === 'string') {

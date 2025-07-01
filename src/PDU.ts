@@ -184,7 +184,7 @@ export default class PDU implements IPDU {
         pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
         pduBuffer: Buffer;
         offset: number;
-    }): Record<string, string | number> {
+    }): { params: Record<string, string | number>; offset: number } {
         const params: Record<string, string | number> = {};
 
         for (const key in pduParams) {
@@ -198,7 +198,7 @@ export default class PDU implements IPDU {
             }
         }
 
-        return params;
+        return { params, offset };
     }
 
     private readTlvsPdu({
@@ -259,7 +259,7 @@ export default class PDU implements IPDU {
         }
 
         const commandParams = DTO({});
-        const params = this.readParamsPdu({ pduBuffer: buffer, pduParams: commandParams.command, offset: HEADER_COMMAND_LENGTH });
+        const { params, offset } = this.readParamsPdu({ pduBuffer: buffer, pduParams: commandParams.command, offset: HEADER_COMMAND_LENGTH });
 
         if (pdu.command_status !== CommandStatus.ESME_ROK) {
             const errorInfo = CommandStatusInfo[pdu.command_status];

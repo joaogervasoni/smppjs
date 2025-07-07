@@ -1,6 +1,15 @@
 import { SecureContextOptions } from 'tls';
 import Session from './session';
-import { BindReceiverParams, BindTransceiverParams, BindTransmitterParams, CommandClient, CommandName, InterfaceVersion, SubmitSmParams } from './types';
+import {
+    BindReceiverParams,
+    BindTransceiverParams,
+    BindTransmitterParams,
+    CommandClient,
+    CommandName,
+    DataSmParams,
+    InterfaceVersion,
+    SubmitSmParams,
+} from './types';
 
 export default class Client {
     private readonly session!: Session;
@@ -89,6 +98,10 @@ export default class Client {
 
     submitSm(params: SubmitSmParams): boolean {
         return this.session.submitSm(params);
+    }
+
+    dataSm(params: DataSmParams): boolean {
+        return this.session.dataSm(params);
     }
 
     enquireLink(): boolean {

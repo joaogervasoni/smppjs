@@ -14,7 +14,7 @@ export * from './bind_transmitter_resp';
 export type DTO<
     T = {
         command: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
-        tlvs?: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode }>;
+        tlvs?: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer | undefined; encode?: Encode }>;
     },
 > = T;
 export interface DTOFunction<T = unknown, Y = DTO> {

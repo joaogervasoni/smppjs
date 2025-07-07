@@ -6,7 +6,7 @@ export const bindTransmitterRespDTO: BindTransmitterRespFunction = ({ systemIdVa
             system_id: { type: 'Cstring', value: systemIdValue || '' },
         },
         tlvs: {
-            sc_interface_version: { type: 'Int8', value: tlvs?.scInterfaceVersion || 0 },
+            sc_interface_version: { type: 'Int8', value: tlvs?.scInterfaceVersion || undefined },
         },
     };
 };

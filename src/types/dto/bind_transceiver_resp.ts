@@ -5,14 +5,14 @@ export interface BindTransceiverResp extends DTO {
         system_id: { type: 'Cstring'; value: string };
     };
     tlvs: {
-        sc_interface_version: { type: 'Int8'; value: InterfaceVersion | 0 };
+        sc_interface_version: { type: 'Int8'; value: InterfaceVersion | undefined };
     };
 }
 
 export type BindTransceiverRespParams = {
     systemIdValue?: string;
     tlvs?: {
-        scInterfaceVersion?: InterfaceVersion | 0;
+        scInterfaceVersion?: InterfaceVersion | undefined;
     };
 };
 

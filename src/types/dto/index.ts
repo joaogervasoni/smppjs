@@ -10,6 +10,8 @@ export * from './unbind';
 export * from './unbind_resp';
 export * from './bind_transmitter';
 export * from './bind_transmitter_resp';
+export * from './data_sm';
+export * from './data_sm_resp';
 
 export type DTO<
     T = {

@@ -16,6 +16,8 @@ import {
     UnbindFunction,
     BindTransmitterFunction,
     BindTransmitterParams,
+    DataSmParams,
+    DataSmFunction,
 } from './types';
 
 export default class Session {
@@ -142,6 +144,14 @@ export default class Session {
         const dto = getDTO<SubmitSmFunction>('submit_sm')(params);
         this.sequenceNumber += 1;
         return this.PDU.call({ command: 'submit_sm', sequenceNumber: this.sequenceNumber, dto });
+    }
+
+    dataSm(params: DataSmParams): boolean {
+        this.logger.debug(`dataSm - called`, params);
+
+        const dto = getDTO<DataSmFunction>('data_sm')(params);
+        this.sequenceNumber += 1;
+        return this.PDU.call({ command: 'data_sm', sequenceNumber: this.sequenceNumber, dto });
     }
 
     enquireLink(): boolean {

@@ -13,6 +13,13 @@ class Int8 {
     }
 
     /**
+     * Read a int8 and returns it
+     */
+    static read({ buffer, offset }: { buffer: Buffer; offset: number }): number {
+        return buffer.readUInt8(offset);
+    }
+
+    /**
      * Return size of int8
      */
     static size() {

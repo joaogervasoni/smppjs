@@ -10,6 +10,10 @@
 
 This library is designed to provide a modern approach to smpp protocol, making easy interaction with the protocol.
 
+### Support 
+- Node version `ES6, Node >=8`
+- Typescript types
+
 ## Getting started
 
 ### Calling

@@ -35,7 +35,6 @@ export type CommandName = SendCommandName | ResponseCommandName;
 // Will be removed in the future.
 /**
  * Commands client
- *
  */
 export type CommandClient =
     | 'bind_receiver'

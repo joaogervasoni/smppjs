@@ -1,10 +1,12 @@
 import { BindReceiverRespFunction, BindReceiverResp, BindReceiverRespParams } from '../types';
 
-export const bindReceiverRespDTO: BindReceiverRespFunction = ({ systemIdValue }: BindReceiverRespParams): BindReceiverResp => {
+export const bindReceiverRespDTO: BindReceiverRespFunction = ({ systemIdValue, tlvs }: BindReceiverRespParams): BindReceiverResp => {
     return {
         command: {
             system_id: { type: 'Cstring', value: systemIdValue || '' },
         },
-        tlvs: {},
+        tlvs: {
+            sc_interface_version: { type: 'Int8', value: tlvs?.scInterfaceVersion || 0 },
+        },
     };
 };

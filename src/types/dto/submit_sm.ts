@@ -45,7 +45,7 @@ export type SubmitSmParams = {
     priorityFlag?: PriorityFlag;
     scheduleDeliveryTime?: Date | string;
     validityPeriod?: Date | string;
-    registeredFelivery?: number;
+    registeredDelivery?: number;
     replaceIfPresentFlag?: number;
     smDefaultMsgId?: number;
     shortMessage?: {
@@ -72,7 +72,7 @@ export interface SubmitSmFunction extends DTOFunction<SubmitSmParams, SubmitSm> 
         priorityFlag,
         scheduleDeliveryTime,
         validityPeriod,
-        registeredFelivery,
+        registeredDelivery,
         replaceIfPresentFlag,
         smDefaultMsgId,
         shortMessage,

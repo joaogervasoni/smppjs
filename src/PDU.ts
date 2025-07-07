@@ -261,11 +261,17 @@ export default class PDU implements IPDU {
         const commandParams = DTO({});
         const { params, offset } = this.readParamsPdu({ pduBuffer: buffer, pduParams: commandParams.command, offset: HEADER_COMMAND_LENGTH });
 
+        let tlvs: Record<string, string | number> | undefined = undefined;
+
+        if (commandParams.tlvs) {
+            tlvs = this.readTlvsPdu({ pduBuffer: buffer, pduTlvs: commandParams.tlvs, offset });
+        }
+
         if (pdu.command_status !== CommandStatus.ESME_ROK) {
             const errorInfo = CommandStatusInfo[pdu.command_status];
             throw new Error(`Command {${pdu.command}} return error {${errorInfo.name}} with info {${errorInfo.description}}.`);
         }
 
-        return Object.assign({}, pdu, params);
+        return Object.assign({}, pdu, params, tlvs);
     }
 }

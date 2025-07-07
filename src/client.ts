@@ -1,15 +1,6 @@
 import { SecureContextOptions } from 'tls';
 import Session from './session';
-import {
-    BindReceiverParams,
-    BindTransceiverParams,
-    BindTransmitterParams,
-    CommandClient,
-    CommandName,
-    DataSmParams,
-    InterfaceVersion,
-    SubmitSmParams,
-} from './types';
+import { BindReceiverParams, BindTransceiverParams, BindTransmitterParams, CommandClient, DataSmParams, InterfaceVersion, SubmitSmParams } from './types';
 
 export default class Client {
     private readonly session!: Session;

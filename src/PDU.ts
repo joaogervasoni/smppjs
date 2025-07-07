@@ -71,7 +71,7 @@ export default class PDU implements IPDU {
         commandId: number;
         sequenceNumber: number;
         pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
-        tlvs?: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }> | undefined;
+        tlvs?: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer | undefined }> | undefined;
         unsafeBuffer?: boolean;
         commandStatus?: number;
     }): Buffer {
@@ -145,7 +145,7 @@ export default class PDU implements IPDU {
     }: {
         pduBuffer: Buffer;
         offset: number;
-        tlvs?: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
+        tlvs?: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer | undefined; encode?: Encode; setLength?: boolean }>;
     }): Buffer {
         if (tlvs && Object.entries(tlvs)) {
             for (const key in tlvs) {
@@ -206,7 +206,7 @@ export default class PDU implements IPDU {
         pduBuffer,
         offset,
     }: {
-        pduTlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
+        pduTlvs: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer | undefined }>;
         pduBuffer: Buffer;
         offset: number;
     }): Record<string, string | number> {
@@ -217,14 +217,16 @@ export default class PDU implements IPDU {
             const type = param.type;
             const value = param.value;
 
-            if (type === 'Cstring') {
-                params[key] = octets.Cstring.read({ buffer: pduBuffer, offset });
-                offset += octets.Cstring.size(value as string);
-            }
+            if (value) {
+                if (type === 'Cstring') {
+                    params[key] = octets.Cstring.read({ buffer: pduBuffer, offset });
+                    offset += octets.Cstring.size(params[key] || (value as string));
+                }
 
-            if (type === 'Int8') {
-                params[key] = octets.Int8.read({ buffer: pduBuffer, offset });
-                offset += octets.Cstring.size(value as string);
+                if (type === 'Int8') {
+                    params[key] = octets.Int8.read({ buffer: pduBuffer, offset });
+                    offset += octets.Cstring.size(value as string);
+                }
             }
         }
 
@@ -261,7 +263,7 @@ export default class PDU implements IPDU {
         const commandParams = DTO({});
         const { params, offset } = this.readParamsPdu({ pduBuffer: buffer, pduParams: commandParams.command, offset: HEADER_COMMAND_LENGTH });
 
-        let tlvs: Record<string, string | number> | undefined = undefined;
+        let tlvs: Record<string, string | number | undefined> | undefined = undefined;
 
         if (commandParams.tlvs) {
             tlvs = this.readTlvsPdu({ pduBuffer: buffer, pduTlvs: commandParams.tlvs, offset });

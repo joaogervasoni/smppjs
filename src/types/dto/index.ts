@@ -13,6 +13,7 @@ export * from './bind_transmitter_resp';
 export * from './data_sm';
 export * from './data_sm_resp';
 export * from './query_sm';
+export * from './query_sm_resp';
 
 export type DTO<
     T = {
@@ -36,4 +37,21 @@ export enum DateType {
     ABSOLUTE = 0,
     RELATIVE = 1,
     ABSOLUTE_AND_RELATIVE = 2,
+}
+
+/**
+ * Enum to reference message state
+ *
+ * ref: Documentation SMPP_v5 - 4.7.15 message_state
+ */
+export enum MessageState {
+    ENROUTE = 0,
+    DELIVERED = 1,
+    EXPIRED = 2,
+    DELETED = 3,
+    UNDELIVERABLE = 4,
+    ACCEPTED = 5,
+    UNKNOWN = 6,
+    REJECTED = 7,
+    SKIPPED = 8,
 }

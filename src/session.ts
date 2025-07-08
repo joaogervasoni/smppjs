@@ -98,7 +98,10 @@ export default class Session {
         return this.socket.closed;
     }
 
-    on(eventName: 'connect' | 'close' | 'end' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | CommandName, callback: (...args: unknown[]) => void) {
+    on(
+        eventName: 'connect' | 'close' | 'end' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable' | CommandName,
+        callback: (...args: unknown[]) => void,
+    ) {
         this.socket.on(eventName, callback);
     }
 

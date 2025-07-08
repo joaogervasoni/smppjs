@@ -162,7 +162,7 @@ export default class Session {
     querySm(params: QuerySmParams): boolean {
         this.logger.debug(`querySm - called`, params);
 
-        const dto = getDTO<QuerySmFunction>('querySm')(params);
+        const dto = getDTO<QuerySmFunction>('query_sm')(params);
         this.sequenceNumber += 1;
         return this.PDU.call({ command: 'query_sm', sequenceNumber: this.sequenceNumber, dto });
     }

@@ -23,6 +23,7 @@ import { bindTransmitterRespDTO } from './bind_transmitter_resp';
 import { dataSmDTO } from './data_sm';
 import { dataSmRespDTO } from './data_sm_resp';
 import { querySmDTO } from './query_sm';
+import { querySmRespDTO } from './query_sm_resp';
 
 const DTOs: Record<string, DTOFunction<never, DTO>> = {
     bind_transceiver: bindTransceiverDTO,
@@ -40,6 +41,7 @@ const DTOs: Record<string, DTOFunction<never, DTO>> = {
     data_sm: dataSmDTO,
     data_sm_resp: dataSmRespDTO,
     query_sm: querySmDTO,
+    query_sm_resp: querySmRespDTO,
 };
 
 const getDTO = <

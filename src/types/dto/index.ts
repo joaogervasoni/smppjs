@@ -12,6 +12,7 @@ export * from './bind_transmitter';
 export * from './bind_transmitter_resp';
 export * from './data_sm';
 export * from './data_sm_resp';
+export * from './query_sm';
 
 export type DTO<
     T = {

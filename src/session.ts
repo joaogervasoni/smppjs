@@ -18,6 +18,8 @@ import {
     BindTransmitterParams,
     DataSmParams,
     DataSmFunction,
+    QuerySmParams,
+    QuerySmFunction,
 } from './types';
 
 export default class Session {
@@ -155,6 +157,14 @@ export default class Session {
         const dto = getDTO<DataSmFunction>('data_sm')(params);
         this.sequenceNumber += 1;
         return this.PDU.call({ command: 'data_sm', sequenceNumber: this.sequenceNumber, dto });
+    }
+
+    querySm(params: QuerySmParams): boolean {
+        this.logger.debug(`querySm - called`, params);
+
+        const dto = getDTO<QuerySmFunction>('querySm')(params);
+        this.sequenceNumber += 1;
+        return this.PDU.call({ command: 'query_sm', sequenceNumber: this.sequenceNumber, dto });
     }
 
     enquireLink(): boolean {

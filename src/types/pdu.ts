@@ -42,6 +42,8 @@ export type CommandClient =
     | 'submit_sm'
     | 'bind_transceiver'
     | 'enquire_link'
+    | 'data_sm'
+    | 'query_sm'
     | 'bind_receiver_resp'
     | 'bind_transmitter_resp'
     | 'submit_sm_resp'

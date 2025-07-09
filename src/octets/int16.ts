@@ -15,7 +15,7 @@ class Int16 {
     /**
      * Return size of int16
      */
-    static size() {
+    static size(): number {
         return 2;
     }
 }

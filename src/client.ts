@@ -1,6 +1,15 @@
 import { SecureContextOptions } from 'tls';
 import Session from './session';
-import { BindReceiverParams, BindTransceiverParams, BindTransmitterParams, CommandName, InterfaceVersion, SubmitSmParams } from './types';
+import {
+    BindReceiverParams,
+    BindTransceiverParams,
+    BindTransmitterParams,
+    CommandClient,
+    DataSmParams,
+    InterfaceVersion,
+    QuerySmParams,
+    SubmitSmParams,
+} from './types';
 
 export default class Client {
     private readonly session!: Session;
@@ -71,7 +80,7 @@ export default class Client {
         return this.session.disconnect();
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | CommandName, callback: (...args: unknown[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable' | CommandClient, callback: (...args: unknown[]) => void) {
         this.session.on(eventName, callback);
     }
 
@@ -89,6 +98,14 @@ export default class Client {
 
     submitSm(params: SubmitSmParams): boolean {
         return this.session.submitSm(params);
+    }
+
+    dataSm(params: DataSmParams): boolean {
+        return this.session.dataSm(params);
+    }
+
+    querySm(params: QuerySmParams): boolean {
+        return this.session.querySm(params);
     }
 
     enquireLink(): boolean {

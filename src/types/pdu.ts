@@ -32,8 +32,27 @@ export type InterfaceVersion = 51 | 52 | 80;
  */
 export type CommandName = SendCommandName | ResponseCommandName;
 
+// Will be removed in the future.
 /**
- * Semd commands name
+ * Commands client
+ */
+export type CommandClient =
+    | 'bind_receiver'
+    | 'bind_transmitter'
+    | 'submit_sm'
+    | 'bind_transceiver'
+    | 'enquire_link'
+    | 'data_sm'
+    | 'query_sm'
+    | 'bind_receiver_resp'
+    | 'bind_transmitter_resp'
+    | 'submit_sm_resp'
+    | 'unbind_resp'
+    | 'bind_transceiver_resp'
+    | 'enquire_link_resp';
+
+/**
+ * Send commands name
  */
 export type SendCommandName =
     | 'generic_nack'

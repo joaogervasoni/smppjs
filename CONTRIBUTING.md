@@ -29,6 +29,8 @@ git checkout -b feat/delivery-receipts
 
 ### 3. **Install dependencies**
 
+`This project use node >=22 to development.`
+
 ```bash
 npm install
 ```

@@ -32,7 +32,9 @@ client.bindTransceiver({ systemId: 'system', password: 'pass' });
 
 Simple and clean to call a PDU.
 
-### Example
+## Examples
+
+### Basic use
 
 ```js
 const client = new Client({ 
@@ -52,5 +54,26 @@ client.on('connect', () => {
     
     client.bindTransceiver({ systemId: 'system', password: 'pass' });
     client.submitSm({ esmClass: 0x00, dataCoding: 0x08, destinationAddr: '0000000000', shortMessage: { message: 'Hello!', encoding: 'ascii' }  });
+});
+```
+
+### Debug
+You can easily receive debug information using the `debug` event, so you can implement the logging system according to your wishes.
+
+```js
+const client = new Client({ 
+    interfaceVersion: 80,
+    // Set debug true
+    debug: true,
+    secure: { tls: false, unsafeBuffer: false },
+    enquireLink: {
+        auto: true,
+        interval: 10000,
+    },
+});
+
+client.on('debug', (data) => {
+    // Use your favorite logger implementation here.
+    console.log(data);
 });
 ```

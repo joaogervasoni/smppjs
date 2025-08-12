@@ -89,7 +89,7 @@ export default class Session {
     connect({ host, port }: { host: string; port: number }): void {
         this.socket.connect(port, host, () => {
             this.connected = true;
-            this.logger.debug(`connect - called - connected to smmp server using secure set to: ${this.secure.tls}`, { host, port });
+            this.logger.debug(`connect - called - connected to smpp server using secure set to: ${this.secure.tls}`, { host, port });
         });
     }
 
@@ -178,7 +178,7 @@ export default class Session {
     unbind(): boolean {
         this.logger.debug(`unbind - called`);
 
-        const dto = getDTO<UnbindFunction>('enquire_link')({});
+        const dto = getDTO<UnbindFunction>('unbind')({});
         this.sequenceNumber += 1;
         return this.PDU.call({ command: 'unbind', sequenceNumber: this.sequenceNumber, dto });
     }

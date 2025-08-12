@@ -40,7 +40,7 @@ const commandsId = {
  *
  * ref: Documentation SMPP_v3_4
  */
-const commandsName: Record<string, CommandName> = {
+const commandsName: Record<number, CommandName> = {
     0x80000000: 'generic_nack',
     0x00000001: 'bind_receiver',
     0x80000001: 'bind_receiver_resp',

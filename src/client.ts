@@ -117,8 +117,15 @@ export default class Client {
     }
 
     private autoEnquireLink(interval: number = 20000) {
-        setInterval(() => {
-            this.enquireLink();
-        }, interval);
+        const scheduleNext = () => {
+            setTimeout(() => {
+                if (this.connected) {
+                    this.enquireLink();
+                    scheduleNext();
+                }
+            }, interval);
+        };
+
+        scheduleNext();
     }
 }

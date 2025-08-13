@@ -55,13 +55,20 @@ class Cstring {
      * Read a cstring buffer and returns it in string
      */
     static read({ buffer, offset }: { buffer: Buffer; offset: number }): string {
+        const MAX_SCAN = 16;
         let length = 0;
 
-        while (buffer[offset + length]) {
+        while (length < MAX_SCAN && offset + length < buffer.length && buffer[offset + length]) {
             length++;
         }
 
-        return buffer.toString('ascii', offset, offset + length);
+        if (length < MAX_SCAN || offset + length >= buffer.length) {
+            return buffer.toString('ascii', offset, offset + length);
+        }
+
+        const nullIndex = buffer.indexOf(0, offset);
+        const endIndex = nullIndex === -1 ? buffer.length : nullIndex;
+        return buffer.toString('ascii', offset, endIndex);
     }
 
     /**

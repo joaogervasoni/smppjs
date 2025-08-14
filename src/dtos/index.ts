@@ -27,6 +27,7 @@ import { querySmDTO } from './query_sm';
 import { querySmRespDTO } from './query_sm_resp';
 import { cancelSmDTO } from './cancel_sm';
 import { cancelSmRespDTO } from './cancel_sm_resp';
+import { outbindDTO } from './outbind';
 
 const DTOs: Record<string, DTOFunction<never, DTO>> = {
     bind_transceiver: bindTransceiverDTO,
@@ -47,6 +48,7 @@ const DTOs: Record<string, DTOFunction<never, DTO>> = {
     query_sm_resp: querySmRespDTO,
     cancel_sm: cancelSmDTO,
     cancel_sm_resp: cancelSmRespDTO,
+    outbind: outbindDTO,
 };
 
 const getDTO = <

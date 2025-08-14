@@ -20,6 +20,8 @@ import {
     DataSmFunction,
     QuerySmParams,
     QuerySmFunction,
+    CancelSmParams,
+    CancelSmFunction,
 } from './types';
 
 export default class Session {
@@ -165,6 +167,14 @@ export default class Session {
         const dto = getDTO<QuerySmFunction>('query_sm')(params);
         this.sequenceNumber += 1;
         return this.PDU.call({ command: 'query_sm', sequenceNumber: this.sequenceNumber, dto });
+    }
+
+    cancelSm(params: CancelSmParams): boolean {
+        this.logger.debug(`cancelSm - called`, params);
+
+        const dto = getDTO<CancelSmFunction>('cancel_sm')(params);
+        this.sequenceNumber += 1;
+        return this.PDU.call({ command: 'cancel_sm', sequenceNumber: this.sequenceNumber, dto });
     }
 
     enquireLink(): boolean {

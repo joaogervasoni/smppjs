@@ -4,6 +4,7 @@ import {
     BindReceiverParams,
     BindTransceiverParams,
     BindTransmitterParams,
+    CancelSmParams,
     CommandClient,
     DataSmParams,
     InterfaceVersion,
@@ -84,6 +85,7 @@ export default class Client {
         this.session.on(eventName, callback);
     }
 
+    // TODO: Add description for each function
     bindTransceiver(params: BindTransceiverParams): boolean {
         return this.session.bindTransceiver(params);
     }
@@ -106,6 +108,10 @@ export default class Client {
 
     querySm(params: QuerySmParams): boolean {
         return this.session.querySm(params);
+    }
+
+    cancelSm(params: CancelSmParams): boolean {
+        return this.session.cancelSm(params);
     }
 
     enquireLink(): boolean {

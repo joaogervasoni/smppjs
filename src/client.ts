@@ -9,6 +9,7 @@ import {
     DataSmParams,
     InterfaceVersion,
     QuerySmParams,
+    ReplaceSmParams,
     SubmitSmParams,
 } from './types';
 
@@ -112,6 +113,10 @@ export default class Client {
 
     cancelSm(params: CancelSmParams): boolean {
         return this.session.cancelSm(params);
+    }
+
+    replaceSm(params: ReplaceSmParams): boolean {
+        return this.session.replaceSm(params);
     }
 
     enquireLink(): boolean {

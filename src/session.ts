@@ -22,6 +22,8 @@ import {
     QuerySmFunction,
     CancelSmParams,
     CancelSmFunction,
+    ReplaceSmFunction,
+    ReplaceSmParams,
 } from './types';
 
 export default class Session {
@@ -175,6 +177,14 @@ export default class Session {
         const dto = getDTO<CancelSmFunction>('cancel_sm')(params);
         this.sequenceNumber += 1;
         return this.PDU.call({ command: 'cancel_sm', sequenceNumber: this.sequenceNumber, dto });
+    }
+
+    replaceSm(params: ReplaceSmParams): boolean {
+        this.logger.debug(`replaceSm - called`, params);
+
+        const dto = getDTO<ReplaceSmFunction>('replace_sm')(params);
+        this.sequenceNumber += 1;
+        return this.PDU.call({ command: 'replace_sm', sequenceNumber: this.sequenceNumber, dto });
     }
 
     enquireLink(): boolean {

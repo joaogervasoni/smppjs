@@ -54,7 +54,8 @@ export type CommandClient =
     | 'enquire_link_resp'
     | 'query_sm_resp'
     | 'cancel_sm_resp'
-    | 'data_sm_resp';
+    | 'data_sm_resp'
+    | 'replace_sm';
 
 /**
  * Send commands name

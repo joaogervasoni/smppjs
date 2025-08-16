@@ -18,6 +18,7 @@ export * from './cancel_sm';
 export * from './cancel_sm_resp';
 export * from './outbind';
 export * from './replace_sm';
+export * from './deliver_sm';
 
 export type DTO<
     T = {

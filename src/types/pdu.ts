@@ -55,7 +55,8 @@ export type CommandClient =
     | 'query_sm_resp'
     | 'cancel_sm_resp'
     | 'data_sm_resp'
-    | 'replace_sm';
+    | 'replace_sm'
+    | 'deliver_sm';
 
 /**
  * Send commands name
@@ -66,7 +67,7 @@ export type SendCommandName =
     | 'bind_transmitter'
     | 'query_sm'
     | 'submit_sm'
-    | 'deliver_sm'
+    | 'deliver_sm_resp'
     | 'unbind'
     | 'replace_sm'
     | 'cancel_sm'
@@ -84,7 +85,6 @@ export type ResponseCommandName =
     | 'bind_transmitter_resp'
     | 'query_sm_resp'
     | 'submit_sm_resp'
-    | 'deliver_sm_resp'
     | 'unbind_resp'
     | 'replace_sm_resp'
     | 'cancel_sm_resp'
@@ -92,7 +92,8 @@ export type ResponseCommandName =
     | 'enquire_link_resp'
     | 'submit_multi_resp'
     | 'data_sm_resp'
-    | 'outbind';
+    | 'outbind'
+    | 'deliver_sm';
 
 /**
  * Pdu base object

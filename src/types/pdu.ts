@@ -32,33 +32,6 @@ export type InterfaceVersion = 51 | 52 | 80;
  */
 export type CommandName = SendCommandName | ResponseCommandName;
 
-// Will be removed in the future.
-/**
- * Commands client
- */
-export type CommandClient =
-    | 'bind_receiver'
-    | 'bind_transmitter'
-    | 'submit_sm'
-    | 'bind_transceiver'
-    | 'enquire_link'
-    | 'data_sm'
-    | 'query_sm'
-    | 'outbind'
-    | 'cancel_sm'
-    | 'bind_receiver_resp'
-    | 'bind_transmitter_resp'
-    | 'bind_transceiver_resp'
-    | 'submit_sm_resp'
-    | 'unbind_resp'
-    | 'enquire_link_resp'
-    | 'query_sm_resp'
-    | 'cancel_sm_resp'
-    | 'data_sm_resp'
-    | 'replace_sm'
-    | 'deliver_sm'
-    | 'deliver_sm_resp';
-
 /**
  * Send commands name
  */

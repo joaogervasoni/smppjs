@@ -5,7 +5,6 @@ import {
     BindTransceiverParams,
     BindTransmitterParams,
     CancelSmParams,
-    CommandClient,
     DataSmParams,
     InterfaceVersion,
     QuerySmParams,
@@ -79,7 +78,7 @@ export default class Client implements IClient {
         return this.session.disconnect();
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable' | CommandClient, callback: (...args: unknown[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable', callback: (...args: unknown[]) => void) {
         this.session.on(eventName, callback);
     }
 

@@ -4,14 +4,17 @@ import {
     BindReceiverParams,
     BindTransceiverParams,
     BindTransmitterParams,
-    CommandClient,
+    CancelSmParams,
     DataSmParams,
     InterfaceVersion,
     QuerySmParams,
+    ReplaceSmParams,
     SubmitSmParams,
+    DeliverSmRespParams,
+    IClient,
 } from './types';
 
-export default class Client {
+export default class Client implements IClient {
     private readonly session!: Session;
     private _debug: boolean;
     private _enquireLink: { auto: boolean; interval?: number };
@@ -71,16 +74,11 @@ export default class Client {
         }
     }
 
-    /**
-     * It's recommended to call unbind event to close connection with server safety.
-     *
-     * @returns boolean confirmation do disconnect.
-     */
     disconnect(): boolean {
         return this.session.disconnect();
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable' | CommandClient, callback: (...args: unknown[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable', callback: (...args: unknown[]) => void) {
         this.session.on(eventName, callback);
     }
 
@@ -106,6 +104,18 @@ export default class Client {
 
     querySm(params: QuerySmParams): boolean {
         return this.session.querySm(params);
+    }
+
+    cancelSm(params: CancelSmParams): boolean {
+        return this.session.cancelSm(params);
+    }
+
+    replaceSm(params: ReplaceSmParams): boolean {
+        return this.session.replaceSm(params);
+    }
+
+    deliverSmResp(params: DeliverSmRespParams): boolean {
+        return this.session.deliverSmResp(params);
     }
 
     enquireLink(): boolean {

@@ -54,21 +54,25 @@ class Cstring {
     /**
      * Read a cstring buffer and returns it in string
      */
-    static read({ buffer, offset }: { buffer: Buffer; offset: number }): string {
-        const MAX_SCAN = 16;
-        let length = 0;
-
-        while (length < MAX_SCAN && offset + length < buffer.length && buffer[offset + length]) {
-            length++;
+    static read({ buffer, offset, encoding = 'ascii', length }: { buffer: Buffer; offset: number; encoding?: Encode; length?: number }): string {
+        if (length && length > 0) {
+            return buffer.toString(encoding, offset, offset + length);
         }
 
-        if (length < MAX_SCAN || offset + length >= buffer.length) {
-            return buffer.toString('ascii', offset, offset + length);
+        const MAX_SCAN = 16;
+        let scanLength = 0;
+
+        while (scanLength < MAX_SCAN && offset + scanLength < buffer.length && buffer[offset + scanLength]) {
+            scanLength++;
+        }
+
+        if (scanLength < MAX_SCAN || offset + scanLength >= buffer.length) {
+            return buffer.toString(encoding, offset, offset + scanLength);
         }
 
         const nullIndex = buffer.indexOf(0, offset);
         const endIndex = nullIndex === -1 ? buffer.length : nullIndex;
-        return buffer.toString('ascii', offset, endIndex);
+        return buffer.toString(encoding, offset, endIndex);
     }
 
     /**

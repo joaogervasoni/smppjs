@@ -14,6 +14,12 @@ export * from './data_sm';
 export * from './data_sm_resp';
 export * from './query_sm';
 export * from './query_sm_resp';
+export * from './cancel_sm';
+export * from './cancel_sm_resp';
+export * from './outbind';
+export * from './replace_sm';
+export * from './deliver_sm';
+export * from './deliver_sm_resp';
 
 export type DTO<
     T = {

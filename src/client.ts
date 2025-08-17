@@ -5,16 +5,16 @@ import {
     BindTransceiverParams,
     BindTransmitterParams,
     CancelSmParams,
-    CommandClient,
     DataSmParams,
     InterfaceVersion,
     QuerySmParams,
     ReplaceSmParams,
     SubmitSmParams,
     DeliverSmRespParams,
+    IClient,
 } from './types';
 
-export default class Client {
+export default class Client implements IClient {
     private readonly session!: Session;
     private _debug: boolean;
     private _enquireLink: { auto: boolean; interval?: number };
@@ -74,20 +74,14 @@ export default class Client {
         }
     }
 
-    /**
-     * It's recommended to call unbind event to close connection with server safety.
-     *
-     * @returns boolean confirmation do disconnect.
-     */
     disconnect(): boolean {
         return this.session.disconnect();
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable' | CommandClient, callback: (...args: unknown[]) => void) {
+    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable', callback: (...args: unknown[]) => void) {
         this.session.on(eventName, callback);
     }
 
-    // TODO: Add description for each function
     bindTransceiver(params: BindTransceiverParams): boolean {
         return this.session.bindTransceiver(params);
     }

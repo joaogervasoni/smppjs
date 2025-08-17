@@ -4,7 +4,6 @@ import PDU from './PDU';
 import { getDTO } from './dtos';
 import { Logger } from './utils/logger';
 import {
-    CommandName,
     InterfaceVersion,
     BindTransceiverFunction,
     BindTransceiverParams,
@@ -85,7 +84,6 @@ export default class Session {
                 if (data) {
                     const pdu = this.PDU.readPdu(data);
                     this.socket.emit('pdu', pdu);
-                    // TODO: Called debug log callback for each command
                 }
             } catch (error) {
                 this.socket.emit('error', error);
@@ -107,10 +105,7 @@ export default class Session {
         return this.socket.closed;
     }
 
-    on(
-        eventName: 'connect' | 'close' | 'end' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable' | CommandName,
-        callback: (...args: unknown[]) => void,
-    ) {
+    on(eventName: 'connect' | 'close' | 'end' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable', callback: (...args: unknown[]) => void) {
         this.socket.on(eventName, callback);
     }
 

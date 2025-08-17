@@ -7,3 +7,4 @@ package-lock.json
 images/
 .prettierrc.json
 .prettierrc
+.nvmrc

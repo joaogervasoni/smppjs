@@ -4,11 +4,14 @@ import {
     BindReceiverParams,
     BindTransceiverParams,
     BindTransmitterParams,
+    CancelSmParams,
     CommandClient,
     DataSmParams,
     InterfaceVersion,
     QuerySmParams,
+    ReplaceSmParams,
     SubmitSmParams,
+    DeliverSmRespParams,
 } from './types';
 
 export default class Client {
@@ -84,6 +87,7 @@ export default class Client {
         this.session.on(eventName, callback);
     }
 
+    // TODO: Add description for each function
     bindTransceiver(params: BindTransceiverParams): boolean {
         return this.session.bindTransceiver(params);
     }
@@ -106,6 +110,18 @@ export default class Client {
 
     querySm(params: QuerySmParams): boolean {
         return this.session.querySm(params);
+    }
+
+    cancelSm(params: CancelSmParams): boolean {
+        return this.session.cancelSm(params);
+    }
+
+    replaceSm(params: ReplaceSmParams): boolean {
+        return this.session.replaceSm(params);
+    }
+
+    deliverSmResp(params: DeliverSmRespParams): boolean {
+        return this.session.deliverSmResp(params);
     }
 
     enquireLink(): boolean {

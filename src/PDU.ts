@@ -1,7 +1,7 @@
 import { Socket } from 'net';
 import { getDTO } from './dtos/index';
 import { octets } from './octets';
-import { CommandStatus, CommandStatusInfo, commandsId, commandsName, optionalParams } from './constains';
+import { CommandStatus, CommandStatusInfo, commandsId, commandsName, optionalParams, encodesName } from './constains';
 import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName, OptionalParamKey } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;
@@ -187,14 +187,45 @@ export default class PDU implements IPDU {
     }): { params: Record<string, string | number>; offset: number } {
         const params: Record<string, string | number> = {};
 
+        let dataCoding: number | undefined;
+        let smLength: number | undefined;
+
         for (const key in pduParams) {
             const param = pduParams[key];
             const type = param.type;
             const value = param.value;
 
             if (type === 'Cstring') {
-                params[key] = octets.Cstring.read({ buffer: pduBuffer, offset });
-                offset += octets.Cstring.size(params[key] || (value as string));
+                if (key === 'short_message' && dataCoding !== undefined) {
+                    const encoding = encodesName[dataCoding];
+
+                    params[key] = octets.Cstring.read({
+                        buffer: pduBuffer,
+                        offset,
+                        encoding,
+                        length: smLength,
+                    });
+
+                    if (smLength) {
+                        offset += smLength;
+                    }
+                } else {
+                    params[key] = octets.Cstring.read({ buffer: pduBuffer, offset });
+                    offset += octets.Cstring.size(params[key] || (value as string));
+                }
+            }
+
+            if (type === 'Int8') {
+                params[key] = octets.Int8.read({ buffer: pduBuffer, offset });
+                offset += octets.Int8.size();
+
+                if (key === 'data_coding') {
+                    dataCoding = params[key] as number;
+                }
+
+                if (key === 'sm_length') {
+                    smLength = params[key] as number;
+                }
             }
         }
 

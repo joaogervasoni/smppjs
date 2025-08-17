@@ -4,7 +4,6 @@ import PDU from './PDU';
 import { getDTO } from './dtos';
 import { Logger } from './utils/logger';
 import {
-    CommandName,
     InterfaceVersion,
     BindTransceiverFunction,
     BindTransceiverParams,
@@ -20,6 +19,12 @@ import {
     DataSmFunction,
     QuerySmParams,
     QuerySmFunction,
+    CancelSmParams,
+    CancelSmFunction,
+    ReplaceSmFunction,
+    ReplaceSmParams,
+    DeliverSmRespFunction,
+    DeliverSmRespParams,
 } from './types';
 
 export default class Session {
@@ -100,10 +105,7 @@ export default class Session {
         return this.socket.closed;
     }
 
-    on(
-        eventName: 'connect' | 'close' | 'end' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable' | CommandName,
-        callback: (...args: unknown[]) => void,
-    ) {
+    on(eventName: 'connect' | 'close' | 'end' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable', callback: (...args: unknown[]) => void) {
         this.socket.on(eventName, callback);
     }
 
@@ -167,6 +169,22 @@ export default class Session {
         return this.PDU.call({ command: 'query_sm', sequenceNumber: this.sequenceNumber, dto });
     }
 
+    cancelSm(params: CancelSmParams): boolean {
+        this.logger.debug(`cancelSm - called`, params);
+
+        const dto = getDTO<CancelSmFunction>('cancel_sm')(params);
+        this.sequenceNumber += 1;
+        return this.PDU.call({ command: 'cancel_sm', sequenceNumber: this.sequenceNumber, dto });
+    }
+
+    replaceSm(params: ReplaceSmParams): boolean {
+        this.logger.debug(`replaceSm - called`, params);
+
+        const dto = getDTO<ReplaceSmFunction>('replace_sm')(params);
+        this.sequenceNumber += 1;
+        return this.PDU.call({ command: 'replace_sm', sequenceNumber: this.sequenceNumber, dto });
+    }
+
     enquireLink(): boolean {
         this.logger.debug(`enquireLink - called`);
 
@@ -181,5 +199,13 @@ export default class Session {
         const dto = getDTO<UnbindFunction>('unbind')({});
         this.sequenceNumber += 1;
         return this.PDU.call({ command: 'unbind', sequenceNumber: this.sequenceNumber, dto });
+    }
+
+    deliverSmResp(params: DeliverSmRespParams): boolean {
+        this.logger.debug(`deliverSmResp - called`, params);
+
+        const dto = getDTO<DeliverSmRespFunction>('deliver_sm_resp')(params);
+        this.sequenceNumber += 1;
+        return this.PDU.call({ command: 'deliver_sm_resp', sequenceNumber: this.sequenceNumber, dto });
     }
 }

@@ -32,25 +32,6 @@ export type InterfaceVersion = 51 | 52 | 80;
  */
 export type CommandName = SendCommandName | ResponseCommandName;
 
-// Will be removed in the future.
-/**
- * Commands client
- */
-export type CommandClient =
-    | 'bind_receiver'
-    | 'bind_transmitter'
-    | 'submit_sm'
-    | 'bind_transceiver'
-    | 'enquire_link'
-    | 'data_sm'
-    | 'query_sm'
-    | 'bind_receiver_resp'
-    | 'bind_transmitter_resp'
-    | 'submit_sm_resp'
-    | 'unbind_resp'
-    | 'bind_transceiver_resp'
-    | 'enquire_link_resp';
-
 /**
  * Send commands name
  */
@@ -60,12 +41,11 @@ export type SendCommandName =
     | 'bind_transmitter'
     | 'query_sm'
     | 'submit_sm'
-    | 'deliver_sm'
+    | 'deliver_sm_resp'
     | 'unbind'
     | 'replace_sm'
     | 'cancel_sm'
     | 'bind_transceiver'
-    | 'outbind'
     | 'enquire_link'
     | 'submit_multi'
     | 'alert_notification'
@@ -79,14 +59,15 @@ export type ResponseCommandName =
     | 'bind_transmitter_resp'
     | 'query_sm_resp'
     | 'submit_sm_resp'
-    | 'deliver_sm_resp'
     | 'unbind_resp'
     | 'replace_sm_resp'
     | 'cancel_sm_resp'
     | 'bind_transceiver_resp'
     | 'enquire_link_resp'
     | 'submit_multi_resp'
-    | 'data_sm_resp';
+    | 'data_sm_resp'
+    | 'outbind'
+    | 'deliver_sm';
 
 /**
  * Pdu base object

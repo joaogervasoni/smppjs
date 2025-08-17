@@ -7,6 +7,10 @@ import {
     EnquireLinkFunction,
     DataSmFunction,
     QuerySmFunction,
+    CancelSmFunction,
+    ReplaceSmFunction,
+    DeliverSmFunction,
+    DeliverSmRespFunction,
 } from '../types';
 import { bindTransceiverDTO } from './bind_transceiver';
 import { bindTransceiverRespDTO } from './bind_transceiver_resp';
@@ -24,6 +28,12 @@ import { dataSmDTO } from './data_sm';
 import { dataSmRespDTO } from './data_sm_resp';
 import { querySmDTO } from './query_sm';
 import { querySmRespDTO } from './query_sm_resp';
+import { cancelSmDTO } from './cancel_sm';
+import { cancelSmRespDTO } from './cancel_sm_resp';
+import { outbindDTO } from './outbind';
+import { replaceSmDTO } from './replace_sm';
+import { deliverSmDTO } from './deliver_sm';
+import { deliverSmRespDTO } from './deliver_sm_resp';
 
 const DTOs: Record<string, DTOFunction<never, DTO>> = {
     bind_transceiver: bindTransceiverDTO,
@@ -42,10 +52,27 @@ const DTOs: Record<string, DTOFunction<never, DTO>> = {
     data_sm_resp: dataSmRespDTO,
     query_sm: querySmDTO,
     query_sm_resp: querySmRespDTO,
+    cancel_sm: cancelSmDTO,
+    cancel_sm_resp: cancelSmRespDTO,
+    outbind: outbindDTO,
+    replace_sm: replaceSmDTO,
+    deliver_sm: deliverSmDTO,
+    deliver_sm_resp: deliverSmRespDTO,
 };
 
 const getDTO = <
-    T extends DTOFunction | BindTransceiverFunction | BindTransceiverRespFunction | SubmitSmFunction | EnquireLinkFunction | DataSmFunction | QuerySmFunction,
+    T extends
+        | DTOFunction
+        | BindTransceiverFunction
+        | BindTransceiverRespFunction
+        | SubmitSmFunction
+        | EnquireLinkFunction
+        | DataSmFunction
+        | QuerySmFunction
+        | CancelSmFunction
+        | ReplaceSmFunction
+        | DeliverSmFunction
+        | DeliverSmRespFunction,
 >(
     name: string,
 ): T => {

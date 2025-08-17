@@ -11,6 +11,7 @@ import {
     QuerySmParams,
     ReplaceSmParams,
     SubmitSmParams,
+    DeliverSmRespParams,
 } from './types';
 
 export default class Client {
@@ -117,6 +118,10 @@ export default class Client {
 
     replaceSm(params: ReplaceSmParams): boolean {
         return this.session.replaceSm(params);
+    }
+
+    deliverSmResp(params: DeliverSmRespParams): boolean {
+        return this.session.deliverSmResp(params);
     }
 
     enquireLink(): boolean {

@@ -56,7 +56,8 @@ export type CommandClient =
     | 'cancel_sm_resp'
     | 'data_sm_resp'
     | 'replace_sm'
-    | 'deliver_sm';
+    | 'deliver_sm'
+    | 'deliver_sm_resp';
 
 /**
  * Send commands name

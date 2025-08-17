@@ -12,9 +12,10 @@ import {
     ReplaceSmParams,
     SubmitSmParams,
     DeliverSmRespParams,
+    IClient,
 } from './types';
 
-export default class Client {
+export default class Client implements IClient {
     private readonly session!: Session;
     private _debug: boolean;
     private _enquireLink: { auto: boolean; interval?: number };
@@ -74,11 +75,6 @@ export default class Client {
         }
     }
 
-    /**
-     * It's recommended to call unbind event to close connection with server safety.
-     *
-     * @returns boolean confirmation do disconnect.
-     */
     disconnect(): boolean {
         return this.session.disconnect();
     }
@@ -87,7 +83,6 @@ export default class Client {
         this.session.on(eventName, callback);
     }
 
-    // TODO: Add description for each function
     bindTransceiver(params: BindTransceiverParams): boolean {
         return this.session.bindTransceiver(params);
     }

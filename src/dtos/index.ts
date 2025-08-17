@@ -9,6 +9,7 @@ import {
     QuerySmFunction,
     CancelSmFunction,
     ReplaceSmFunction,
+    DeliverSmFunction,
 } from '../types';
 import { bindTransceiverDTO } from './bind_transceiver';
 import { bindTransceiverRespDTO } from './bind_transceiver_resp';
@@ -30,6 +31,7 @@ import { cancelSmDTO } from './cancel_sm';
 import { cancelSmRespDTO } from './cancel_sm_resp';
 import { outbindDTO } from './outbind';
 import { replaceSmDTO } from './replace_sm';
+import { deliverSmDTO } from './deliver_sm';
 
 const DTOs: Record<string, DTOFunction<never, DTO>> = {
     bind_transceiver: bindTransceiverDTO,
@@ -52,6 +54,7 @@ const DTOs: Record<string, DTOFunction<never, DTO>> = {
     cancel_sm_resp: cancelSmRespDTO,
     outbind: outbindDTO,
     replace_sm: replaceSmDTO,
+    deliver_sm: deliverSmDTO,
 };
 
 const getDTO = <
@@ -64,7 +67,8 @@ const getDTO = <
         | DataSmFunction
         | QuerySmFunction
         | CancelSmFunction
-        | ReplaceSmFunction,
+        | ReplaceSmFunction
+        | DeliverSmFunction,
 >(
     name: string,
 ): T => {

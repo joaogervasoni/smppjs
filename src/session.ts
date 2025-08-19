@@ -66,6 +66,7 @@ export default class Session {
     constructor(
         private readonly interfaceVersion: InterfaceVersion,
         private readonly debug = false,
+        private readonly timeout: number,
         private readonly secure: { tls?: boolean; unsafeBuffer?: boolean; secureOptions?: SecureContextOptions },
     ) {
         this.initSession();
@@ -80,6 +81,7 @@ export default class Session {
             this.socket = new Socket();
         }
 
+        this.socket.setTimeout(this.timeout);
         this.logger = new Logger(this.socket, { debug: this.debug });
         this.PDU = new PDU(this.socket, { unsafeBuffer: this.secure.unsafeBuffer || false });
     }

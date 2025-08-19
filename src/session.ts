@@ -1,7 +1,7 @@
 import { Socket } from 'net';
 import { TLSSocket, SecureContextOptions } from 'tls';
 import PDU from './PDU';
-import { getDTO } from './dtos';
+import { getDTO, DTOPayloadMap } from './dtos';
 import { Logger } from './utils/logger';
 import {
     InterfaceVersion,
@@ -25,6 +25,7 @@ import {
     ReplaceSmParams,
     DeliverSmRespFunction,
     DeliverSmRespParams,
+    Pdu,
 } from './types';
 
 export default class Session {
@@ -84,6 +85,7 @@ export default class Session {
                 if (data) {
                     const pdu = this.PDU.readPdu(data);
                     this.socket.emit('pdu', pdu);
+                    this.socket.emit(pdu.command, pdu);
                 }
             } catch (error) {
                 this.socket.emit('error', error);
@@ -105,8 +107,16 @@ export default class Session {
         return this.socket.closed;
     }
 
-    on(eventName: 'connect' | 'close' | 'end' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable', callback: (...args: unknown[]) => void) {
-        this.socket.on(eventName, callback);
+    on(event: "connect" | "end" | "timeout" | "readable", listener: () => void): this;
+    on(event: "close", listener: (hadError: boolean) => void): this;
+    on(event: "error", listener: (err: Error) => void): this;
+    on(event: "data", listener: (data: Buffer) => void): this;
+    on(event: "debug", listener: (message: string) => void): this;
+    on(event: "pdu", listener: (pdu: Pdu) => void): this;
+    on<T extends keyof DTOPayloadMap>(event: T, listener: (pdu: Pdu<DTOPayloadMap[T]>) => void): this;
+    on(event: string, listener: (...args: any[]) => void): this {
+        this.socket.on(event, listener);
+        return this;
     }
 
     bindTransceiver(params: BindTransceiverParams): boolean {

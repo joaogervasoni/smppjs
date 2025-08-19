@@ -12,7 +12,9 @@ import {
     SubmitSmParams,
     DeliverSmRespParams,
     IClient,
+    type Pdu,
 } from './types';
+import type { DTOPayloadMap } from './dtos';
 
 export default class Client implements IClient {
     private readonly session!: Session;
@@ -78,8 +80,16 @@ export default class Client implements IClient {
         return this.session.disconnect();
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable', callback: (...args: unknown[]) => void) {
-        this.session.on(eventName, callback);
+    on(event: "connect" | "end" | "timeout" | "readable", listener: () => void): this;
+    on(event: "close", listener: (hadError: boolean) => void): this;
+    on(event: "error", listener: (err: Error) => void): this;
+    on(event: "data", listener: (data: Buffer) => void): this;
+    on(event: "debug", listener: (message: string) => void): this;
+    on(event: "pdu", listener: (pdu: Pdu) => void): this;
+    on<T extends keyof DTOPayloadMap>(event: T, listener: (pdu: Pdu<DTOPayloadMap[T]>) => void): this;
+    on(event: string, listener: (...args: any[]) => void): this {
+        this.session.on(event as Parameters<Session["on"]>[0], listener);
+        return this;
     }
 
     bindTransceiver(params: BindTransceiverParams): boolean {

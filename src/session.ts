@@ -31,8 +31,14 @@ export default class Session {
     private socket!: Socket | TLSSocket;
     private logger!: Logger;
     private PDU!: PDU;
-    private sequenceNumber: number = 0;
+    private _sequenceNumber: number = 0;
     private _connected: boolean = false;
+
+    /**
+     * SMPP sequence number is a 32-bit unsigned integer.
+     * The maximum value is 0xffffffff (4294967295).
+     */
+    private readonly MAX_SMPP_SEQUENCE = 0xffffffff;
 
     public get connected(): boolean {
         return this._connected;
@@ -46,9 +52,21 @@ export default class Session {
         return this.socket.closed;
     }
 
+    private get sequenceNumber(): number {
+        this._sequenceNumber += 1;
+
+        if (this._sequenceNumber > this.MAX_SMPP_SEQUENCE) {
+            this._sequenceNumber = 1;
+            this.logger.debug('sequence number wrapped around - avoid overflow');
+        }
+
+        return this._sequenceNumber;
+    }
+
     constructor(
         private readonly interfaceVersion: InterfaceVersion,
         private readonly debug = false,
+        private readonly timeout: number,
         private readonly secure: { tls?: boolean; unsafeBuffer?: boolean; secureOptions?: SecureContextOptions },
     ) {
         this.initSession();
@@ -63,6 +81,7 @@ export default class Session {
             this.socket = new Socket();
         }
 
+        this.socket.setTimeout(this.timeout);
         this.logger = new Logger(this.socket, { debug: this.debug });
         this.PDU = new PDU(this.socket, { unsafeBuffer: this.secure.unsafeBuffer || false });
     }
@@ -117,7 +136,6 @@ export default class Session {
         }
 
         const dto = getDTO<BindTransceiverFunction>('bind_transceiver')(params);
-        this.sequenceNumber += 1;
         return this.PDU.call({ command: 'bind_transceiver', sequenceNumber: this.sequenceNumber, dto });
     }
 
@@ -129,7 +147,6 @@ export default class Session {
         }
 
         const dto = getDTO<BindReceiverFunction>('bind_receiver')(params);
-        this.sequenceNumber += 1;
         return this.PDU.call({ command: 'bind_receiver', sequenceNumber: this.sequenceNumber, dto });
     }
 
@@ -141,7 +158,6 @@ export default class Session {
         }
 
         const dto = getDTO<BindTransmitterFunction>('bind_transmitter')(params);
-        this.sequenceNumber += 1;
         return this.PDU.call({ command: 'bind_transmitter', sequenceNumber: this.sequenceNumber, dto });
     }
 
@@ -149,7 +165,6 @@ export default class Session {
         this.logger.debug(`submitSm - called`, params);
 
         const dto = getDTO<SubmitSmFunction>('submit_sm')(params);
-        this.sequenceNumber += 1;
         return this.PDU.call({ command: 'submit_sm', sequenceNumber: this.sequenceNumber, dto });
     }
 
@@ -157,7 +172,6 @@ export default class Session {
         this.logger.debug(`dataSm - called`, params);
 
         const dto = getDTO<DataSmFunction>('data_sm')(params);
-        this.sequenceNumber += 1;
         return this.PDU.call({ command: 'data_sm', sequenceNumber: this.sequenceNumber, dto });
     }
 
@@ -165,7 +179,6 @@ export default class Session {
         this.logger.debug(`querySm - called`, params);
 
         const dto = getDTO<QuerySmFunction>('query_sm')(params);
-        this.sequenceNumber += 1;
         return this.PDU.call({ command: 'query_sm', sequenceNumber: this.sequenceNumber, dto });
     }
 
@@ -173,7 +186,6 @@ export default class Session {
         this.logger.debug(`cancelSm - called`, params);
 
         const dto = getDTO<CancelSmFunction>('cancel_sm')(params);
-        this.sequenceNumber += 1;
         return this.PDU.call({ command: 'cancel_sm', sequenceNumber: this.sequenceNumber, dto });
     }
 
@@ -181,7 +193,6 @@ export default class Session {
         this.logger.debug(`replaceSm - called`, params);
 
         const dto = getDTO<ReplaceSmFunction>('replace_sm')(params);
-        this.sequenceNumber += 1;
         return this.PDU.call({ command: 'replace_sm', sequenceNumber: this.sequenceNumber, dto });
     }
 
@@ -189,7 +200,6 @@ export default class Session {
         this.logger.debug(`enquireLink - called`);
 
         const dto = getDTO<EnquireLinkFunction>('enquire_link')({});
-        this.sequenceNumber += 1;
         return this.PDU.call({ command: 'enquire_link', sequenceNumber: this.sequenceNumber, dto });
     }
 
@@ -197,7 +207,6 @@ export default class Session {
         this.logger.debug(`unbind - called`);
 
         const dto = getDTO<UnbindFunction>('unbind')({});
-        this.sequenceNumber += 1;
         return this.PDU.call({ command: 'unbind', sequenceNumber: this.sequenceNumber, dto });
     }
 
@@ -205,7 +214,6 @@ export default class Session {
         this.logger.debug(`deliverSmResp - called`, params);
 
         const dto = getDTO<DeliverSmRespFunction>('deliver_sm_resp')(params);
-        this.sequenceNumber += 1;
         return this.PDU.call({ command: 'deliver_sm_resp', sequenceNumber: this.sequenceNumber, dto });
     }
 }

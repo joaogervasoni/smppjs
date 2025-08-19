@@ -6,7 +6,9 @@ The following versions of `smppjs` are currently supported with security updates
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.x     | ✅                |
+| 1.2.0     | ✅                |
+| 1.1.0     | ❌                |
+| 1.0.0     | ❌                |
 
 ## Reporting a Vulnerability
 

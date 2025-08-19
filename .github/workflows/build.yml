@@ -2,7 +2,7 @@ name: Test build
 
 on:
   pull_request: 
-    branches: [master]
+    branches: [master, develop]
 
 jobs:
   build:
@@ -21,4 +21,4 @@ jobs:
       run: npm install
   
     - name: Build application
-      run: npm run build
+      run: npm run prod:build

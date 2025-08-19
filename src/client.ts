@@ -37,7 +37,9 @@ export default class Client implements IClient {
         secure = {
             tls: false,
             unsafeBuffer: false,
+            secureOptions: undefined,
         },
+        timeout = 3000,
         debug = false,
     }: {
         interfaceVersion: InterfaceVersion;
@@ -46,11 +48,12 @@ export default class Client implements IClient {
          */
         enquireLink: { auto: boolean; interval?: number };
         secure: { tls?: boolean; unsafeBuffer?: boolean; secureOptions?: SecureContextOptions };
+        timeout?: number;
         debug?: boolean;
     }) {
         this._debug = debug;
         this._enquireLink = enquireLink;
-        this.session = new Session(interfaceVersion, this.debug, secure);
+        this.session = new Session(interfaceVersion, this.debug, timeout, secure);
     }
 
     connect({ url }: { url: string }): void {

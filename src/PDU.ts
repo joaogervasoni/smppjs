@@ -265,6 +265,10 @@ export default class PDU implements IPDU {
     }
 
     private readHeaderPdu({ buffer, pdu }: { buffer: Buffer; pdu: Pdu }): Pdu {
+        if (buffer.length < HEADER_COMMAND_LENGTH) {
+            throw new Error('PDU: Buffer too small for header.');
+        }
+
         pdu.command_length = buffer.readUInt32BE(0);
         pdu.command_id = buffer.readUInt32BE(4);
         pdu.command_status = buffer.readUInt32BE(8);

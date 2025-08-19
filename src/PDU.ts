@@ -270,6 +270,11 @@ export default class PDU implements IPDU {
         }
 
         pdu.command_length = buffer.readUInt32BE(0);
+
+        if (pdu.command_length < 16 || pdu.command_length > 65536) {
+            throw new Error('PDU: Invalid command length.');
+        }
+
         pdu.command_id = buffer.readUInt32BE(4);
         pdu.command_status = buffer.readUInt32BE(8);
         pdu.sequence_number = buffer.readUInt32BE(12);

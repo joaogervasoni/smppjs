@@ -39,7 +39,7 @@ export default class Client implements IClient {
             unsafeBuffer: false,
             secureOptions: undefined,
         },
-        timeout = 10000,
+        timeout = 3000,
         debug = false,
     }: {
         interfaceVersion: InterfaceVersion;

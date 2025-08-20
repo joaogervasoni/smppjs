@@ -32,14 +32,9 @@ export default class Session {
     private socket!: Socket | TLSSocket;
     private logger!: Logger;
     private PDU!: PDU;
-    private _sequenceNumber: number = 0;
-    private _connected: boolean = false;
+    private _sequenceNumber = new Uint32Array(1);
 
-    /**
-     * SMPP sequence number is a 32-bit unsigned integer.
-     * The maximum value is 0xffffffff (4294967295).
-     */
-    private readonly MAX_SMPP_SEQUENCE = 0xffffffff;
+    private _connected: boolean = false;
 
     public get connected(): boolean {
         return this._connected;
@@ -54,14 +49,13 @@ export default class Session {
     }
 
     private get sequenceNumber(): number {
-        this._sequenceNumber += 1;
+        this._sequenceNumber[0] += 1;
 
-        if (this._sequenceNumber > this.MAX_SMPP_SEQUENCE) {
-            this._sequenceNumber = 1;
-            this.logger.debug('sequence number wrapped around - avoid overflow');
+        if (this._sequenceNumber[0] === 0) {
+            this._sequenceNumber[0] = 1;
         }
 
-        return this._sequenceNumber;
+        return this._sequenceNumber[0];
     }
 
     constructor(

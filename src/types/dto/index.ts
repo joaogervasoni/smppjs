@@ -20,6 +20,7 @@ export * from './outbind';
 export * from './replace_sm';
 export * from './deliver_sm';
 export * from './deliver_sm_resp';
+export * from './alert_notification';
 
 export type DTO<
     T = {

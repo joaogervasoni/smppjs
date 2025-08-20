@@ -13,6 +13,7 @@ import {
     DeliverSmRespFunction,
     DTOData,
     ResponseCommandName,
+    AlertNotificationFunction,
 } from '../types';
 import { bindTransceiverDTO } from './bind_transceiver';
 import { bindTransceiverRespDTO } from './bind_transceiver_resp';
@@ -36,6 +37,7 @@ import { outbindDTO } from './outbind';
 import { replaceSmDTO } from './replace_sm';
 import { deliverSmDTO } from './deliver_sm';
 import { deliverSmRespDTO } from './deliver_sm_resp';
+import { alertNotificationDTO } from './alert_notification';
 
 const DTOs = {
     bind_transceiver: bindTransceiverDTO,
@@ -60,6 +62,7 @@ const DTOs = {
     replace_sm: replaceSmDTO,
     deliver_sm: deliverSmDTO,
     deliver_sm_resp: deliverSmRespDTO,
+    alert_notification: alertNotificationDTO,
 } as const satisfies Record<string, DTOFunction<never, DTO>>;
 
 export type DTOPayloadMap = {
@@ -78,7 +81,8 @@ const getDTO = <
         | CancelSmFunction
         | ReplaceSmFunction
         | DeliverSmFunction
-        | DeliverSmRespFunction,
+        | DeliverSmRespFunction
+        | AlertNotificationFunction,
 >(
     name: string,
 ): T => {

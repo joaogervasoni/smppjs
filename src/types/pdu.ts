@@ -48,7 +48,6 @@ export type SendCommandName =
     | 'bind_transceiver'
     | 'enquire_link'
     | 'submit_multi'
-    | 'alert_notification'
     | 'data_sm';
 
 /**
@@ -67,7 +66,8 @@ export type ResponseCommandName =
     | 'submit_multi_resp'
     | 'data_sm_resp'
     | 'outbind'
-    | 'deliver_sm';
+    | 'deliver_sm'
+    | 'alert_notification';
 
 export type DTOData<T extends DTO> = {
     [K in keyof T["command"]]: T["command"][K]["value"];

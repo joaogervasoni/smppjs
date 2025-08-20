@@ -59,18 +59,7 @@ export default class Client implements IClient {
     }
 
     connect({ url }: { url: string }): void {
-        const [host, portStr] = url.split(':');
-
-        if (!host || !portStr) {
-            throw new Error('Invalid URL.');
-        }
-
-        const port = parseInt(portStr, 10);
-
-        if (isNaN(port)) {
-            throw new Error('Invalid port.');
-        }
-
+        const { host, port } = this.validateUrl(url);
         this.session.connect({ host, port });
 
         if (this._enquireLink.auto && this._enquireLink.interval) {
@@ -137,6 +126,35 @@ export default class Client implements IClient {
 
     unbind(): boolean {
         return this.session.unbind();
+    }
+
+    private validateUrl(url: string): { host: string; port: number } {
+        if (!url || typeof url !== 'string') {
+            throw new Error('URL must be a string.');
+        }
+
+        url = url.trim();
+
+        const lastColonIndex = url.lastIndexOf(':');
+
+        if (lastColonIndex === -1) {
+            throw new Error('Invalid URL format. Expected "host:port".');
+        }
+
+        const host = url.substring(0, lastColonIndex);
+        const portStr = url.substring(lastColonIndex + 1);
+
+        if (!host) {
+            throw new Error('Host cannot be empty.');
+        }
+
+        const port = parseInt(portStr, 10);
+
+        if (isNaN(port)) {
+            throw new Error('Invalid port.');
+        }
+
+        return { host, port };
     }
 
     private autoEnquireLink(interval: number = 20000) {

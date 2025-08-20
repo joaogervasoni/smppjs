@@ -11,6 +11,8 @@ import {
     ReplaceSmFunction,
     DeliverSmFunction,
     DeliverSmRespFunction,
+    DTOData,
+    ResponseCommandName,
 } from '../types';
 import { bindTransceiverDTO } from './bind_transceiver';
 import { bindTransceiverRespDTO } from './bind_transceiver_resp';
@@ -35,7 +37,7 @@ import { replaceSmDTO } from './replace_sm';
 import { deliverSmDTO } from './deliver_sm';
 import { deliverSmRespDTO } from './deliver_sm_resp';
 
-const DTOs: Record<string, DTOFunction<never, DTO>> = {
+const DTOs = {
     bind_transceiver: bindTransceiverDTO,
     bind_transceiver_resp: bindTransceiverRespDTO,
     submit_sm: submitSmDTO,
@@ -58,7 +60,11 @@ const DTOs: Record<string, DTOFunction<never, DTO>> = {
     replace_sm: replaceSmDTO,
     deliver_sm: deliverSmDTO,
     deliver_sm_resp: deliverSmRespDTO,
-};
+} as const satisfies Record<string, DTOFunction<never, DTO>>;
+
+export type DTOPayloadMap = {
+    [K in keyof typeof DTOs & ResponseCommandName]: DTOData<ReturnType<(typeof DTOs)[K]>>
+}
 
 const getDTO = <
     T extends
@@ -76,7 +82,7 @@ const getDTO = <
 >(
     name: string,
 ): T => {
-    return DTOs[name] as T;
+    return DTOs[name as keyof typeof DTOs] as T;
 };
 
 export { getDTO };

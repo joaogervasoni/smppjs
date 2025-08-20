@@ -282,7 +282,7 @@ export default class PDU implements IPDU {
         return pdu;
     }
 
-    readPdu(buffer: Buffer): Record<string, string | number> {
+    readPdu(buffer: Buffer): Pdu {
         const pdu: Pdu = {
             command: '',
             command_id: 0,

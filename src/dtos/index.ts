@@ -12,6 +12,7 @@ import {
     DeliverSmFunction,
     DeliverSmRespFunction,
     DTOData,
+    ResponseCommandName,
 } from '../types';
 import { bindTransceiverDTO } from './bind_transceiver';
 import { bindTransceiverRespDTO } from './bind_transceiver_resp';

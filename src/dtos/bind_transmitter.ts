@@ -7,6 +7,7 @@ const MAX_LENGTH: Record<string, number> = {
     system_type: 13,
     address_range: 41,
 };
+const REQUIRED = ['system_id', 'password'];
 
 export const bindTransmitterDTO: BindTransmitterFunction = ({
     systemId,
@@ -29,6 +30,6 @@ export const bindTransmitterDTO: BindTransmitterFunction = ({
         },
     };
 
-    dtoValidation({ dto, MAX_LENGTH });
+    dtoValidation({ dto, MAX_LENGTH, REQUIRED });
     return dto;
 };

@@ -7,6 +7,8 @@ const MAX_LENGTH: Record<string, number> = {
     destination_addr: 21,
 };
 
+const REQUIRED = ['destination_addr', 'data_coding', 'esm_class'];
+
 export const dataSmDTO: DataSmFunction = ({
     destinationAddr,
     dataCoding,
@@ -38,6 +40,6 @@ export const dataSmDTO: DataSmFunction = ({
         },
     };
 
-    dtoValidation({ dto, MAX_LENGTH });
+    dtoValidation({ dto, MAX_LENGTH, REQUIRED });
     return dto;
 };

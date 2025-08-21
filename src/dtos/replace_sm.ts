@@ -15,6 +15,8 @@ const DATE_TYPE = {
     validity_period: DateType.ABSOLUTE_AND_RELATIVE,
 };
 
+const REQUIRED = ['messageId', 'short_message'];
+
 export const replaceSmDTO: ReplaceSmFunction = ({
     messageId,
     sourceAddrTon,
@@ -45,6 +47,6 @@ export const replaceSmDTO: ReplaceSmFunction = ({
         },
     };
 
-    dtoValidation({ dto, DATE_TYPE, MAX_LENGTH });
+    dtoValidation({ dto, DATE_TYPE, MAX_LENGTH, REQUIRED });
     return dto;
 };

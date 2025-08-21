@@ -17,6 +17,8 @@ const DATE_TYPE = {
     validity_period: DateType.ABSOLUTE_AND_RELATIVE,
 };
 
+const REQUIRED = ['destination_addr', 'data_coding', 'esm_class'];
+
 export const submitSmDTO: SubmitSmFunction = ({
     destinationAddr,
     dataCoding,
@@ -63,10 +65,10 @@ export const submitSmDTO: SubmitSmFunction = ({
             },
         },
         tlvs: {
-            message_payload: { type: 'Cstring', value: tlvs?.messagePayload || '', encode: 'ascii' }, // Add to pass encode client
+            message_payload: { type: 'Cstring', value: tlvs?.messagePayload || '', encode: 'ascii' }, // TODO: Add to pass encode client
         },
     };
 
-    dtoValidation({ dto, DATE_TYPE, MAX_LENGTH });
+    dtoValidation({ dto, DATE_TYPE, MAX_LENGTH, REQUIRED });
     return dto;
 };

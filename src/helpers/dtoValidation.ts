@@ -12,12 +12,25 @@ export const dtoValidation = ({
     dto,
     MAX_LENGTH,
     DATE_TYPE,
+    REQUIRED,
 }: {
     dto: DTO;
     MAX_LENGTH?: Record<string, number>;
     DATE_TYPE?: Record<string, DateType>;
+    REQUIRED?: string[];
 }): void => {
     const dtoRecord: Record<string, { type: string; value: string | number | Buffer }> = dto.command;
+
+    if (REQUIRED) {
+        for (let index = 0; index < REQUIRED.length; index += 1) {
+            const fieldName = REQUIRED[index];
+            const value = dtoRecord[fieldName].value;
+
+            if (value === undefined || value === null) {
+                throw new Error(`${fieldName} is required`);
+            }
+        }
+    }
 
     if (MAX_LENGTH) {
         const validator = Object.entries(MAX_LENGTH);

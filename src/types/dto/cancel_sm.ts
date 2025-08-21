@@ -16,10 +16,10 @@ export interface CancelSm extends DTO {
 export type CancelSmParams = {
     messageId: string;
     destinationAddr: string;
+    sourceAddr: string;
     systemTypeValue?: SystemType | (string & {});
     sourceAddrTon?: number;
     sourceAddrNpi?: number;
-    sourceAddr?: string;
     destAddrTon?: number;
     destAddrNpi?: number;
 };

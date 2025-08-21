@@ -24,8 +24,9 @@ export const dtoValidation = ({
     if (REQUIRED) {
         for (let index = 0; index < REQUIRED.length; index += 1) {
             const fieldName = REQUIRED[index];
+            const value = dtoRecord[fieldName].value;
 
-            if (!dtoRecord[fieldName].value) {
+            if (value === undefined || value === null) {
                 throw new Error(`${fieldName} is required`);
             }
         }

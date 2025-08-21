@@ -6,6 +6,8 @@ const MAX_LENGTH: Record<string, number> = {
     source_addr: 21,
 };
 
+const REQUIRED = ['message_id'];
+
 export const querySmDTO: QuerySmFunction = ({ messageId, sourceAddrTon, sourceAddrNpi, sourceAddr }: QuerySmParams): QuerySm => {
     const dto: QuerySm = {
         command: {
@@ -16,6 +18,6 @@ export const querySmDTO: QuerySmFunction = ({ messageId, sourceAddrTon, sourceAd
         },
     };
 
-    dtoValidation({ dto, MAX_LENGTH });
+    dtoValidation({ dto, MAX_LENGTH, REQUIRED });
     return dto;
 };

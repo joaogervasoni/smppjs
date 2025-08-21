@@ -70,22 +70,23 @@ export type ResponseCommandName =
     | 'alert_notification';
 
 export type DTOData<T extends DTO> = {
-    [K in keyof T["command"]]: T["command"][K]["value"];
-} & (T["tlvs"] extends NonNullable<T["tlvs"]> ? {
-    [K in keyof T["tlvs"]]?: T["tlvs"][K]["value"];
-} : {})
+    [K in keyof T['command']]: T['command'][K]['value'];
+} & (T['tlvs'] extends NonNullable<T['tlvs']>
+    ? {
+          [K in keyof T['tlvs']]?: T['tlvs'][K]['value'];
+      }
+    : object);
 
 /**
  * Pdu base object
  */
-export type Pdu<T extends Record<string, any> = Record<string, string | number>> = T & {
+export type Pdu<T extends Record<string, string | number> = Record<string, string | number>> = T & {
     command_length: number;
     command_id: number;
     command_status: number;
     sequence_number: number;
     command: CommandName | '';
-}
-
+};
 
 /**
  * Indicate priority

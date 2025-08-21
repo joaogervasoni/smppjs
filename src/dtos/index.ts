@@ -66,8 +66,8 @@ const DTOs = {
 } as const satisfies Record<string, DTOFunction<never, DTO>>;
 
 export type DTOPayloadMap = {
-    [K in keyof typeof DTOs & ResponseCommandName]: DTOData<ReturnType<(typeof DTOs)[K]>>
-}
+    [K in keyof typeof DTOs & ResponseCommandName]: DTOData<ReturnType<(typeof DTOs)[K]>>;
+};
 
 const getDTO = <
     T extends

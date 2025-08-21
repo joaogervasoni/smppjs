@@ -9,7 +9,8 @@
     "dev:start": "./node_modules/.bin/tsc && node .",
     "dev:build": "./node_modules/.bin/tsc",
     "prod:pack": "npm pack",
-    "prod:build": "tsc -p ."
+    "prod:build": "tsc -p .",
+    "lint": "eslint src/**/*.ts"
   },
   "engines": {
     "node": ">=8"

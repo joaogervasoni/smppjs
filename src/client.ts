@@ -13,6 +13,7 @@ import {
     DeliverSmRespParams,
     IClient,
     type Pdu,
+    SubmitMultiParams,
 } from './types';
 import type { DTOPayloadMap } from './dtos';
 
@@ -98,6 +99,10 @@ export default class Client implements IClient {
 
     submitSm(params: SubmitSmParams): boolean {
         return this.session.submitSm(params);
+    }
+
+    submitMulti(params: SubmitMultiParams): boolean {
+        return this.session.submitMulti(params);
     }
 
     dataSm(params: DataSmParams): boolean {

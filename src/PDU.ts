@@ -2,7 +2,7 @@ import { Socket } from 'net';
 import { getDTO } from './dtos/index';
 import { octets } from './octets';
 import { CommandStatus, CommandStatusInfo, commandsId, commandsName, optionalParams, encodesName } from './constains';
-import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName, OptionalParamKey } from './types';
+import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName, OptionalParamKey, DTOCommand } from './types';
 
 const HEADER_COMMAND_LENGTH = 16;
 
@@ -24,11 +24,31 @@ export default class PDU implements IPDU {
         for (let index = 0; index < paramEntries.length; index++) {
             const element = paramEntries[index][1];
 
-            if (element.encode && element.type === 'Cstring' && typeof element.value === 'string') {
-                element.value = octets[element.type].convertToUtf16be(element.value);
-            }
+            if (element.type !== 'Array' && typeof element.value !== 'object') {
+                if (element.encode && element.type === 'Cstring' && typeof element.value === 'string') {
+                    element.value = octets[element.type].convertToUtf16be(element.value);
+                }
 
-            commandLength += octets[element.type].size(element.value);
+                commandLength += octets[element.type].size(element.value);
+            } else if (element.type === 'Array') {
+                const commandParamsArray = element.value as Record<string, DTOCommand>[];
+
+                for (let index = 0; index < commandParamsArray.length; index++) {
+                    const subParamEntries = Object.entries(commandParamsArray[index]);
+
+                    for (let index = 0; index < subParamEntries.length; index++) {
+                        const subElement = subParamEntries[index][1];
+
+                        if (subElement.type !== 'Array' && typeof subElement.value !== 'object') {
+                            if (subElement.encode && subElement.type === 'Cstring' && typeof subElement.value === 'string') {
+                                subElement.value = octets[subElement.type].convertToUtf16be(subElement.value);
+                            }
+
+                            commandLength += octets[subElement.type].size(subElement.value);
+                        }
+                    }
+                }
+            }
         }
 
         if (tlvs) {
@@ -70,7 +90,7 @@ export default class PDU implements IPDU {
         commandLength: number;
         commandId: number;
         sequenceNumber: number;
-        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
+        pduParams: Record<string, DTOCommand>;
         tlvs?: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer | undefined }> | undefined;
         unsafeBuffer?: boolean;
         commandStatus?: number;
@@ -80,7 +100,6 @@ export default class PDU implements IPDU {
         pduBuffer = this.writeHeaderPdu({ buffer: pduBuffer, commandLength, commandId, sequenceNumber, commandStatus });
         const pduWithParams = this.writeParamsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, pduParams });
         pduBuffer = pduWithParams.pduBuffer;
-
         pduBuffer = this.writeTlvsPdu({ offset: pduWithParams.offset, pduBuffer, tlvs });
 
         return pduBuffer;
@@ -107,15 +126,10 @@ export default class PDU implements IPDU {
         return buffer;
     }
 
-    private writeParamsPdu({
-        pduParams,
-        pduBuffer,
-        offset,
-    }: {
-        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
-        pduBuffer: Buffer;
+    private writeParamsPdu({ pduParams, pduBuffer, offset }: { pduParams: Record<string, DTOCommand>; pduBuffer: Buffer; offset: number }): {
         offset: number;
-    }): { offset: number; pduBuffer: Buffer } {
+        pduBuffer: Buffer;
+    } {
         for (const key in pduParams) {
             const param = pduParams[key];
             const type = param.type;
@@ -132,6 +146,16 @@ export default class PDU implements IPDU {
             if (type === 'Int8') {
                 pduBuffer = octets.Int8.write({ buffer: pduBuffer, offset, value: value as number });
                 offset += octets.Int8.size();
+            }
+
+            if (type === 'Array') {
+                const subParamEntries = value as Record<string, DTOCommand>[];
+
+                for (let index = 0; index < subParamEntries.length; index += 1) {
+                    const { pduBuffer: subPduBuffer, offset: subOffset } = this.writeParamsPdu({ pduParams: subParamEntries[index], pduBuffer, offset });
+                    pduBuffer = subPduBuffer;
+                    offset = subOffset;
+                }
             }
         }
 
@@ -176,15 +200,10 @@ export default class PDU implements IPDU {
         return pduBuffer;
     }
 
-    private readParamsPdu({
-        pduParams,
-        pduBuffer,
-        offset,
-    }: {
-        pduParams: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer }>;
-        pduBuffer: Buffer;
+    private readParamsPdu({ pduParams, pduBuffer, offset }: { pduParams: Record<string, DTOCommand>; pduBuffer: Buffer; offset: number }): {
+        params: Record<string, string | number>;
         offset: number;
-    }): { params: Record<string, string | number>; offset: number } {
+    } {
         const params: Record<string, string | number> = {};
 
         let dataCoding: number | undefined;

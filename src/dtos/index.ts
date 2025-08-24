@@ -11,6 +11,10 @@ import {
     ReplaceSmFunction,
     DeliverSmFunction,
     DeliverSmRespFunction,
+    DTOData,
+    ResponseCommandName,
+    AlertNotificationFunction,
+    SubmitMultiFunction,
 } from '../types';
 import { bindTransceiverDTO } from './bind_transceiver';
 import { bindTransceiverRespDTO } from './bind_transceiver_resp';
@@ -34,11 +38,16 @@ import { outbindDTO } from './outbind';
 import { replaceSmDTO } from './replace_sm';
 import { deliverSmDTO } from './deliver_sm';
 import { deliverSmRespDTO } from './deliver_sm_resp';
+import { alertNotificationDTO } from './alert_notification';
+import { submitMultiDTO } from './submit_multi';
+import { submitMultiRespDTO } from './submit_multi_resp';
 
-const DTOs: Record<string, DTOFunction<never, DTO>> = {
+const DTOs = {
     bind_transceiver: bindTransceiverDTO,
     bind_transceiver_resp: bindTransceiverRespDTO,
+    submit_multi: submitMultiDTO,
     submit_sm: submitSmDTO,
+    submit_multi_resp: submitMultiRespDTO,
     submit_sm_resp: submitSmRespDTO,
     enquire_link: enquireLinkDTO,
     enquire_link_resp: enquireLinkRespDTO,
@@ -58,6 +67,11 @@ const DTOs: Record<string, DTOFunction<never, DTO>> = {
     replace_sm: replaceSmDTO,
     deliver_sm: deliverSmDTO,
     deliver_sm_resp: deliverSmRespDTO,
+    alert_notification: alertNotificationDTO,
+} as const satisfies Record<string, DTOFunction<never, DTO>>;
+
+export type DTOPayloadMap = {
+    [K in keyof typeof DTOs & ResponseCommandName]: DTOData<ReturnType<(typeof DTOs)[K]>>;
 };
 
 const getDTO = <
@@ -66,17 +80,19 @@ const getDTO = <
         | BindTransceiverFunction
         | BindTransceiverRespFunction
         | SubmitSmFunction
+        | SubmitMultiFunction
         | EnquireLinkFunction
         | DataSmFunction
         | QuerySmFunction
         | CancelSmFunction
         | ReplaceSmFunction
         | DeliverSmFunction
-        | DeliverSmRespFunction,
+        | DeliverSmRespFunction
+        | AlertNotificationFunction,
 >(
     name: string,
 ): T => {
-    return DTOs[name] as T;
+    return DTOs[name as keyof typeof DTOs] as T;
 };
 
 export { getDTO };

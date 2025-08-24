@@ -1,7 +1,7 @@
 import { Socket } from 'net';
 import { TLSSocket, SecureContextOptions } from 'tls';
 import PDU from './PDU';
-import { getDTO } from './dtos';
+import { getDTO, DTOPayloadMap } from './dtos';
 import { Logger } from './utils/logger';
 import {
     InterfaceVersion,
@@ -25,20 +25,18 @@ import {
     ReplaceSmParams,
     DeliverSmRespFunction,
     DeliverSmRespParams,
+    Pdu,
+    SubmitMultiParams,
+    SubmitMultiFunction,
 } from './types';
 
 export default class Session {
     private socket!: Socket | TLSSocket;
     private logger!: Logger;
     private PDU!: PDU;
-    private _sequenceNumber: number = 0;
-    private _connected: boolean = false;
+    private _sequenceNumber = new Uint32Array(1);
 
-    /**
-     * SMPP sequence number is a 32-bit unsigned integer.
-     * The maximum value is 0xffffffff (4294967295).
-     */
-    private readonly MAX_SMPP_SEQUENCE = 0xffffffff;
+    private _connected: boolean = false;
 
     public get connected(): boolean {
         return this._connected;
@@ -53,14 +51,13 @@ export default class Session {
     }
 
     private get sequenceNumber(): number {
-        this._sequenceNumber += 1;
+        this._sequenceNumber[0] += 1;
 
-        if (this._sequenceNumber > this.MAX_SMPP_SEQUENCE) {
-            this._sequenceNumber = 1;
-            this.logger.debug('sequence number wrapped around - avoid overflow');
+        if (this._sequenceNumber[0] === 0) {
+            this._sequenceNumber[0] = 1;
         }
 
-        return this._sequenceNumber;
+        return this._sequenceNumber[0];
     }
 
     constructor(
@@ -103,6 +100,7 @@ export default class Session {
                 if (data) {
                     const pdu = this.PDU.readPdu(data);
                     this.socket.emit('pdu', pdu);
+                    this.socket.emit(pdu.command, pdu);
                 }
             } catch (error) {
                 this.socket.emit('error', error);
@@ -124,8 +122,27 @@ export default class Session {
         return this.socket.closed;
     }
 
-    on(eventName: 'connect' | 'close' | 'end' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable', callback: (...args: unknown[]) => void) {
-        this.socket.on(eventName, callback);
+    on(event: 'connect' | 'end' | 'timeout' | 'readable', listener: () => void): this;
+    on(event: 'close', listener: (hadError: boolean) => void): this;
+    on(event: 'error', listener: (err: Error) => void): this;
+    on(event: 'data', listener: (data: Buffer) => void): this;
+    on(event: 'debug', listener: (message: string) => void): this;
+    on(event: 'pdu', listener: (pdu: Pdu) => void): this;
+    on<T extends keyof DTOPayloadMap>(event: T, listener: (pdu: Pdu<DTOPayloadMap[T] & Record<string, string | number>>) => void): this;
+    on(
+        event: string,
+        listener:
+            | (() => void)
+            | ((hadError: boolean) => void)
+            | ((err: Error) => void)
+            | ((data: Buffer) => void)
+            | ((message: string) => void)
+            | ((pdu: Pdu) => void)
+            | ((pdu: Pdu<DTOPayloadMap[keyof DTOPayloadMap] & Record<string, string | number>>) => void)
+            | ((...args: unknown[]) => void),
+    ): this {
+        this.socket.on(event, listener as (...args: unknown[]) => void);
+        return this;
     }
 
     bindTransceiver(params: BindTransceiverParams): boolean {
@@ -166,6 +183,13 @@ export default class Session {
 
         const dto = getDTO<SubmitSmFunction>('submit_sm')(params);
         return this.PDU.call({ command: 'submit_sm', sequenceNumber: this.sequenceNumber, dto });
+    }
+
+    submitMulti(params: SubmitMultiParams): boolean {
+        this.logger.debug(`submitMulti - called`, params);
+
+        const dto = getDTO<SubmitMultiFunction>('submit_multi')(params);
+        return this.PDU.call({ command: 'submit_multi', sequenceNumber: this.sequenceNumber, dto });
     }
 
     dataSm(params: DataSmParams): boolean {

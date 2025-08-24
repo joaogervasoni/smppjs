@@ -24,7 +24,7 @@ export * from './alert_notification';
 export * from './submit_multi';
 
 export type DTOCommand = {
-    type: 'Cstring' | 'Int8' | 'Array';
+    type: 'Cstring' | 'Int8' | 'Int32' | 'Array';
     value: string | number | Buffer | Record<string, DTOCommand>[];
     encode?: Encode;
     setLength?: boolean;

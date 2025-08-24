@@ -31,6 +31,11 @@ export default class PDU implements IPDU {
 
                 commandLength += octets[element.type].size(element.value);
             } else if (element.type === 'Array') {
+                /**
+                 * Validation of array params focused on submit_multi
+                 *
+                 * TODO: Work fine but need refactor to better legibility
+                 */
                 const commandParamsArray = element.value as Record<string, DTOCommand>[];
 
                 for (let index = 0; index < commandParamsArray.length; index++) {
@@ -201,13 +206,14 @@ export default class PDU implements IPDU {
     }
 
     private readParamsPdu({ pduParams, pduBuffer, offset }: { pduParams: Record<string, DTOCommand>; pduBuffer: Buffer; offset: number }): {
-        params: Record<string, string | number>;
+        params: Record<string, string | number | Array<Record<string, string | number>>>;
         offset: number;
     } {
-        const params: Record<string, string | number> = {};
+        const params: Record<string, string | number | Array<Record<string, string | number>>> = {};
 
         let dataCoding: number | undefined;
         let smLength: number | undefined;
+        let noUnsuccess: number | undefined;
 
         for (const key in pduParams) {
             const param = pduParams[key];
@@ -230,7 +236,7 @@ export default class PDU implements IPDU {
                     }
                 } else {
                     params[key] = octets.Cstring.read({ buffer: pduBuffer, offset });
-                    offset += octets.Cstring.size(params[key] || (value as string));
+                    offset += octets.Cstring.size((params[key] as string) || (value as string));
                 }
             }
 
@@ -244,6 +250,37 @@ export default class PDU implements IPDU {
 
                 if (key === 'sm_length') {
                     smLength = params[key] as number;
+                }
+
+                if (key === 'no_unsuccess') {
+                    noUnsuccess = params[key] as number;
+                }
+            }
+
+            /**
+             * Validation of array params focused on submit_multi_resp
+             *
+             * TODO: Work fine but need refactor to better legibility
+             */
+            if (type === 'Array' && noUnsuccess) {
+                const subParamEntries = value as Record<string, DTOCommand>[];
+
+                for (let index = 0; index < noUnsuccess; index += 1) {
+                    const { params: subParams, offset: subOffset } = this.readParamsPdu({ pduParams: subParamEntries[index], pduBuffer, offset });
+
+                    if (subParams && Object.keys(subParams).length > 0) {
+                        if (!params['unsuccess_sme']) {
+                            params['unsuccess_sme'] = [];
+
+                            if (subParams) {
+                                params['unsuccess_sme'].push(subParams as Record<string, string | number>);
+                            }
+                        } else {
+                            params['unsuccess_sme'] = Array.prototype.concat.call(params['unsuccess_sme'], subParams);
+                        }
+                    }
+
+                    offset = subOffset;
                 }
             }
         }

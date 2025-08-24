@@ -21,10 +21,19 @@ export * from './replace_sm';
 export * from './deliver_sm';
 export * from './deliver_sm_resp';
 export * from './alert_notification';
+export * from './submit_multi';
+export * from './submit_multi_resp';
+
+export type DTOCommand = {
+    type: 'Cstring' | 'Int8' | 'Int32' | 'Array';
+    value: string | number | Buffer | Record<string, DTOCommand>[];
+    encode?: Encode;
+    setLength?: boolean;
+};
 
 export type DTO<
     T = {
-        command: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer; encode?: Encode; setLength?: boolean }>;
+        command: Record<string, DTOCommand>;
         tlvs?: Record<string, { type: 'Cstring' | 'Int8'; value: string | number | Buffer | undefined; encode?: Encode }>;
     },
 > = T;

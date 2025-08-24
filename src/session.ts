@@ -26,6 +26,8 @@ import {
     DeliverSmRespFunction,
     DeliverSmRespParams,
     Pdu,
+    SubmitMultiParams,
+    SubmitMultiFunction,
 } from './types';
 
 export default class Session {
@@ -170,6 +172,13 @@ export default class Session {
 
         const dto = getDTO<SubmitSmFunction>('submit_sm')(params);
         return this.PDU.call({ command: 'submit_sm', sequenceNumber: this.sequenceNumber, dto });
+    }
+
+    submitMulti(params: SubmitMultiParams): boolean {
+        this.logger.debug(`submitMulti - called`, params);
+
+        const dto = getDTO<SubmitMultiFunction>('submit_multi')(params);
+        return this.PDU.call({ command: 'submit_multi', sequenceNumber: this.sequenceNumber, dto });
     }
 
     dataSm(params: DataSmParams): boolean {

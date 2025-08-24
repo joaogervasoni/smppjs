@@ -14,6 +14,7 @@ import {
     DTOData,
     ResponseCommandName,
     AlertNotificationFunction,
+    SubmitMultiFunction,
 } from '../types';
 import { bindTransceiverDTO } from './bind_transceiver';
 import { bindTransceiverRespDTO } from './bind_transceiver_resp';
@@ -38,11 +39,15 @@ import { replaceSmDTO } from './replace_sm';
 import { deliverSmDTO } from './deliver_sm';
 import { deliverSmRespDTO } from './deliver_sm_resp';
 import { alertNotificationDTO } from './alert_notification';
+import { submitMultiDTO } from './submit_multi';
+import { submitMultiRespDTO } from './submit_multi_resp';
 
 const DTOs = {
     bind_transceiver: bindTransceiverDTO,
     bind_transceiver_resp: bindTransceiverRespDTO,
+    submit_multi: submitMultiDTO,
     submit_sm: submitSmDTO,
+    submit_multi_resp: submitMultiRespDTO,
     submit_sm_resp: submitSmRespDTO,
     enquire_link: enquireLinkDTO,
     enquire_link_resp: enquireLinkRespDTO,
@@ -75,6 +80,7 @@ const getDTO = <
         | BindTransceiverFunction
         | BindTransceiverRespFunction
         | SubmitSmFunction
+        | SubmitMultiFunction
         | EnquireLinkFunction
         | DataSmFunction
         | QuerySmFunction

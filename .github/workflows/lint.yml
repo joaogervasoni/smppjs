@@ -1,0 +1,24 @@
+name: Test lint
+
+on:
+  pull_request: 
+    branches: [master, develop]
+
+jobs:
+  lint:
+    runs-on: ubuntu-22.04
+
+    steps:
+    - name: Set up Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up NodeJS
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+
+    - name: Install dependencies
+      run: npm install
+  
+    - name: Run lint test application
+      run: npm run lint

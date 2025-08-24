@@ -101,9 +101,9 @@ const CommandStatus = Object.assign({}, CommandStatus34, CommandStatus5);
  *
  * ref: Documentation SMPP_v3_4 and SMPP_v5 (command_status, error_status_code)
  */
-const CommandStatusInfo: Record<string, { name: string; description: string }> = {
-    0x00000001: { name: 'ESME RINVMSGLEN', description: 'Message Length is invalid.' },
-    0x00000002: { name: 'ESME RINVCMDLEN', description: 'Command Length is invalid.' },
+const CommandStatusInfo: Record<string, { name: keyof typeof CommandStatus; description: string }> = {
+    0x00000001: { name: 'ESME_RINVMSGLEN', description: 'Message Length is invalid.' },
+    0x00000002: { name: 'ESME_RINVCMDLEN', description: 'Command Length is invalid.' },
     0x00000003: { name: 'ESME_RINVCMDID', description: 'Invalid Command ID.' },
     0x00000004: { name: 'ESME_RINVBNDSTS', description: 'Incorrect BIND Status for given command.' },
     0x00000005: { name: 'ESME_RALYBND', description: 'ESME Already in Bound State.' },
@@ -131,20 +131,20 @@ const CommandStatusInfo: Record<string, { name: string; description: string }> =
     0x00000044: { name: 'ESME_RCNTSUBDL', description: 'Cannot Submit to Distribution List.' },
     0x00000045: { name: 'ESME_RSUBMITFAIL', description: 'submit_sm, data_sm or submit_multi failed.' },
     0x00000048: { name: 'ESME_RINVSRCTON', description: 'Invalid Source address TON.' },
-    0x00000049: { name: 'ESME RINVSRCNPI', description: 'Invalid Source address NPI.' },
+    0x00000049: { name: 'ESME_RINVSRCNPI', description: 'Invalid Source address NPI.' },
     0x00000050: { name: 'ESME_RINVDSTTON', description: 'Invalid Destination address TON.' },
     0x00000051: { name: 'ESME_RINVDSTNPI', description: 'Invalid Destination address NPI.' },
     0x00000053: { name: 'ESME_RINVSYSTYP', description: 'Invalid system_type field.' },
     0x00000054: { name: 'ESME_RINVREPFLAG', description: 'Invalid replace_if_present flag.' },
-    0x00000055: { name: 'ESME RINVNUMMSGS', description: 'Invalid number of messages.' },
+    0x00000055: { name: 'ESME_RINVNUMMSGS', description: 'Invalid number of messages.' },
     0x00000058: { name: 'ESME_RTHROTTLED', description: 'Throttling error (ESME has exceeded allowed message limits).' },
     0x00000061: { name: 'ESME_RINVSCHED', description: 'Invalid Scheduled Delivery Time.' },
     0x00000062: { name: 'ESME_RINVEXPIRY', description: 'Invalid message validity period (Expiry time).' },
-    0x00000063: { name: 'ESME RINVDFTMSGID', description: 'Predefined Message ID is Invalid or specified predefined message was not found.' },
+    0x00000063: { name: 'ESME_RINVDFTMSGID', description: 'Predefined Message ID is Invalid or specified predefined message was not found.' },
     0x00000064: { name: 'ESME_RX_T_APPN', description: 'ESME Receiver Temporary App Error Code.' },
     0x00000065: { name: 'ESME_RX_P_APPN', description: 'ESME Receiver Permanent App Error Code.' },
     0x00000066: { name: 'ESME_RX_R_APPN', description: 'ESME Receiver Reject Message Error Code.' },
-    0x00000067: { name: 'ESME RQUERYFAIL', description: 'query_sm request failed.' },
+    0x00000067: { name: 'ESME_RQUERYFAIL', description: 'query_sm request failed.' },
     0x000000c0: { name: 'ESME_RINVTLVSTREAM', description: 'Error in the optional part of the PDU Body.' },
     0x000000c1: { name: 'ESME_RTLVNOTALLWD', description: 'TLV not allowed.' },
     0x000000c2: { name: 'ESME_RINVTLVLEN', description: 'Invalid Parameter Length.' },
@@ -161,8 +161,8 @@ const CommandStatusInfo: Record<string, { name: string; description: string }> =
     0x00000106: { name: 'ESME_RINVDSTADDRSUBUNIT', description: 'Destination Address Sub unit is Invalid.' },
     0x00000107: { name: 'ESME_RINVBCASTFREQINT', description: 'Broadcast Frequency Interval is invalid.' },
     0x00000108: { name: 'ESME_RINVBCASTALIAS_NAME', description: 'Broadcast Alias Name is invalid.' },
-    0x00000109: { name: 'ESME RINVBCASTAREAFMT', description: 'Broadcast Area Format is invalid.' },
-    0x0000010a: { name: 'ESME RINVNUMBCAST_AREAS', description: 'Number of Broadcast Areas is invalid.' },
+    0x00000109: { name: 'ESME_RINVBCASTAREAFMT', description: 'Broadcast Area Format is invalid.' },
+    0x0000010a: { name: 'ESME_RINVNUMBCAST_AREAS', description: 'Number of Broadcast Areas is invalid.' },
     0x0000010b: { name: 'ESME_RINVBCASTCNTTYPE', description: 'Broadcast Content Type is invalid.' },
     0x0000010c: { name: 'ESME_RINVBCASTMSGCLASS', description: 'Broadcast Message Class is invalid.' },
     0x0000010d: { name: 'ESME_RBCASTFAIL', description: 'broadcast_sm operation failed.' },
@@ -170,7 +170,7 @@ const CommandStatusInfo: Record<string, { name: string; description: string }> =
     0x0000010f: { name: 'ESME_RBCASTCANCELFAIL', description: 'cancel_broadcast_sm operation failed.' },
     0x00000110: { name: 'ESME_RINVBCAST_REP', description: 'Number of Repeated Broadcasts is invalid.' },
     0x00000111: { name: 'ESME_RINVBCASTSRVGRP', description: 'Broadcast Service Group is invalid.' },
-    0x00000112: { name: 'ESME RINVBCASTCHANIND', description: 'Broadcast Channel Indicator is invalid.' },
+    0x00000112: { name: 'ESME_RINVBCASTCHANIND', description: 'Broadcast Channel Indicator is invalid.' },
 };
 
 export { CommandStatus, CommandStatusInfo };

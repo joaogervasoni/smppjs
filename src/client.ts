@@ -12,7 +12,10 @@ import {
     SubmitSmParams,
     DeliverSmRespParams,
     IClient,
+    type Pdu,
+    SubmitMultiParams,
 } from './types';
+import type { DTOPayloadMap } from './dtos';
 
 export default class Client implements IClient {
     private readonly session!: Session;
@@ -57,18 +60,7 @@ export default class Client implements IClient {
     }
 
     connect({ url }: { url: string }): void {
-        const [host, portStr] = url.split(':');
-
-        if (!host || !portStr) {
-            throw new Error('Invalid URL.');
-        }
-
-        const port = parseInt(portStr, 10);
-
-        if (isNaN(port)) {
-            throw new Error('Invalid port.');
-        }
-
+        const { host, port } = this.validateUrl(url);
         this.session.connect({ host, port });
 
         if (this._enquireLink.auto && this._enquireLink.interval) {
@@ -81,8 +73,27 @@ export default class Client implements IClient {
         return this.session.disconnect();
     }
 
-    on(eventName: 'connect' | 'close' | 'error' | 'timeout' | 'debug' | 'data' | 'pdu' | 'readable', callback: (...args: unknown[]) => void) {
-        this.session.on(eventName, callback);
+    on(event: 'connect' | 'end' | 'timeout' | 'readable', listener: () => void): this;
+    on(event: 'close', listener: (hadError: boolean) => void): this;
+    on(event: 'error', listener: (err: Error) => void): this;
+    on(event: 'data', listener: (data: Buffer) => void): this;
+    on(event: 'debug', listener: (message: string) => void): this;
+    on(event: 'pdu', listener: (pdu: Pdu) => void): this;
+    on<T extends keyof DTOPayloadMap>(event: T, listener: (pdu: Pdu<DTOPayloadMap[T] & Record<string, string | number>>) => void): this;
+    on(
+        event: string,
+        listener:
+            | (() => void)
+            | ((hadError: boolean) => void)
+            | ((err: Error) => void)
+            | ((data: Buffer) => void)
+            | ((message: string) => void)
+            | ((pdu: Pdu) => void)
+            | ((pdu: Pdu<DTOPayloadMap[keyof DTOPayloadMap] & Record<string, string | number>>) => void)
+            | ((...args: unknown[]) => void),
+    ): this {
+        this.session.on(event as Parameters<Session['on']>[0], listener as (...args: unknown[]) => void);
+        return this;
     }
 
     bindTransceiver(params: BindTransceiverParams): boolean {
@@ -99,6 +110,10 @@ export default class Client implements IClient {
 
     submitSm(params: SubmitSmParams): boolean {
         return this.session.submitSm(params);
+    }
+
+    submitMulti(params: SubmitMultiParams): boolean {
+        return this.session.submitMulti(params);
     }
 
     dataSm(params: DataSmParams): boolean {
@@ -127,6 +142,35 @@ export default class Client implements IClient {
 
     unbind(): boolean {
         return this.session.unbind();
+    }
+
+    private validateUrl(url: string): { host: string; port: number } {
+        if (!url || typeof url !== 'string') {
+            throw new Error('URL must be a string.');
+        }
+
+        url = url.trim();
+
+        const lastColonIndex = url.lastIndexOf(':');
+
+        if (lastColonIndex === -1) {
+            throw new Error('Invalid URL format. Expected "host:port".');
+        }
+
+        const host = url.substring(0, lastColonIndex);
+        const portStr = url.substring(lastColonIndex + 1);
+
+        if (!host) {
+            throw new Error('Host cannot be empty.');
+        }
+
+        const port = parseInt(portStr, 10);
+
+        if (isNaN(port)) {
+            throw new Error('Invalid port.');
+        }
+
+        return { host, port };
     }
 
     private autoEnquireLink(interval: number = 20000) {

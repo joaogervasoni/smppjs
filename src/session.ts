@@ -122,15 +122,26 @@ export default class Session {
         return this.socket.closed;
     }
 
-    on(event: "connect" | "end" | "timeout" | "readable", listener: () => void): this;
-    on(event: "close", listener: (hadError: boolean) => void): this;
-    on(event: "error", listener: (err: Error) => void): this;
-    on(event: "data", listener: (data: Buffer) => void): this;
-    on(event: "debug", listener: (message: string) => void): this;
-    on(event: "pdu", listener: (pdu: Pdu) => void): this;
-    on<T extends keyof DTOPayloadMap>(event: T, listener: (pdu: Pdu<DTOPayloadMap[T]>) => void): this;
-    on(event: string, listener: (...args: any[]) => void): this {
-        this.socket.on(event, listener);
+    on(event: 'connect' | 'end' | 'timeout' | 'readable', listener: () => void): this;
+    on(event: 'close', listener: (hadError: boolean) => void): this;
+    on(event: 'error', listener: (err: Error) => void): this;
+    on(event: 'data', listener: (data: Buffer) => void): this;
+    on(event: 'debug', listener: (message: string) => void): this;
+    on(event: 'pdu', listener: (pdu: Pdu) => void): this;
+    on<T extends keyof DTOPayloadMap>(event: T, listener: (pdu: Pdu<DTOPayloadMap[T] & Record<string, string | number>>) => void): this;
+    on(
+        event: string,
+        listener:
+            | (() => void)
+            | ((hadError: boolean) => void)
+            | ((err: Error) => void)
+            | ((data: Buffer) => void)
+            | ((message: string) => void)
+            | ((pdu: Pdu) => void)
+            | ((pdu: Pdu<DTOPayloadMap[keyof DTOPayloadMap] & Record<string, string | number>>) => void)
+            | ((...args: unknown[]) => void),
+    ): this {
+        this.socket.on(event, listener as (...args: unknown[]) => void);
         return this;
     }
 

@@ -22,6 +22,7 @@ export * from './deliver_sm';
 export * from './deliver_sm_resp';
 export * from './alert_notification';
 export * from './submit_multi';
+export * from './submit_multi_resp';
 
 export type DTOCommand = {
     type: 'Cstring' | 'Int8' | 'Int32' | 'Array';

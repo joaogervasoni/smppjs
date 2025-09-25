@@ -6,10 +6,9 @@ class Int8 {
      * Write a int8 in a buffer
      */
     static write({ buffer, value, offset }: { buffer: Buffer; value: number; offset: number }): Buffer {
-        const newBuffer = buffer;
-        newBuffer.writeUInt8(value || 0, offset);
+        buffer.writeUInt8(value || 0, offset);
 
-        return newBuffer;
+        return buffer;
     }
 
     /**

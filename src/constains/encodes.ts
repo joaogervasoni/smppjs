@@ -10,9 +10,9 @@ import { Encode } from '../types';
 const encodesName: Record<number, Encode> = {
     0: 'ascii', // GSM 7-bit Default Alphabet (GSM 03.38)
     1: 'ascii', // IA5 (CCITT T.50)/ASCII (ANSI X3.4)
-    2: 'latin1', // Octet unspecified (8-bit binary)
+    2: 'binary', // Octet unspecified (8-bit binary)
     3: 'latin1', // Latin 1 (ISO-8859-1)
-    4: 'latin1', // Octet unspecified (8-bit binary)
+    4: 'binary', // Octet unspecified (8-bit binary)
     5: 'ascii', // JIS (X 0208-1990) - fallback to ASCII
     6: 'latin1', // Cyrillic (ISO-8859-5) - fallback to latin1
     7: 'latin1', // Latin/Hebrew (ISO-8859-8) - fallback to latin1
@@ -25,9 +25,9 @@ const encodesName: Record<number, Encode> = {
     // Flash SMS values, same encoding as base value but with 240 value.
     240: 'ascii', // Flash + GSM 7-bit
     241: 'ascii', // Flash + IA5/ASCII
-    242: 'latin1', // Flash + Octet unspecified
+    242: 'binary', // Flash + Octet unspecified
     243: 'latin1', // Flash + Latin 1
-    244: 'latin1', // Flash + Octet unspecified
+    244: 'binary', // Flash + Octet unspecified
     245: 'ascii', // Flash + JIS
     246: 'latin1', // Flash + Cyrillic
     247: 'latin1', // Flash + Latin/Hebrew

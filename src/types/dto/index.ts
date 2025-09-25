@@ -44,7 +44,7 @@ export interface DTOFunction<T = unknown, Y = DTO> {
 /**
  * Accepted encodes
  */
-export type Encode = 'ascii' | 'latin1' | 'ucs2';
+export type Encode = 'ascii' | 'latin1' | 'ucs2' | 'binary';
 
 /**
  * Enum to reference date types

@@ -168,7 +168,7 @@ export default class Client implements IClient {
 
         const port = parseInt(portStr, 10);
 
-        if (isNaN(port) && port >= 0 && port <= 6553) {
+        if (isNaN(port) || port < 0 || port > 65535) {
             throw new Error('Invalid port. Port must be between 0 and 65535.');
         }
 

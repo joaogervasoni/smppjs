@@ -33,8 +33,6 @@ export default class PDU implements IPDU {
             } else if (element.type === 'Array') {
                 /**
                  * Validation of array params focused on submit_multi
-                 *
-                 * TODO: Work fine but need refactor to better legibility
                  */
                 const commandParamsArray = element.value as Record<string, DTOCommand>[];
 
@@ -100,7 +98,7 @@ export default class PDU implements IPDU {
         unsafeBuffer?: boolean;
         commandStatus?: number;
     }): Buffer {
-        let pduBuffer = unsafeBuffer ? Buffer.allocUnsafe(commandLength) : Buffer.alloc(commandLength);
+        let pduBuffer: Buffer = unsafeBuffer ? Buffer.allocUnsafe(commandLength) : Buffer.alloc(commandLength);
 
         pduBuffer = this.writeHeaderPdu({ buffer: pduBuffer, commandLength, commandId, sequenceNumber, commandStatus });
         const pduWithParams = this.writeParamsPdu({ offset: HEADER_COMMAND_LENGTH, pduBuffer, pduParams });
@@ -259,8 +257,6 @@ export default class PDU implements IPDU {
 
             /**
              * Validation of array params focused on submit_multi_resp
-             *
-             * TODO: Work fine but need refactor to better legibility
              */
             if (type === 'Array' && noUnsuccess) {
                 const subParamEntries = value as Record<string, DTOCommand>[];

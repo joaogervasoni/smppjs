@@ -18,7 +18,7 @@ import {
 import type { DTOPayloadMap } from './dtos';
 
 export default class Client implements IClient {
-    private readonly session!: Session;
+    private readonly session: Session;
     private _debug: boolean;
     private _enquireLink: { auto: boolean; interval?: number };
 
@@ -56,6 +56,8 @@ export default class Client implements IClient {
     }) {
         this._debug = debug;
         this._enquireLink = enquireLink;
+        this._enquireLink.interval = this._enquireLink.interval || 20000;
+
         this.session = new Session(interfaceVersion, this.debug, timeout, secure);
     }
 

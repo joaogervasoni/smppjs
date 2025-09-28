@@ -1,4 +1,4 @@
-import { DTO, DTOFunction, Encode, SystemType } from '../index';
+import { DataCoding, DTO, DTOFunction, Encode, SystemType } from '../index';
 
 /**
  * sm_length - Passed in short message DTO (setLength).
@@ -23,7 +23,7 @@ export interface DataSm extends DTO {
 
 export type DataSmParams = {
     destinationAddr: string;
-    dataCoding: number;
+    dataCoding: number | DataCoding;
     esmClass: number;
     systemTypeValue?: SystemType | (string & {});
     sourceAddrTon?: number;

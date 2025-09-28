@@ -44,7 +44,26 @@ export interface DTOFunction<T = unknown, Y = DTO> {
 /**
  * Accepted encodes
  */
-export type Encode = 'ascii' | 'latin1' | 'ucs2';
+export type Encode = 'ascii' | 'latin1' | 'ucs2' | 'binary';
+
+/**
+ * All available data coding names
+ *
+ * Fallback data coding names are not included, you can use the number instead.
+ */
+export type DataCoding =
+    | 'GSM_7BIT'
+    | 'IA5_ASCII'
+    | 'OCTET_UNSPECIFIED_1'
+    | 'LATIN1'
+    | 'OCTET_UNSPECIFIED_2'
+    | 'UCS2'
+    | 'FLASH_GSM_7BIT'
+    | 'FLASH_IA5_ASCII'
+    | 'FLASH_OCTET_UNSPECIFIED_1'
+    | 'FLASH_LATIN1'
+    | 'FLASH_OCTET_UNSPECIFIED_2'
+    | 'FLASH_UCS2';
 
 /**
  * Enum to reference date types

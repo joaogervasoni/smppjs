@@ -1,4 +1,4 @@
-import { DTO, DTOFunction, Encode, PriorityFlag, SystemType } from '../index';
+import { DataCoding, DTO, DTOFunction, Encode, PriorityFlag, SystemType } from '../index';
 
 /**
  * sm_length - Passed in short message DTO (setLength).
@@ -48,7 +48,7 @@ export interface SubmitMulti extends DTO {
 }
 
 export type SubmitMultiParams = {
-    dataCoding: number;
+    dataCoding: number | DataCoding;
     esmClass: number;
     numberOfDests: number;
     destAddressSME: {
@@ -75,6 +75,9 @@ export type SubmitMultiParams = {
     smDefaultMsgId?: number;
     shortMessage?: {
         message: string;
+        /**
+         * @deprecated Use dataCoding parameter instead. This will be removed in v1.4.0
+         */
         encoding?: Encode;
     };
     tlvs?: {

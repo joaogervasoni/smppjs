@@ -18,7 +18,7 @@ import {
 import type { DTOPayloadMap } from './dtos';
 
 export default class Client implements IClient {
-    private readonly session!: Session;
+    private readonly session: Session;
     private _debug: boolean;
     private _enquireLink: { auto: boolean; interval?: number };
 
@@ -56,6 +56,8 @@ export default class Client implements IClient {
     }) {
         this._debug = debug;
         this._enquireLink = enquireLink;
+        this._enquireLink.interval = this._enquireLink.interval || 20000;
+
         this.session = new Session(interfaceVersion, this.debug, timeout, secure);
     }
 
@@ -166,8 +168,8 @@ export default class Client implements IClient {
 
         const port = parseInt(portStr, 10);
 
-        if (isNaN(port)) {
-            throw new Error('Invalid port.');
+        if (isNaN(port) || port < 0 || port > 65535) {
+            throw new Error('Invalid port. Port must be between 0 and 65535.');
         }
 
         return { host, port };

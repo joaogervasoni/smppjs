@@ -6,10 +6,9 @@ class Int32 {
      * Write a int32 in a buffer
      */
     static write({ buffer, value, offset }: { buffer: Buffer; value: number; offset: number }): Buffer {
-        const newBuffer = buffer;
-        newBuffer.writeUInt32BE(value || 0, offset);
+        buffer.writeUInt32BE(value || 0, offset);
 
-        return newBuffer;
+        return buffer;
     }
 
     /**

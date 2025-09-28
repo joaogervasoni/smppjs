@@ -1,4 +1,4 @@
-import { DTO, DTOFunction, Encode } from '../index';
+import { DataCoding, DTO, DTOFunction, Encode } from '../index';
 
 /**
  * sm_length - Passed in short message DTO (setLength).
@@ -22,6 +22,10 @@ export interface ReplaceSm extends DTO {
 
 export type ReplaceSmParams = {
     messageId: string;
+    /**
+     * This is not part of the SMPP specification, but it is used to encode the short message.
+     */
+    dataCoding: number | DataCoding;
     sourceAddrTon?: number;
     sourceAddrNpi?: number;
     sourceAddr?: string;
@@ -31,6 +35,9 @@ export type ReplaceSmParams = {
     smDefaultMsgId?: number;
     shortMessage?: {
         message: string;
+        /**
+         * @deprecated Use dataCoding parameter instead. This will be removed in v1.4.0
+         */
         encoding?: Encode;
     };
 };
@@ -46,5 +53,6 @@ export interface ReplaceSmFunction extends DTOFunction<ReplaceSmParams, ReplaceS
         registeredDelivery,
         smDefaultMsgId,
         shortMessage,
+        dataCoding,
     }: ReplaceSmParams): ReplaceSm;
 }

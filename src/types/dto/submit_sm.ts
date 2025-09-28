@@ -1,4 +1,4 @@
-import { DTO, DTOFunction, Encode, PriorityFlag, SystemType } from '../index';
+import { DataCoding, DTO, DTOFunction, Encode, PriorityFlag, SystemType } from '../index';
 
 /**
  * sm_length - Passed in short message DTO (setLength).
@@ -33,7 +33,7 @@ export interface SubmitSm extends DTO {
 
 export type SubmitSmParams = {
     destinationAddr: string;
-    dataCoding: number;
+    dataCoding: number | DataCoding;
     esmClass: number;
     systemTypeValue?: SystemType | (string & {});
     sourceAddrTon?: number;
@@ -50,6 +50,9 @@ export type SubmitSmParams = {
     smDefaultMsgId?: number;
     shortMessage?: {
         message: string;
+        /**
+         * @deprecated Use dataCoding parameter instead. This will be removed in v1.4.0
+         */
         encoding?: Encode;
     };
     tlvs?: {

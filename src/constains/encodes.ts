@@ -1,4 +1,4 @@
-import { Encode } from '../types';
+import { DataCoding, Encode } from '../types';
 
 /**
  * SMPP data_coding values to Buffer encoding mapping
@@ -38,4 +38,33 @@ const encodesName: Record<number, Encode> = {
     254: 'latin1', // Flash + KS C 5601
 };
 
-export { encodesName };
+const encodesNumber: Record<DataCoding, number> = {
+    GSM_7BIT: 0, // GSM 7-bit Default Alphabet (GSM 03.38)
+    IA5_ASCII: 1, // IA5 (CCITT T.50)/ASCII (ANSI X3.4)
+    OCTET_UNSPECIFIED_1: 2, // Octet unspecified (8-bit binary)
+    LATIN1: 3, // Latin 1 (ISO-8859-1)
+    OCTET_UNSPECIFIED_2: 4, // Octet unspecified (8-bit binary)
+    JIS: 5, // JIS (X 0208-1990)
+    CYRILLIC: 6, // Cyrillic (ISO-8859-5)
+    LATIN_HEBREW: 7, // Latin/Hebrew (ISO-8859-8)
+    UCS2: 8, // UCS2 (ISO/IEC-10646) - Unicode
+    PICTOGRAM: 9, // Pictogram Encoding
+    ISO_2022_JP: 10, // ISO-2022-JP (Music Codes)
+    EXTENDED_KANJI_JIS: 13, // Extended Kanji JIS (X 0212-1990)
+    KS_C_5601: 14, // KS C 5601 (Korean)
+    FLASH_GSM_7BIT: 240, // Flash + GSM 7-bit
+    FLASH_IA5_ASCII: 241, // Flash + IA5/ASCII
+    FLASH_OCTET_UNSPECIFIED_1: 242, // Flash + Octet unspecified
+    FLASH_LATIN1: 243, // Flash + Latin 1
+    FLASH_OCTET_UNSPECIFIED_2: 244, // Flash + Octet unspecified
+    FLASH_JIS: 245, // Flash + JIS
+    FLASH_CYRILLIC: 246, // Flash + Cyrillic
+    FLASH_LATIN_HEBREW: 247, // Flash + Latin/Hebrew
+    FLASH_UCS2: 248, // Flash + UCS2
+    FLASH_PICTOGRAM: 249, // Flash + Pictogram
+    FLASH_ISO_2022_JP: 250, // Flash + ISO-2022-JP
+    FLASH_EXTENDED_KANJI_JIS: 253, // Flash + Extended Kanji JIS
+    FLASH_KS_C_5601: 254, // Flash + KS C 5601
+};
+
+export { encodesName, encodesNumber };

@@ -1,6 +1,7 @@
 import { dateToAbsolute } from '../helpers';
 import { DateType, ReplaceSm, ReplaceSmFunction, ReplaceSmParams } from '../types';
 import { dtoValidation } from '../helpers';
+import { encodesName, encodesNumber } from '../constains';
 
 const MAX_LENGTH: Record<string, number> = {
     source_addr: 21,
@@ -27,7 +28,19 @@ export const replaceSmDTO: ReplaceSmFunction = ({
     registeredDelivery,
     smDefaultMsgId,
     shortMessage,
+    dataCoding,
 }: ReplaceSmParams): ReplaceSm => {
+    /**
+     * Deprecation warning for encoding property
+     * Remove in v1.4.0
+     */
+    if (shortMessage?.encoding) {
+        console.warn('[SMPP.js DEPRECATION WARNING] shortMessage.encoding is deprecated and will be removed in v1.4.0. Use dataCoding parameter instead.');
+    }
+
+    const encodeNumber = typeof dataCoding === 'number' ? dataCoding : encodesNumber[dataCoding];
+    const encodeName = encodesName[encodeNumber];
+
     const dto: ReplaceSm = {
         command: {
             message_id: { type: 'Cstring', value: messageId },
@@ -40,8 +53,8 @@ export const replaceSmDTO: ReplaceSmFunction = ({
             sm_default_msg_id: { type: 'Int8', value: smDefaultMsgId || 0 },
             short_message: {
                 type: 'Cstring',
-                value: shortMessage?.message || Buffer.alloc(0, '', shortMessage?.encoding as BufferEncoding),
-                encode: shortMessage?.encoding,
+                value: shortMessage?.message || Buffer.alloc(0, '', shortMessage?.encoding || encodeName),
+                encode: shortMessage?.encoding || encodeName,
                 setLength: true,
             },
         },

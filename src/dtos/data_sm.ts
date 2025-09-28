@@ -1,3 +1,4 @@
+import { encodesName, encodesNumber } from '../constains';
 import { dtoValidation } from '../helpers';
 import { DataSm, DataSmFunction, DataSmParams } from '../types/dto';
 
@@ -22,6 +23,9 @@ export const dataSmDTO: DataSmFunction = ({
     registeredDelivery,
     tlvs,
 }: DataSmParams): DataSm => {
+    const encodeNumber = typeof dataCoding === 'number' ? dataCoding : encodesNumber[dataCoding];
+    const encodeName = encodesName[encodeNumber];
+
     const dto: DataSm = {
         command: {
             service_type: { type: 'Cstring', value: systemTypeValue || '' },
@@ -33,10 +37,10 @@ export const dataSmDTO: DataSmFunction = ({
             destination_addr: { type: 'Cstring', value: destinationAddr },
             esm_class: { type: 'Int8', value: esmClass },
             registered_delivery: { type: 'Int8', value: registeredDelivery || 0 },
-            data_coding: { type: 'Int8', value: dataCoding },
+            data_coding: { type: 'Int8', value: encodeNumber },
         },
         tlvs: {
-            message_payload: { type: 'Cstring', value: tlvs?.messagePayload || '', encode: 'ascii' },
+            message_payload: { type: 'Cstring', value: tlvs?.messagePayload || '', encode: encodeName },
         },
     };
 

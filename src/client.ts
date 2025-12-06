@@ -22,6 +22,10 @@ export default class Client implements IClient {
     private _debug: boolean;
     private _enquireLink: { auto: boolean; interval?: number };
 
+    public get connectionInfo(): { host: string; port: number } | undefined {
+        return this.session.connectionInfo;
+    }
+
     public get debug(): boolean {
         return this._debug;
     }

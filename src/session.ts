@@ -35,6 +35,7 @@ export default class Session {
     private logger!: Logger;
     private PDU!: PDU;
     private _sequenceNumber = new Uint32Array(1);
+    private _connectionInfo: { host: string; port: number } | undefined = undefined;
 
     private _connected: boolean = false;
 
@@ -48,6 +49,10 @@ export default class Session {
 
     public get closed(): boolean {
         return this.socket.closed;
+    }
+
+    public get connectionInfo(): { host: string; port: number } | undefined {
+        return this._connectionInfo;
     }
 
     private get sequenceNumber(): number {
@@ -109,6 +114,8 @@ export default class Session {
     }
 
     connect({ host, port }: { host: string; port: number }): void {
+        this._connectionInfo = { host, port };
+
         this.socket.connect(port, host, () => {
             this.connected = true;
             this.logger.debug(`connect - called - connected to smpp server using secure set to: ${this.secure.tls}`, { host, port });

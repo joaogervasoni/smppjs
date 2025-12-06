@@ -30,11 +30,22 @@ import {
     SubmitMultiFunction,
 } from './types';
 
+type EventListener =
+    | (() => void)
+    | ((hadError: boolean) => void)
+    | ((err: Error) => void)
+    | ((data: Buffer) => void)
+    | ((message: string) => void)
+    | ((pdu: Pdu) => void)
+    | ((pdu: Pdu<DTOPayloadMap[keyof DTOPayloadMap] & Record<string, string | number>>) => void)
+    | ((...args: unknown[]) => void);
+
 export default class Session {
     private socket!: Socket | TLSSocket;
     private logger!: Logger;
     private PDU!: PDU;
     private _sequenceNumber = new Uint32Array(1);
+    private storedListeners: Record<string, EventListener[]> = {};
     private _connectionInfo: { host: string; port: number } | undefined = undefined;
 
     private _connected: boolean = false;
@@ -148,8 +159,26 @@ export default class Session {
             | ((pdu: Pdu<DTOPayloadMap[keyof DTOPayloadMap] & Record<string, string | number>>) => void)
             | ((...args: unknown[]) => void),
     ): this {
+        if (!this.storedListeners[event]) {
+            this.storedListeners[event] = [];
+        }
+
+        this.storedListeners[event].push(listener);
         this.socket.on(event, listener as (...args: unknown[]) => void);
         return this;
+    }
+
+    private restoreListeners(): void {
+        const events = Object.keys(this.storedListeners);
+
+        for (let i = 0; i < events.length; i += 1) {
+            const event = events[i];
+            const listeners = this.storedListeners[event];
+
+            for (let j = 0; j < listeners.length; j += 1) {
+                this.socket.on(event, listeners[j] as (...args: unknown[]) => void);
+            }
+        }
     }
 
     bindTransceiver(params: BindTransceiverParams): boolean {

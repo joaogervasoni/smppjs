@@ -80,6 +80,7 @@ export default class Session {
         private readonly interfaceVersion: InterfaceVersion,
         private readonly debug = false,
         private readonly timeout: number,
+        private readonly reconnect: boolean = true,
         private readonly secure: { tls?: boolean; unsafeBuffer?: boolean; secureOptions?: SecureContextOptions },
     ) {
         this.initSession();
@@ -147,18 +148,7 @@ export default class Session {
     on(event: 'debug', listener: (message: string) => void): this;
     on(event: 'pdu', listener: (pdu: Pdu) => void): this;
     on<T extends keyof DTOPayloadMap>(event: T, listener: (pdu: Pdu<DTOPayloadMap[T] & Record<string, string | number>>) => void): this;
-    on(
-        event: string,
-        listener:
-            | (() => void)
-            | ((hadError: boolean) => void)
-            | ((err: Error) => void)
-            | ((data: Buffer) => void)
-            | ((message: string) => void)
-            | ((pdu: Pdu) => void)
-            | ((pdu: Pdu<DTOPayloadMap[keyof DTOPayloadMap] & Record<string, string | number>>) => void)
-            | ((...args: unknown[]) => void),
-    ): this {
+    on(event: string, listener: EventListener): this {
         if (!this.storedListeners[event]) {
             this.storedListeners[event] = [];
         }

@@ -48,6 +48,7 @@ export default class Client implements IClient {
         },
         timeout = 3000,
         debug = false,
+        reconnect = true,
     }: {
         interfaceVersion: InterfaceVersion;
         /**
@@ -57,12 +58,13 @@ export default class Client implements IClient {
         secure: { tls?: boolean; unsafeBuffer?: boolean; secureOptions?: SecureContextOptions };
         timeout?: number;
         debug?: boolean;
+        reconnect?: boolean;
     }) {
         this._debug = debug;
         this._enquireLink = enquireLink;
         this._enquireLink.interval = this._enquireLink.interval || 20000;
 
-        this.session = new Session(interfaceVersion, this.debug, timeout, secure);
+        this.session = new Session(interfaceVersion, this.debug, timeout, reconnect, secure);
     }
 
     connect({ url }: { url: string }): void {

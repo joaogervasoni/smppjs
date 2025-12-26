@@ -48,6 +48,8 @@ export default class Session {
     private storedListeners: Record<string, EventListener[]> = {};
     private _connectionInfo: { host: string; port: number } | undefined = undefined;
     private _remainingAttempts: number | undefined = undefined;
+    private _reconnectTimeout: NodeJS.Timeout | undefined = undefined;
+    private _reconnectInProgress: boolean = false;
 
     private _connected: boolean = false;
 
@@ -61,6 +63,14 @@ export default class Session {
 
     public get closed(): boolean {
         return this.socket.closed;
+    }
+
+    public get reconnectInProgress(): boolean {
+        return this._reconnectInProgress;
+    }
+
+    private set reconnectInProgress(value: boolean) {
+        this._reconnectInProgress = value;
     }
 
     public get connectionInfo(): { host: string; port: number } | undefined {
@@ -108,11 +118,7 @@ export default class Session {
             this.logger.debug(`disconnect - forced - disconnected from smpp server.`);
             this.socket.destroy();
 
-            if (this.reconnect && this.reconnect.interval && this.reconnect.attempts && this._connectionInfo) {
-                if (this._remainingAttempts === undefined) {
-                    this._remainingAttempts = this.reconnect.attempts;
-                }
-
+            if (this.reconnect && this._connectionInfo) {
                 this.attemptReconnect();
             } else {
                 throw new Error('Server closed the conn.');
@@ -122,40 +128,48 @@ export default class Session {
 
     initResponseError(): void {
         this.socket.on('error', (error: NodeJS.ErrnoException) => {
-            const connectionErrors = ['ECONNREFUSED', 'ETIMEDOUT', 'ENOTFOUND', 'ECONNRESET', 'EHOSTUNREACH'];
-            const isConnectionError = error.code && connectionErrors.includes(error.code);
-
-            if (isConnectionError && this._connectionInfo) {
+            if (this.reconnect && this._connectionInfo) {
                 this.connected = false;
                 this.logger.debug(`disconnect - connection error: ${error.code} - ${error.message}`);
                 this.socket.destroy();
 
-                if (this.reconnect && this.reconnect.interval && this.reconnect.attempts) {
-                    if (this._remainingAttempts === undefined) {
-                        this._remainingAttempts = this.reconnect.attempts;
-                    }
-
-                    this.attemptReconnect();
-                } else {
-                    throw error;
-                }
+                this.reconnectInProgress = false;
+                this.attemptReconnect();
+            } else {
+                throw error;
             }
         });
     }
 
     private attemptReconnect(): void {
+        if (this._remainingAttempts === undefined) {
+            this._remainingAttempts = this.reconnect!.attempts;
+        }
+
         if (!this.reconnect || !this.reconnect.interval || !this._connectionInfo) {
             return;
         }
 
-        if (this._remainingAttempts === undefined || this._remainingAttempts <= 0) {
-            this._remainingAttempts = undefined;
+        if (this._reconnectInProgress || this._reconnectTimeout) {
+            this.logger.debug(`reconnect - already in progress, skipping duplicate attempt.`);
+            return;
+        }
+
+        if (this._remainingAttempts <= 0) {
             throw new Error('Max attempts reached to reconnect. Server closed the conn.');
         }
 
-        setTimeout(() => {
+        this.reconnectInProgress = true;
+
+        this._reconnectTimeout = setTimeout(() => {
+            this._reconnectTimeout = undefined;
             this._remainingAttempts! -= 1;
             this.logger.debug(`reconnect - attempting to reconnect (${this._remainingAttempts!} attempts remaining).`);
+
+            if (this.socket && !this.socket.destroyed) {
+                this.socket.destroy();
+            }
+
             this.initSession();
             this.restoreListeners();
             this.initResponseEnd();
@@ -187,11 +201,24 @@ export default class Session {
         this.socket.connect(port, host, () => {
             this.connected = true;
             this._remainingAttempts = undefined;
+            this.reconnectInProgress = false;
+
+            if (this._reconnectTimeout) {
+                clearTimeout(this._reconnectTimeout);
+                this._reconnectTimeout = undefined;
+            }
+
             this.logger.debug(`connect - called - connected to smpp server using secure set to: ${this.secure.tls}`, { host, port });
         });
     }
 
     disconnect(): boolean {
+        if (this._reconnectTimeout) {
+            clearTimeout(this._reconnectTimeout);
+            this._reconnectTimeout = undefined;
+        }
+
+        this.reconnectInProgress = false;
         this.socket.destroy();
         this.connected = false;
         this.logger.debug(`disconnect - called - disconnected to smpp server.`);

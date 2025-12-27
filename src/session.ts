@@ -157,7 +157,7 @@ export default class Session {
         }
 
         if (this._reconnectInProgress || this._reconnectTimeout) {
-            this.logger.debug(`reconnect - already in progress, skipping duplicate attempt.`);
+            this.logger.debug('reconnect - already in progress, skipping duplicate attempt.');
             return;
         }
 

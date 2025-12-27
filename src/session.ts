@@ -113,12 +113,14 @@ export default class Session {
     }
 
     initResponseEnd(): void {
+        this.socket.removeAllListeners('end');
         this.socket.on('end', () => {
             this.connected = false;
             this.logger.debug(`disconnect - forced - disconnected from smpp server.`);
             this.socket.destroy();
 
             if (this.reconnect && this._connectionInfo) {
+                this.reconnectInProgress = false;
                 this.attemptReconnect();
             } else {
                 throw new Error('Server closed the conn.');
@@ -127,6 +129,7 @@ export default class Session {
     }
 
     initResponseError(): void {
+        this.socket.removeAllListeners('error');
         this.socket.on('error', (error: NodeJS.ErrnoException) => {
             if (this.reconnect && this._connectionInfo) {
                 this.connected = false;
@@ -162,7 +165,6 @@ export default class Session {
         this.reconnectInProgress = true;
 
         this._reconnectTimeout = setTimeout(() => {
-            this._reconnectTimeout = undefined;
             this._remainingAttempts! -= 1;
             this.logger.debug(`reconnect - attempting to reconnect (${this._remainingAttempts!} attempts remaining).`);
 
@@ -171,15 +173,18 @@ export default class Session {
             }
 
             this.initSession();
-            this.restoreListeners();
             this.initResponseEnd();
             this.initResponseError();
             this.initResponseRead();
+            this.restoreListeners();
             this.connect(this._connectionInfo!);
+
+            this._reconnectTimeout = undefined;
         }, this.reconnect.interval);
     }
 
     initResponseRead(): void {
+        this.socket.removeAllListeners('readable');
         this.socket.on('readable', () => {
             try {
                 const data = this.socket.read();

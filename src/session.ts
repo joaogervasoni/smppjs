@@ -131,7 +131,10 @@ export default class Session {
     initResponseError(): void {
         this.socket.removeAllListeners('error');
         this.socket.on('error', (error: NodeJS.ErrnoException) => {
-            if (this.reconnect && this._connectionInfo) {
+            const connectionErrors = ['ECONNREFUSED', 'ETIMEDOUT', 'ENOTFOUND', 'ECONNRESET', 'EHOSTUNREACH'];
+            const isConnectionError = error.code && connectionErrors.includes(error.code);
+
+            if (isConnectionError && this.reconnect && this._connectionInfo) {
                 this.connected = false;
                 this.logger.debug(`disconnect - connection error: ${error.code} - ${error.message}`);
                 this.socket.destroy();

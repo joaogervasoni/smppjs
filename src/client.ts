@@ -21,6 +21,10 @@ export default class Client implements IClient {
     private readonly session: Session;
     private _debug: boolean;
     private _enquireLink: { auto: boolean; interval?: number };
+    /**
+     * Uses ReturnType<typeof setTimeout> to automatically infer the correct type to old node versions.
+     */
+    private _enquireLinkTimeout: ReturnType<typeof setTimeout> | undefined;
 
     public get debug(): boolean {
         return this._debug;
@@ -72,6 +76,7 @@ export default class Client implements IClient {
     }
 
     disconnect(): boolean {
+        this.stopEnquireLink();
         return this.session.disconnect();
     }
 
@@ -177,7 +182,7 @@ export default class Client implements IClient {
 
     private autoEnquireLink(interval: number = 20000) {
         const scheduleNext = () => {
-            setTimeout(() => {
+            this._enquireLinkTimeout = setTimeout(() => {
                 if (this.connected) {
                     this.enquireLink();
                     scheduleNext();
@@ -186,5 +191,12 @@ export default class Client implements IClient {
         };
 
         scheduleNext();
+    }
+
+    private stopEnquireLink(): void {
+        if (this._enquireLinkTimeout) {
+            clearTimeout(this._enquireLinkTimeout);
+            this._enquireLinkTimeout = undefined;
+        }
     }
 }

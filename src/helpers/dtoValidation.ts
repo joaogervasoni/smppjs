@@ -38,7 +38,7 @@ export const dtoValidation = ({
         const maxLength = MAX_LENGTH[fieldName];
 
         if (value && value.toString().length + 1 > maxLength) {
-            throw new Error(`${fieldName} need to be minor than ${maxLength}`);
+            throw new Error(`${fieldName} must be less than ${maxLength}`);
         }
     };
 
@@ -57,10 +57,10 @@ export const dtoValidation = ({
     };
 
     for (let index = 0; index < dtoRecordEntries.length; index += 1) {
-        const dto = dtoRecordEntries[index];
-        const fieldName = dto[0];
-        const value = dto[1].value;
-        const type = dto[1].type;
+        const dtoEntry = dtoRecordEntries[index];
+        const fieldName = dtoEntry[0];
+        const value = dtoEntry[1].value;
+        const type = dtoEntry[1].type;
 
         if (type === 'Array' && value) {
             const subDtoRecordEntries = Object.entries(value as Record<string, DTOCommand>[]);

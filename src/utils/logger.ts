@@ -8,10 +8,9 @@ class Logger {
         },
     ) {}
 
-    debug(message: string, object?: object) {
-        const messageEmit = `${message} - ${object ? JSON.stringify(object) : '{}'}`;
-
+    debug(message: string, object?: object): void {
         if (this.options.debug) {
+            const messageEmit = object ? `${message} - ${JSON.stringify(object)}` : `${message} - {}`;
             this.socket.emit('debug', messageEmit);
         }
     }

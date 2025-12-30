@@ -21,7 +21,6 @@ class Cstring {
         setLength?: boolean;
         encoding?: Encode;
     }): Buffer {
-        const newBuffer = buffer;
         let valueBuffer: Buffer;
 
         if (typeof value === 'string') {
@@ -35,9 +34,9 @@ class Cstring {
         }
 
         valueBuffer.copy(buffer, offset);
-        newBuffer[offset + valueBuffer.length] = 0;
+        buffer[offset + valueBuffer.length] = 0;
 
-        return newBuffer;
+        return buffer;
     }
 
     /**

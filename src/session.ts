@@ -88,7 +88,6 @@ export default class Session {
             this.connected = false;
             this.logger.debug(`disconnect - forced - disconnected from smpp server.`);
             this.socket.destroy();
-            throw new Error('Server closed the conn.');
         });
     }
 

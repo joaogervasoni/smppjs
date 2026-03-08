@@ -109,13 +109,17 @@ export default class Session {
                 const data = this.socket.read();
 
                 if (data) {
-                    const pdu = this.PDU.readPdu(data);
-                    this.logger.debug(`${pdu.command} - received`, pdu);
-                    this.socket.emit('pdu', pdu);
-                    this.socket.emit(pdu.command, pdu);
+                    const pdus = this.PDU.readPdus(data);
 
-                    if (bindRespCommands.includes(pdu.command) && pdu.command_status === 0) {
-                        this.bound = true;
+                    for (let i = 0; i < pdus.length; i += 1) {
+                        const pdu = pdus[i];
+                        this.logger.debug(`${pdu.command} - received`, pdu);
+                        this.socket.emit('pdu', pdu);
+                        this.socket.emit(pdu.command, pdu);
+
+                        if (bindRespCommands.includes(pdu.command) && pdu.command_status === 0) {
+                            this.bound = true;
+                        }
                     }
                 }
             } catch (error) {

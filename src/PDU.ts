@@ -378,9 +378,13 @@ export default class PDU implements IPDU {
         let offset = 0;
 
         while (offset < buffer.length) {
-            const pdu = this.readPdu(buffer.subarray(offset));
-            pdus.push(pdu);
-            offset += pdu.command_length;
+            if (buffer.length - offset < 4) break;
+
+            const pduLength = buffer.readUInt32BE(offset);
+            if (buffer.length - offset < pduLength) break;
+
+            pdus.push(this.readPdu(buffer.subarray(offset, offset + pduLength)));
+            offset += pduLength;
         }
 
         return pdus;

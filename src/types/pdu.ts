@@ -14,9 +14,17 @@ export interface IPDU {
     call({ command, sequenceNumber, dto }: { command: SendCommandName; sequenceNumber: number; dto: DTO }): boolean;
     /**
      * Receive a smpp protocol buffer, read and return formated to object Pdu.
-     * @param buffer Buffer
+     * @param buffer Buffer containing a single PDU
      */
-    readPdu(buffer: Buffer): Record<string, string | number>;
+    readPdu(buffer: Buffer): Pdu;
+    /**
+     * Receive a buffer with one or more SMPP PDUs and return all of them.
+     *
+     * - This can happen when the buffer is larger than the size of a PDU and the buffer contains more than one PDU.
+     *
+     * @param buffer Buffer containing one or more PDUs
+     */
+    readPdus(buffer: Buffer): Pdu[];
 }
 
 /**

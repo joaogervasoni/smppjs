@@ -372,4 +372,21 @@ export default class PDU implements IPDU {
 
         return Object.assign({}, pdu, params, tlvs);
     }
+
+    readPdus(buffer: Buffer): Pdu[] {
+        const pdus: Pdu[] = [];
+        let offset = 0;
+
+        while (offset < buffer.length) {
+            if (buffer.length - offset < 4) break;
+
+            const pduLength = buffer.readUInt32BE(offset);
+            if (buffer.length - offset < pduLength) break;
+
+            pdus.push(this.readPdu(buffer.subarray(offset, offset + pduLength)));
+            offset += pduLength;
+        }
+
+        return pdus;
+    }
 }

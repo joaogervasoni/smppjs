@@ -30,7 +30,8 @@ class Cstring {
         }
 
         if (setLength) {
-            buffer.writeUInt8(valueBuffer.length, offset++);
+            buffer.writeUInt8(valueBuffer.length, offset);
+            offset += 1;
         }
 
         valueBuffer.copy(buffer, offset);
@@ -65,7 +66,7 @@ class Cstring {
         let scanLength = 0;
 
         while (scanLength < MAX_SCAN && offset + scanLength < buffer.length && buffer[offset + scanLength]) {
-            scanLength++;
+            scanLength += 1;
         }
 
         if (scanLength < MAX_SCAN || offset + scanLength >= buffer.length) {

@@ -25,6 +25,7 @@ export default [
         rules: {
             'prettier/prettier': 'error',
             'no-console': 'warn',
+            'no-plusplus': 'error',
             'no-restricted-syntax': [
                 'error',
                 {

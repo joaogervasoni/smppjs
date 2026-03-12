@@ -26,33 +26,33 @@ const dateToRelative = (futureDate: Date | string): string => {
 
     if (milliseconds < 0) {
         milliseconds += 1000;
-        seconds--;
+        seconds -= 1;
     }
 
     if (seconds < 0) {
         seconds += 60;
-        minutes--;
+        minutes -= 1;
     }
 
     if (minutes < 0) {
         minutes += 60;
-        hours--;
+        hours -= 1;
     }
 
     if (hours < 0) {
         hours += 24;
-        days--;
+        days -= 1;
     }
 
     if (days < 0) {
         const prevMonth = new Date(now.getUTCFullYear(), now.getUTCMonth(), 0);
         days += prevMonth.getUTCDate();
-        months--;
+        months -= 1;
     }
 
     if (months < 0) {
         months += 12;
-        years--;
+        years -= 1;
     }
 
     const pad = (n: number, len = 2) => n.toString().padStart(len, '0');

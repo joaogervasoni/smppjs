@@ -14,8 +14,11 @@ import {
     IClient,
     type Pdu,
     SubmitMultiParams,
+    type BindRespCommandName,
 } from './types';
 import type { DTOPayloadMap } from './dtos';
+
+const BIND_RESP_EVENTS: readonly BindRespCommandName[] = ['bind_transceiver_resp', 'bind_transmitter_resp', 'bind_receiver_resp'];
 
 export default class Client implements IClient {
     private readonly session: Session;
@@ -87,7 +90,8 @@ export default class Client implements IClient {
                     if (pdu.command_status === 0) this.autoEnquireLink(interval);
                 };
 
-                for (const evt of ['bind_transceiver_resp', 'bind_transmitter_resp', 'bind_receiver_resp'] as const) {
+                for (let i = 0; i < BIND_RESP_EVENTS.length; i += 1) {
+                    const evt = BIND_RESP_EVENTS[i];
                     this.on(evt, onBound);
                 }
             }

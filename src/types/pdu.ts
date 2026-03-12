@@ -77,6 +77,9 @@ export type ResponseCommandName =
     | 'deliver_sm'
     | 'alert_notification';
 
+/** Bind response command names */
+export type BindRespCommandName = 'bind_receiver_resp' | 'bind_transmitter_resp' | 'bind_transceiver_resp';
+
 export type DTOData<T extends DTO> = {
     [K in keyof T['command']]: T['command'][K]['value'];
 } & (T['tlvs'] extends NonNullable<T['tlvs']>

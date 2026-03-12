@@ -25,6 +25,34 @@ export default [
         rules: {
             'prettier/prettier': 'error',
             'no-console': 'warn',
+            'no-plusplus': 'error',
+            'no-restricted-syntax': [
+                'error',
+                {
+                    selector: 'ForOfStatement',
+                    message: 'Use standard for loop instead of for...of',
+                },
+                {
+                    selector: "CallExpression[callee.property.name='forEach']",
+                    message: 'Use standard for loop instead of forEach',
+                },
+                {
+                    selector: "CallExpression[callee.property.name='map']",
+                    message: 'Use array or object iteration instead of map',
+                },
+                {
+                    selector: "CallExpression[callee.property.name='set']",
+                    message: 'Use array or object iteration instead of set',
+                },
+                {
+                    selector: "NewExpression[callee.name='Map']",
+                    message: 'Use plain object instead of Map',
+                },
+                {
+                    selector: "NewExpression[callee.name='Set']",
+                    message: 'Use array instead of Set',
+                },
+            ],
             'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
             'padding-line-between-statements': [
                 'error',

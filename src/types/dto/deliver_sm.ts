@@ -48,6 +48,18 @@ export type DeliverSmParams = {
         message: string;
         encoding?: Encode;
     };
+    /** Indicates if UDH (User Data Header) is present (1 = present, 0 = absent) */
+    has_udh?: number;
+    /** Length of the UDH in bytes, including the UDHL field itself */
+    udh_length?: number;
+    /** Information Element Identifier for concatenated messages (0x00 for 8-bit ref, 0x08 for 16-bit ref) */
+    udh_concat_iei?: number;
+    /** Reference number identifying the concatenated message set */
+    udh_concat_ref?: number;
+    /** Total number of parts in the concatenated message */
+    udh_concat_total?: number;
+    /** Sequence number of this part in the concatenated message (1-based) */
+    udh_concat_seq?: number;
 };
 
 export interface DeliverSmFunction extends DTOFunction<DeliverSmParams, DeliverSm> {

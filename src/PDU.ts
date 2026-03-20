@@ -3,6 +3,7 @@ import { getDTO } from './dtos/index';
 import { octets } from './octets';
 import { CommandStatus, CommandStatusInfo, commandsId, commandsName, optionalParams, encodesName } from './constains';
 import { DTO, DTOFunction, Encode, IPDU, Pdu, SendCommandName, OptionalParamKey, DTOCommand } from './types';
+import { parseConcatenatedUdh } from './utils/udh.js';
 
 const HEADER_COMMAND_LENGTH = 16;
 
@@ -211,6 +212,7 @@ export default class PDU implements IPDU {
 
         let dataCoding: number | undefined;
         let smLength: number | undefined;
+        let esmClass: number | undefined;
         let noUnsuccess: number | undefined;
 
         for (const key in pduParams) {
@@ -220,22 +222,39 @@ export default class PDU implements IPDU {
 
             if (type === 'Cstring') {
                 if (key === 'short_message' && dataCoding !== undefined) {
-                    const encoding = encodesName[dataCoding];
+                    const encoding = encodesName[dataCoding] || 'ascii';
+                    const shortMessageLength = smLength || 0;
 
-                    if (encoding === 'ucs2' && smLength !== undefined && smLength > 0) {
-                        params[key] = octets.Cstring.convertFromUtf16be(pduBuffer, offset, smLength);
+                    const shortMessageRaw = shortMessageLength > 0
+                        ? pduBuffer.subarray(offset, offset + shortMessageLength)
+                        : Buffer.alloc(0);
+
+                    const hasUdhi = esmClass !== undefined && (esmClass & 0x40) === 0x40;
+                    const parsedUdh = hasUdhi
+                        ? parseConcatenatedUdh(shortMessageRaw)
+                        : null;
+
+                    let contentOffset = 0;
+
+                    if (parsedUdh) {
+                        contentOffset = parsedUdh.udhLength;
+                        params['has_udh'] = 1;
+                        params['udh_length'] = parsedUdh.udhLength;
+                        params['udh_concat_iei'] = parsedUdh.concatIei;
+                        params['udh_concat_ref'] = parsedUdh.referenceNumber;
+                        params['udh_concat_total'] = parsedUdh.totalParts;
+                        params['udh_concat_seq'] = parsedUdh.partNumber;
+                    }
+
+                    const payload = shortMessageRaw.subarray(contentOffset);
+
+                    if (encoding === 'ucs2') {
+                        params[key] = octets.Cstring.convertFromUtf16be(payload, 0, payload.length);
                     } else {
-                        params[key] = octets.Cstring.read({
-                            buffer: pduBuffer,
-                            offset,
-                            encoding,
-                            length: smLength,
-                        });
+                        params[key] = payload.toString(encoding);
                     }
 
-                    if (smLength) {
-                        offset += smLength;
-                    }
+                    offset += shortMessageLength;
                 } else {
                     params[key] = octets.Cstring.read({ buffer: pduBuffer, offset });
                     offset += octets.Cstring.size((params[key] as string) || (value as string));
@@ -245,6 +264,10 @@ export default class PDU implements IPDU {
             if (type === 'Int8') {
                 params[key] = octets.Int8.read({ buffer: pduBuffer, offset });
                 offset += octets.Int8.size();
+
+                if (key === 'esm_class') {
+                    esmClass = params[key] as number;
+                }
 
                 if (key === 'data_coding') {
                     dataCoding = params[key] as number;
